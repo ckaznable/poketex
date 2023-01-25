@@ -7,9 +7,9 @@ use std::{error::Error, io};
 use tui::{
     backend::{Backend, CrosstermBackend},
     layout::{Alignment, Constraint, Direction, Layout},
-    style::{Style, Modifier},
-    widgets::{Block, BorderType, Borders, TableState, Row, Table},
-    Frame, Terminal,
+    style::{Style, Modifier, Color},
+    widgets::{Block, BorderType, Borders, ListState, List, ListItem},
+    Frame, Terminal, text::Spans,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::from_str;
@@ -39,13 +39,13 @@ struct Pokemon {
     iv: PokemonIV,
 }
 
-struct PokemonTable {
-    state: TableState,
+struct PokemonList {
+    state: ListState,
     items: Vec<Pokemon>,
 }
 
-impl PokemonTable {
-    fn new(mut items: Vec<Pokemon>) -> PokemonTable {
+impl PokemonList {
+    fn new(mut items: Vec<Pokemon>) -> PokemonList {
         // make sure items has def pokemon
         if items.len() == 0 {
             let pm = Pokemon {
@@ -66,10 +66,10 @@ impl PokemonTable {
         };
 
         // init position = 0
-        let mut state = TableState::default();
+        let mut state = ListState::default();
         state.select(Some(0));
 
-        PokemonTable {
+        PokemonList {
             state,
             items,
         }
@@ -141,8 +141,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut terminal = Terminal::new(backend)?;
 
     // create app and run it
-    let pm_table = PokemonTable::new(pokemon);
-    let res = run_app(&mut terminal, pm_table);
+    let pm_list = PokemonList::new(pokemon);
+    let res = run_app(&mut terminal, pm_list);
 
     // restore terminal
     disable_raw_mode()?;
@@ -160,42 +160,48 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut pm_table: PokemonTable) -> io::Result<()> {
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut pm_list: PokemonList) -> io::Result<()> {
     loop {
-        terminal.draw(|f| ui(f, &mut pm_table))?;
+        terminal.draw(|f| ui(f, &mut pm_list))?;
 
         if let Event::Key(key) = event::read()? {
             match key.code {
                 KeyCode::Char('q') => return Ok(()),
-                KeyCode::Down => pm_table.next(),
-                KeyCode::Up => pm_table.previous(),
+                KeyCode::Down => pm_list.next(),
+                KeyCode::Up => pm_list.previous(),
                 _ => {}
             }
         }
     }
 }
 
-fn get_table<'a>(pm_table: &&'a mut PokemonTable) -> Table<'a> {
-    let selected_style = Style::default().add_modifier(Modifier::REVERSED);
+fn data_list<'a>(pm_list: &&'a mut PokemonList) -> List<'a> {
+    let items: Vec<ListItem> = pm_list.items
+        .iter()
+        .map(|item| {
+            let title = "#".to_string()
+                + item.no.to_string().as_str()
+                + " "
+                + item.name.en.as_str();
 
-    let rows = pm_table.items.iter().map(|item| {
-        Row::new(vec![
-            "#".to_string()
-            + item.no.to_string().as_str()
-            + " "
-            + item.name.en.as_str()
-        ]).height(1).bottom_margin(1)
-    });
+            ListItem::new(vec![Spans::from(title)])
+        })
+        .collect();
 
-    Table::new(rows)
-        .block(Block::default().borders(Borders::NONE))
-        .highlight_style(selected_style)
-        .widths(&[Constraint::Percentage(100)])
+    List::new(items)
+        .block(Block::default()
+        .title_alignment(Alignment::Center)
+        .title("Pokemon List"))
+        .highlight_style(
+            Style::default()
+                .bg(Color::LightGreen)
+                .add_modifier(Modifier::BOLD),
+        )
 }
 
-fn ui<B: Backend>(f: &mut Frame<B>, pm_table: &mut PokemonTable) {
+fn ui<B: Backend>(f: &mut Frame<B>, pm_list: &mut PokemonList) {
     let size = f.size();
-    let current_pm = pm_table.get_current_item();
+    let current_pm = pm_list.get_current_item();
 
     // Surrounding block
     let block = Block::default()
@@ -232,6 +238,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, pm_table: &mut PokemonTable) {
         .horizontal_margin(2)
         .split(right_chunks[0]);
 
-    let t = get_table(&pm_table);
-    f.render_stateful_widget(t, right_chunks_margin[0], &mut pm_table.state);
+    // pm list
+    f.render_stateful_widget(data_list(&pm_list), right_chunks_margin[0], &mut pm_list.state);
 }
