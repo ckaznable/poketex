@@ -1,5 +1,7 @@
 # Poketex
 
+![demo](doc/demo.png)
+
 A simple pokedex tui
 
 data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/poke-data-cralwer)
@@ -10,7 +12,7 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
 
 ## Todo
 
-- [ ] show pokemon iv and type
+- [x] show pokemon iv and type
 - [ ] make pokemon table searchable
 - [ ] add region form
 - [ ] add cli variable

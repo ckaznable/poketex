@@ -8,8 +8,8 @@ use tui::{
     backend::{Backend, CrosstermBackend},
     layout::{Alignment, Constraint, Direction, Layout},
     style::{Style, Modifier, Color},
-    widgets::{Block, BorderType, Borders, ListState, List, ListItem},
-    Frame, Terminal, text::Spans,
+    widgets::{Block, BorderType, Borders, ListState, List, ListItem, Gauge},
+    Frame, Terminal, text::{Spans, Span},
 };
 use serde::{Deserialize, Serialize};
 use serde_json::from_str;
@@ -118,6 +118,10 @@ impl PokemonList {
     }
 }
 
+fn get_pokemon_iv_highest(pm: &PokemonIV) -> u16 {
+    *vec![pm.hp, pm.att, pm.def, pm.s_att, pm.s_def, pm.spd].iter().max().unwrap()
+}
+
 fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
     let contents = include_str!("data.json");
     let pokemon: Result<Vec<Pokemon>, serde_json::Error> = from_str(&contents);
@@ -190,6 +194,7 @@ fn data_list<'a>(pm_list: &&'a mut PokemonList) -> List<'a> {
 
     List::new(items)
         .block(Block::default()
+        .borders(Borders::LEFT)
         .title_alignment(Alignment::Center)
         .title("Pokemon List"))
         .highlight_style(
@@ -199,9 +204,34 @@ fn data_list<'a>(pm_list: &&'a mut PokemonList) -> List<'a> {
         )
 }
 
+fn get_type_bg_color(t: &str) -> Color {
+    match t {
+        "fire" => Color::Rgb(255, 68, 34),
+        "grass" => Color::Rgb(119, 204, 85),
+        "water" => Color::Rgb(51, 153, 255),
+        "normal" => Color::Rgb(187, 187, 170),
+        "electric" => Color::Rgb(255, 204, 51),
+        "ice" => Color::Rgb(119, 221, 255),
+        "fighting" => Color::Rgb(187, 85, 68),
+        "poison" => Color::Rgb(170, 85, 153),
+        "ground" => Color::Rgb(221, 187, 85),
+        "flying" => Color::Rgb(102, 153, 255),
+        "psychic" => Color::Rgb(255, 85, 153),
+        "bug" => Color::Rgb(170, 187, 34),
+        "rock" => Color::Rgb(187, 170, 102),
+        "ghost" => Color::Rgb(102, 102, 187),
+        "dragon" => Color::Rgb(119, 102, 238),
+        "dark" => Color::Rgb(119, 85, 68),
+        "steel" => Color::Rgb(170, 170, 187),
+        "fairy" => Color::Rgb(255, 170, 255),
+        _ => Color::Black
+    }
+}
+
 fn ui<B: Backend>(f: &mut Frame<B>, pm_list: &mut PokemonList) {
     let size = f.size();
     let current_pm = pm_list.get_current_item();
+    let max_iv = get_pokemon_iv_highest(&current_pm.iv) as f32;
 
     // Surrounding block
     let block = Block::default()
@@ -214,18 +244,163 @@ fn ui<B: Backend>(f: &mut Frame<B>, pm_list: &mut PokemonList) {
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
         .margin(2)
-        .constraints([Constraint::Percentage(50), Constraint::Percentage(50)].as_ref())
+        .constraints([Constraint::Percentage(66), Constraint::Percentage(34)].as_ref())
         .split(f.size());
 
     // left inner blocks
     let left_chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Percentage(100)].as_ref())
+        .constraints([
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Min(0)
+        ].as_ref())
         .split(chunks[0]);
 
+    let hp_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(10), Constraint::Percentage(60), Constraint::Min(0)])
+        .split(left_chunks[2]);
+
+    let block = Block::default().title("HP");
+    f.render_widget(block, hp_chunks[0]);
+
+    let gauge = Gauge::default()
+        .block(Block::default().borders(Borders::NONE))
+        .gauge_style(
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::ITALIC),
+        )
+        .percent(((current_pm.iv.hp as f32 / max_iv) * 100.0) as u16)
+        .label(current_pm.iv.hp.to_string());
+    f.render_widget(gauge, hp_chunks[1]);
+
+    let atk_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(10), Constraint::Percentage(60), Constraint::Min(0)])
+        .split(left_chunks[4]);
+
+    let block = Block::default().title("Atk");
+    f.render_widget(block, atk_chunks[0]);
+
+    let gauge = Gauge::default()
+        .block(Block::default().borders(Borders::NONE))
+        .gauge_style(
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::ITALIC),
+        )
+        .percent(((current_pm.iv.att as f32 / max_iv) * 100.0) as u16)
+        .label(current_pm.iv.att.to_string());
+    f.render_widget(gauge, atk_chunks[1]);
+
+    let def_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(10), Constraint::Percentage(60), Constraint::Min(0)])
+        .split(left_chunks[6]);
+
+    let block = Block::default().title("Def");
+    f.render_widget(block, def_chunks[0]);
+
+    let gauge = Gauge::default()
+        .block(Block::default().borders(Borders::NONE))
+        .gauge_style(
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::ITALIC),
+        )
+        .percent(((current_pm.iv.def as f32 / max_iv) * 100.0) as u16)
+        .label(current_pm.iv.def.to_string());
+    f.render_widget(gauge, def_chunks[1]);
+
+    let s_atk_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(10), Constraint::Percentage(60), Constraint::Min(0)])
+        .split(left_chunks[8]);
+
+    let block = Block::default().title("S.Atk");
+    f.render_widget(block, s_atk_chunks[0]);
+
+    let gauge = Gauge::default()
+        .block(Block::default().borders(Borders::NONE))
+        .gauge_style(
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::ITALIC),
+        )
+        .percent(((current_pm.iv.s_att as f32 / max_iv) * 100.0) as u16)
+        .label(current_pm.iv.s_att.to_string());
+    f.render_widget(gauge, s_atk_chunks[1]);
+
+    let s_def_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(10), Constraint::Percentage(60), Constraint::Min(0)])
+        .split(left_chunks[10]);
+
+    let block = Block::default().title("S.Def");
+    f.render_widget(block, s_def_chunks[0]);
+
+    let gauge = Gauge::default()
+        .block(Block::default().borders(Borders::NONE))
+        .gauge_style(
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::ITALIC),
+        )
+        .percent(((current_pm.iv.s_def as f32 / max_iv) * 100.0) as u16)
+        .label(current_pm.iv.s_def.to_string());
+    f.render_widget(gauge, s_def_chunks[1]);
+
+    let spd_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(10), Constraint::Percentage(60), Constraint::Min(0)])
+        .split(left_chunks[12]);
+
+    let block = Block::default().title("Spd");
+    f.render_widget(block, spd_chunks[0]);
+
+    let gauge = Gauge::default()
+        .block(Block::default().borders(Borders::NONE))
+        .gauge_style(
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::ITALIC),
+        )
+        .percent(((current_pm.iv.spd as f32 / max_iv) * 100.0) as u16)
+        .label(current_pm.iv.spd.to_string());
+    f.render_widget(gauge, spd_chunks[1]);
+
+    let t = current_pm.r#type.get(0).unwrap();
+    let mut type_span = vec![
+        Span::styled(t, Style::default().bg(get_type_bg_color(t)).fg(Color::White)),
+        Span::from(" "),
+    ];
+
+    match current_pm.r#type.get(1) {
+        Some(t) => {
+            if !t.eq("unknow") {
+                type_span.push(Span::styled(t, Style::default().bg(get_type_bg_color(t)).fg(Color::White)));
+            }
+            ()
+        },
+        None => (),
+    };
+
     let block = Block::default()
-        .title(current_pm.name.en.as_str())
-        .borders(Borders::RIGHT);
+        .title(type_span)
+        .borders(Borders::NONE);
     f.render_widget(block, left_chunks[0]);
 
     let right_chunks = Layout::default()
