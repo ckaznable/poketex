@@ -15,4 +15,7 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
 - [x] show pokemon iv and type
 - [ ] make pokemon table searchable
 - [ ] add region form
+  - [x] Alola
+  - [ ] Galar
+  - [ ] Paldea
 - [ ] add cli variable
