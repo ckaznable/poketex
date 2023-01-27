@@ -37,6 +37,7 @@ fn data_list<'a>(pm_list: &&'a mut PokemonList) -> List<'a> {
 fn set_type_block<B: Backend>(pm: &Pokemon, area: Rect, f: &mut Frame<B>) {
     let t = pm.r#type.get(0).unwrap();
     let mut type_span = vec![
+        Span::from(pm.name.en.to_string() + " "),
         Span::styled(t, Style::default().bg(get_type_bg_color(t)).fg(Color::White)),
         Span::from(" "),
     ];
