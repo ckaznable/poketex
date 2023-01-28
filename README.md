@@ -16,6 +16,7 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
 - [ ] make pokemon table searchable
 - [ ] add region form
   - [x] Alola
-  - [ ] Galar
+  - [x] Galar
+  - [ ] Hisuian
   - [ ] Paldea
 - [ ] add cli variable
