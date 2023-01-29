@@ -17,6 +17,6 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
 - [ ] add region form
   - [x] Alola
   - [x] Galar
-  - [ ] Hisuian
+  - [x] Hisuian
   - [ ] Paldea
 - [ ] add cli variable
