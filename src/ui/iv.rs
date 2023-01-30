@@ -1,6 +1,6 @@
 use tui::{layout::{Layout, Direction, Constraint, Rect}, widgets::{Block, Gauge, Borders}, style::{Style, Color, Modifier}, backend::Backend, Frame};
 
-pub fn set_iv_layout<'a, B: Backend>(title: &'a str,iv: &u16, max_iv: f32, area: Rect, f: &mut Frame<B>) {
+pub fn set_iv_layout<'a, B: Backend>(title: &'a str, iv: &u16, max_iv: f32, area: Rect, f: &mut Frame<B>) {
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Percentage(10), Constraint::Percentage(60), Constraint::Min(0)])
