@@ -1,5 +1,6 @@
 mod pokemon;
 mod ui;
+mod env;
 
 use ui::{ui, pokemon::PokemonList};
 use pokemon::*;

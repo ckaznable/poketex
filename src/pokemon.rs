@@ -1,10 +1,24 @@
 use serde::{Deserialize, Serialize};
+use crate::env::LOCALES;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct PokemonName {
     pub zh: String,
     pub en: String,
     pub jp: String,
+}
+
+impl PokemonName {
+    pub fn get_name(&self) -> String {
+        let sp: Vec<&str> = LOCALES.as_str().split("-").collect();
+
+        match *sp.get(0).unwrap() {
+            "en" => self.en.to_owned(),
+            "zh" => self.zh.to_owned(),
+            "ja" => self.jp.to_owned(),
+            _ => self.en.to_owned()
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone)]
