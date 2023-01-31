@@ -7,10 +7,10 @@ use tui::{backend::Backend, Frame, layout::{Constraint, Layout, Direction, Align
 
 use crate::pokemon::Pokemon;
 
-use self::{pokemon::PokemonList, util::{get_pokemon_iv_highest, get_type_bg_color}, iv::set_iv_layout};
+use self::{pokemon::PokemonDex, util::{get_pokemon_iv_highest, get_type_bg_color}, iv::set_iv_layout};
 
-fn data_list<'a>(pm_list: &&'a mut PokemonList) -> List<'a> {
-    let items: Vec<ListItem> = pm_list.items
+fn data_list<'a>(pm_dex: &&'a mut PokemonDex) -> List<'a> {
+    let items: Vec<ListItem> = pm_dex.items
         .iter()
         .map(|item| {
             let title = "#".to_string()
@@ -58,9 +58,9 @@ fn set_type_block<B: Backend>(pm: &Pokemon, area: Rect, f: &mut Frame<B>) {
     f.render_widget(block, area);
 }
 
-pub fn ui<B: Backend>(f: &mut Frame<B>, pm_list: &mut PokemonList) {
+pub fn ui<B: Backend>(f: &mut Frame<B>, pm_dex: &mut PokemonDex) {
     let size = f.size();
-    let current_pm = pm_list.get_current_item();
+    let current_pm = pm_dex.get_current_item();
     let max_iv = get_pokemon_iv_highest(&current_pm.iv) as f32;
 
     // Surrounding block
@@ -155,5 +155,5 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, pm_list: &mut PokemonList) {
         .split(right_chunks[0]);
 
     // pm list
-    f.render_stateful_widget(data_list(&pm_list), right_chunks_margin[0], &mut pm_list.state);
+    f.render_stateful_widget(data_list(&pm_dex), right_chunks_margin[0], &mut pm_dex.state);
 }

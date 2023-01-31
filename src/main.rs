@@ -2,7 +2,7 @@ mod pokemon;
 mod ui;
 mod env;
 
-use ui::{ui, pokemon::PokemonList};
+use ui::{ui, pokemon::PokemonDex};
 use pokemon::*;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
@@ -39,8 +39,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut terminal = Terminal::new(backend)?;
 
     // create app and run it
-    let pm_list = PokemonList::new(pokemon);
-    let res = run_app(&mut terminal, pm_list);
+    let pm_dex = PokemonDex::new(pokemon);
+    let res = run_app(&mut terminal, pm_dex);
 
     // restore terminal
     disable_raw_mode()?;
@@ -58,15 +58,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut pm_list: PokemonList) -> io::Result<()> {
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut pm_dex: PokemonDex) -> io::Result<()> {
     loop {
-        terminal.draw(|f| ui(f, &mut pm_list))?;
+        terminal.draw(|f| ui(f, &mut pm_dex))?;
 
         if let Event::Key(key) = event::read()? {
             match key.code {
                 KeyCode::Char('q') => return Ok(()),
-                KeyCode::Down => pm_list.next(),
-                KeyCode::Up => pm_list.previous(),
+                KeyCode::Down => pm_dex.next(),
+                KeyCode::Up => pm_dex.previous(),
                 _ => {}
             }
         }

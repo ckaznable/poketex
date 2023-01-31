@@ -38,3 +38,21 @@ pub struct Pokemon {
     pub name: PokemonName,
     pub iv: PokemonIV,
 }
+
+impl Default for Pokemon {
+    fn default() -> Self {
+        Pokemon {
+            name: PokemonName { zh: "".to_string(), en: "".to_string(), jp: "".to_string() },
+            no: 0,
+            r#type: vec!["unknown".to_string()],
+            iv: PokemonIV {
+                hp: 0,
+                att: 0,
+                def: 0,
+                s_att: 0,
+                s_def: 0,
+                spd: 0
+            }
+        }
+    }
+}

@@ -1,38 +1,24 @@
 use tui::widgets::ListState;
 
-use crate::pokemon::{Pokemon, PokemonName, PokemonIV};
+use crate::pokemon::Pokemon;
 
-pub struct PokemonList {
+pub struct PokemonDex {
     pub state: ListState,
     pub items: Vec<Pokemon>,
 }
 
-impl PokemonList {
-    pub fn new(mut items: Vec<Pokemon>) -> PokemonList {
+impl PokemonDex {
+    pub fn new(mut items: Vec<Pokemon>) -> PokemonDex {
         // make sure items has def pokemon
         if items.len() == 0 {
-            let pm = Pokemon {
-                name: PokemonName { zh: "".to_string(), en: "".to_string(), jp: "".to_string() },
-                no: 0,
-                r#type: vec!["unknow".to_string()],
-                iv: PokemonIV {
-                    hp: 0,
-                    att: 0,
-                    def: 0,
-                    s_att: 0,
-                    s_def: 0,
-                    spd: 0
-                }
-            };
-
-            items.push(pm);
+            items.push(Pokemon::default());
         };
 
         // init position = 0
         let mut state = ListState::default();
         state.select(Some(0));
 
-        PokemonList {
+        PokemonDex {
             state,
             items,
         }
