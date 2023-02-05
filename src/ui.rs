@@ -1,41 +1,14 @@
 use tui::{
     backend::Backend,
     layout::{Alignment, Constraint, Direction, Layout},
-    style::{Color, Modifier, Style},
-    text::{Spans},
-    widgets::{Block, BorderType, Borders, List, ListItem},
+    widgets::{Block, BorderType, Borders},
     Frame,
 };
 
-use crate::widget::{dex::PokemonDexBlock, pmlist::PokemonListStatus};
-
-fn data_list<'a>(pm_dex: &&'a mut PokemonListStatus) -> List<'a> {
-    let items: Vec<ListItem> = pm_dex
-        .items
-        .iter()
-        .map(|item| {
-            let title = "#".to_string()
-                + item.no.to_string().as_str()
-                + " "
-                + item.name.get_name().as_str();
-
-            ListItem::new(vec![Spans::from(title)])
-        })
-        .collect();
-
-    List::new(items)
-        .block(
-            Block::default()
-                .borders(Borders::LEFT)
-                .title_alignment(Alignment::Center)
-                .title("Pokemon List"),
-        )
-        .highlight_style(
-            Style::default()
-                .bg(Color::LightGreen)
-                .add_modifier(Modifier::BOLD),
-        )
-}
+use crate::widget::{
+    dex::PokemonDexBlock,
+    pmlist::{PokemonList, PokemonListStatus},
+};
 
 pub fn ui<B: Backend>(f: &mut Frame<B>, pm_dex: &mut PokemonListStatus) {
     let size = f.size();
@@ -62,15 +35,6 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, pm_dex: &mut PokemonListStatus) {
         .constraints([Constraint::Percentage(100)].as_ref())
         .split(chunks[1]);
 
-    let right_chunks_margin = Layout::default()
-        .constraints([Constraint::Percentage(100)])
-        .horizontal_margin(2)
-        .split(right_chunks[0]);
-
     // pm list
-    f.render_stateful_widget(
-        data_list(&pm_dex),
-        right_chunks_margin[0],
-        &mut pm_dex.state,
-    );
+    f.render_stateful_widget(PokemonList::default(), right_chunks[0], pm_dex);
 }
