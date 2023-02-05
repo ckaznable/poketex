@@ -67,10 +67,18 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut pm_dex: PokemonListStatus
         if let Event::Key(key) = event::read()? {
             match key.code {
                 KeyCode::Char('q') => return Ok(()),
+
                 KeyCode::Down => pm_dex.next(),
+                KeyCode::Char('j') => pm_dex.next(),
+
                 KeyCode::Up => pm_dex.previous(),
+                KeyCode::Char('k') => pm_dex.previous(),
+
                 KeyCode::Left => pm_dex.dex.previous(),
+                KeyCode::Char('h') => pm_dex.dex.previous(),
+
                 KeyCode::Right => pm_dex.dex.next(),
+                KeyCode::Char('l') => pm_dex.dex.next(),
                 _ => {}
             }
         }
