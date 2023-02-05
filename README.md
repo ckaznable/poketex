@@ -19,4 +19,5 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
   - [x] Galar
   - [x] Hisuian
   - [x] Paldea
-- [ ] add cli variable
+- [x] add cli variable
+  - [x] --locale [en, jp, zh]
