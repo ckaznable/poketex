@@ -20,4 +20,4 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
   - [x] Hisuian
   - [x] Paldea
 - [x] add cli variable
-  - [x] --locale [en, jp, zh]
+  - [x] --locale [en, ja, zh]
