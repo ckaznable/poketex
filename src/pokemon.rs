@@ -1,6 +1,8 @@
 use serde::Deserialize;
 use crate::env::LOCALES;
 
+pub static mut DEF_LOCALES: &'static str = "en";
+
 fn get_dict_pm_type(pm_type: &Vec<String>) -> (String, Option<String>) {
     (
         pm_type[0].clone(),
@@ -23,11 +25,19 @@ impl PokemonName {
     pub fn get_name(&self) -> String {
         let sp: Vec<&str> = LOCALES.as_str().split("-").collect();
 
-        match *sp.get(0).unwrap() {
-            "en" => self.en.to_owned(),
-            "zh" => self.zh.to_owned(),
-            "ja" => self.jp.to_owned(),
-            _ => self.en.to_owned()
+        unsafe {
+            let loc = if !DEF_LOCALES.eq("en") {
+                DEF_LOCALES
+            } else {
+                *sp.get(0).unwrap()
+            };
+
+            match loc {
+                "en" => self.en.to_owned(),
+                "zh" => self.zh.to_owned(),
+                "ja" => self.jp.to_owned(),
+                _ => self.en.to_owned()
+            }
         }
     }
 }

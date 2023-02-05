@@ -3,7 +3,9 @@ mod ui;
 mod env;
 mod widget;
 mod util;
+mod args;
 
+use clap::Parser;
 use pokemon::*;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
@@ -25,6 +27,12 @@ fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let args = args::Args::parse();
+
+    unsafe {
+        DEF_LOCALES = Box::leak(args.locale.into_boxed_str());
+    }
+
     let pokemon = match get_pokemon_data() {
         Ok(r) => r,
         Err(_) => {
