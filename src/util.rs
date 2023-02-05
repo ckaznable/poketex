@@ -1,11 +1,5 @@
 use tui::style::Color;
 
-use crate::pokemon::PokemonIV;
-
-pub fn get_pokemon_iv_highest(pm: &PokemonIV) -> u16 {
-    *vec![pm.hp, pm.att, pm.def, pm.s_att, pm.s_def, pm.spd].iter().max().unwrap()
-}
-
 pub fn get_type_bg_color(t: &str) -> Color {
     match t {
         "fire" => Color::Rgb(255, 68, 34),

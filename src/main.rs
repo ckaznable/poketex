@@ -1,14 +1,16 @@
 mod pokemon;
 mod ui;
 mod env;
+mod widget;
+mod util;
 
-use ui::{ui, pokemon::PokemonDex};
 use pokemon::*;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use widget::pmlist::PokemonListStatus;
 use std::{error::Error, io};
 use tui::{
     backend::{Backend, CrosstermBackend},
@@ -39,7 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut terminal = Terminal::new(backend)?;
 
     // create app and run it
-    let pm_dex = PokemonDex::new(pokemon);
+    let pm_dex = PokemonListStatus::new(pokemon);
     let res = run_app(&mut terminal, pm_dex);
 
     // restore terminal
@@ -58,15 +60,17 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut pm_dex: PokemonDex) -> io::Result<()> {
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut pm_dex: PokemonListStatus) -> io::Result<()> {
     loop {
-        terminal.draw(|f| ui(f, &mut pm_dex))?;
+        terminal.draw(|f| ui::ui(f, &mut pm_dex))?;
 
         if let Event::Key(key) = event::read()? {
             match key.code {
                 KeyCode::Char('q') => return Ok(()),
                 KeyCode::Down => pm_dex.next(),
                 KeyCode::Up => pm_dex.previous(),
+                KeyCode::Left => pm_dex.dex.previous(),
+                KeyCode::Right => pm_dex.dex.next(),
                 _ => {}
             }
         }
