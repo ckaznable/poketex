@@ -34,13 +34,18 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     // right chunks
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Length(4), Constraint::Min(0)].as_ref(),
-        )
+        .constraints([
+            Constraint::Length(match app.input_mode {
+                crate::InputMode::Normal => 1,
+                crate::InputMode::Editing => 3,
+            }),
+            Constraint::Min(0)
+        ])
         .split(chunks[1]);
 
     // search input
     f.render_stateful_widget(Filter::default(), chunks[0], app);
 
     // pm list
-    f.render_stateful_widget(PokemonList::default(), chunks[1], &mut app.pm);
+    f.render_stateful_widget(PokemonList::default(), chunks[1], app);
 }
