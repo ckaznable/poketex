@@ -5,12 +5,12 @@ use tui::{
     Frame,
 };
 
-use crate::widget::{
-    dex::PokemonDexBlock,
-    pmlist::{PokemonList, PokemonListStatus},
+use crate::{
+    widget::{dex::PokemonDexBlock, filter::Filter, pmlist::PokemonList},
+    AppState,
 };
 
-pub fn ui<B: Backend>(f: &mut Frame<B>, pm_dex: &mut PokemonListStatus) {
+pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let size = f.size();
 
     // Surrounding block
@@ -21,6 +21,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, pm_dex: &mut PokemonListStatus) {
         .border_type(BorderType::Rounded);
     f.render_widget(block, size);
 
+    // left chunks
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
         .margin(2)
@@ -28,13 +29,18 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, pm_dex: &mut PokemonListStatus) {
         .split(f.size());
 
     let block = PokemonDexBlock::default();
-    f.render_stateful_widget(block, chunks[0], &mut pm_dex.dex);
+    f.render_stateful_widget(block, chunks[0], &mut app.pm.dex);
 
-    let right_chunks = Layout::default()
+    // right chunks
+    let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Percentage(100)].as_ref())
+        .constraints([Constraint::Length(4), Constraint::Min(0)].as_ref(),
+        )
         .split(chunks[1]);
 
+    // search input
+    f.render_stateful_widget(Filter::default(), chunks[0], app);
+
     // pm list
-    f.render_stateful_widget(PokemonList::default(), right_chunks[0], pm_dex);
+    f.render_stateful_widget(PokemonList::default(), chunks[1], &mut app.pm);
 }

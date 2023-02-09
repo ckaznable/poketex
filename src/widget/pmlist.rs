@@ -1,11 +1,11 @@
 use tui::{
-    layout::{Alignment, Constraint, Layout},
+    layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
     text::Spans,
     widgets::{Block, Borders, List, ListItem, ListState, StatefulWidget},
 };
 
-use crate::pokemon::{DictType, Pokemon};
+use crate::{pokemon::{DictType, Pokemon}, constant::LIST_H_MARGIN};
 
 use super::dex::{PokemonDex, PokemonDexState};
 
@@ -124,7 +124,7 @@ impl StatefulWidget for PokemonList {
     ) {
         let layout = Layout::default()
             .constraints([Constraint::Percentage(100)])
-            .horizontal_margin(2)
+            .horizontal_margin(LIST_H_MARGIN)
             .split(area);
 
         let items: Vec<ListItem> = state
@@ -141,12 +141,7 @@ impl StatefulWidget for PokemonList {
             .collect();
 
         List::new(items)
-            .block(
-                Block::default()
-                    .borders(Borders::LEFT)
-                    .title_alignment(Alignment::Center)
-                    .title("Pokemon List"),
-            )
+            .block(Block::default().borders(Borders::LEFT))
             .highlight_style(
                 Style::default()
                     .bg(Color::LightGreen)
