@@ -124,15 +124,18 @@ impl StatefulWidget for PokemonList {
             .horizontal_margin(LIST_H_MARGIN)
             .split(area);
 
+        let get_name = |item: &Pokemon| -> String {
+            format!("#{} {}", item.no.to_string().as_str(), item.name.get_name().as_str())
+        };
         let items: Vec<ListItem> = pm
             .items
             .iter()
+            .filter(|item| {
+                let title = get_name(item);
+                title.to_lowercase().contains(state.query.to_lowercase().as_str())
+            })
             .map(|item| {
-                let title = "#".to_string()
-                    + item.no.to_string().as_str()
-                    + " "
-                    + item.name.get_name().as_str();
-
+                let title = get_name(item);
                 ListItem::new(vec![Spans::from(title)])
             })
             .collect();

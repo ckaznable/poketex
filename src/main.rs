@@ -123,6 +123,9 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                     KeyCode::Char('/') => {
                         app.input_mode = InputMode::Editing;
                     }
+                    KeyCode::Esc => {
+                        app.query = String::from("");
+                    }
                     _ => {}
                 },
 
@@ -133,9 +136,11 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                     }
                     KeyCode::Esc => {
                         app.reset();
+                        app.query = String::from("");
                     }
                     _ => {
                         app.input.handle_event(&Event::Key(key));
+                        app.query = app.input.value().to_owned();
                     }
                 }
             }
