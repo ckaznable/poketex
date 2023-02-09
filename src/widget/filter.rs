@@ -14,9 +14,7 @@ impl Default for Filter {
 }
 
 impl Filter {
-    fn paragraph<'a>(self, area: &tui::layout::Rect, state: &'a mut AppState) -> Paragraph<'a> {
-        let width = area.width.max(3) - 3;
-        let scroll = state.input.visual_scroll(width as usize);
+    fn paragraph<'a>(self, scroll: usize, state: &'a mut AppState) -> Paragraph<'a> {
         Paragraph::new(state.input.value())
             .style(match state.input_mode {
                 InputMode::Normal => Style::default(),
@@ -45,7 +43,9 @@ impl StatefulWidget for Filter {
             }
 
             InputMode::Editing => {
-                self.paragraph(&layout[0], state).render(layout[1], buf);
+                let width = area.width.max(3) - 3;
+                let scroll = state.input.visual_scroll(width as usize);
+                self.paragraph(scroll, state).render(layout[1], buf);
             }
         }
     }
