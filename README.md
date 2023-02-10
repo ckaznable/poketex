@@ -14,6 +14,7 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
 
 - [x] show pokemon iv and type
 - [x] pokemon list searchable
+- [ ] add pokemon ability rows
 - [x] add region form
   - [x] Alola
   - [x] Galar
@@ -21,3 +22,5 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
   - [x] Paldea
 - [x] add cli variable
   - [x] --locale [en, ja, zh]
+- [ ] feature tab
+  - [ ] damage calculator
