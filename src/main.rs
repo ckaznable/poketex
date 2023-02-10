@@ -4,6 +4,7 @@ mod env;
 mod widget;
 mod util;
 mod args;
+mod constant;
 
 use clap::Parser;
 use pokemon::*;
@@ -19,6 +20,35 @@ use tui::{
     Terminal,
 };
 use serde_json::from_str;
+use tui_input::{Input, backend::crossterm::EventHandler};
+
+pub enum InputMode {
+    Normal,
+    Editing
+}
+
+pub struct AppState {
+    pm: PokemonListStatus,
+    input_mode: InputMode,
+    input: Input,
+    query: String,
+}
+
+impl AppState {
+    fn new(pm: PokemonListStatus) -> Self {
+        AppState {
+            pm,
+            input_mode: InputMode::Normal,
+            input: Input::default(),
+            query: String::from(""),
+        }
+    }
+
+    fn reset(&mut self) {
+        self.input_mode = InputMode::Normal;
+        self.input.reset();
+    }
+}
 
 fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
     let contents = include_str!("data.json");
@@ -49,8 +79,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut terminal = Terminal::new(backend)?;
 
     // create app and run it
-    let pm_dex = PokemonListStatus::new(pokemon);
-    let res = run_app(&mut terminal, pm_dex);
+    let pm = PokemonListStatus::new(pokemon);
+    let app = AppState::new(pm);
+    let res = run_app(&mut terminal, app);
 
     // restore terminal
     disable_raw_mode()?;
@@ -68,26 +99,50 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut pm_dex: PokemonListStatus) -> io::Result<()> {
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Result<()> {
     loop {
-        terminal.draw(|f| ui::ui(f, &mut pm_dex))?;
+        terminal.draw(|f| ui::ui(f, &mut app))?;
 
         if let Event::Key(key) = event::read()? {
-            match key.code {
-                KeyCode::Char('q') => return Ok(()),
+            match app.input_mode {
+                InputMode::Normal => match key.code {
+                    KeyCode::Char('q') => return Ok(()),
 
-                KeyCode::Down => pm_dex.next(),
-                KeyCode::Char('j') => pm_dex.next(),
+                    KeyCode::Down => app.pm.next(),
+                    KeyCode::Char('j') => app.pm.next(),
 
-                KeyCode::Up => pm_dex.previous(),
-                KeyCode::Char('k') => pm_dex.previous(),
+                    KeyCode::Up => app.pm.previous(),
+                    KeyCode::Char('k') => app.pm.previous(),
 
-                KeyCode::Left => pm_dex.dex.previous(),
-                KeyCode::Char('h') => pm_dex.dex.previous(),
+                    KeyCode::Left => app.pm.dex.previous(),
+                    KeyCode::Char('h') => app.pm.dex.previous(),
 
-                KeyCode::Right => pm_dex.dex.next(),
-                KeyCode::Char('l') => pm_dex.dex.next(),
-                _ => {}
+                    KeyCode::Right => app.pm.dex.next(),
+                    KeyCode::Char('l') => app.pm.dex.next(),
+
+                    KeyCode::Char('/') => {
+                        app.input_mode = InputMode::Editing;
+                    }
+                    KeyCode::Esc => {
+                        app.query = String::from("");
+                    }
+                    _ => {}
+                },
+
+                InputMode::Editing => match key.code {
+                    KeyCode::Enter => {
+                        app.query = app.input.value().to_owned();
+                        app.reset();
+                    }
+                    KeyCode::Esc => {
+                        app.reset();
+                        app.query = String::from("");
+                    }
+                    _ => {
+                        app.input.handle_event(&Event::Key(key));
+                        app.query = app.input.value().to_owned();
+                    }
+                }
             }
         }
     }

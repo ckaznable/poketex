@@ -1,11 +1,11 @@
 use tui::{
-    layout::{Alignment, Constraint, Layout},
+    layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
     text::Spans,
     widgets::{Block, Borders, List, ListItem, ListState, StatefulWidget},
 };
 
-use crate::pokemon::{DictType, Pokemon};
+use crate::{pokemon::{DictType, Pokemon}, constant::LIST_H_MARGIN, AppState};
 
 use super::dex::{PokemonDex, PokemonDexState};
 
@@ -114,44 +114,44 @@ impl Default for PokemonList {
 }
 
 impl StatefulWidget for PokemonList {
-    type State = PokemonListStatus;
+    type State = AppState;
 
-    fn render(
-        self,
-        area: tui::layout::Rect,
-        buf: &mut tui::buffer::Buffer,
-        state: &mut Self::State,
-    ) {
+    fn render(self, area: tui::layout::Rect, buf: &mut tui::buffer::Buffer, state: &mut Self::State) {
+        let AppState { pm, .. } = state;
+
         let layout = Layout::default()
             .constraints([Constraint::Percentage(100)])
-            .horizontal_margin(2)
+            .horizontal_margin(LIST_H_MARGIN)
             .split(area);
 
-        let items: Vec<ListItem> = state
+        let get_name = |item: &Pokemon| -> String {
+            format!("#{} {}", item.no.to_string().as_str(), item.name.get_name().as_str())
+        };
+        let items: Vec<ListItem> = pm
             .items
             .iter()
-            .map(|item| {
-                let title = "#".to_string()
-                    + item.no.to_string().as_str()
-                    + " "
-                    + item.name.get_name().as_str();
+            .filter(|item| {
+                if state.query.eq("") {
+                    return true
+                }
 
+                let title = get_name(item);
+                title.to_lowercase().contains(state.query.to_lowercase().as_str())
+            })
+            .map(|item| {
+                let title = get_name(item);
                 ListItem::new(vec![Spans::from(title)])
             })
             .collect();
 
         List::new(items)
-            .block(
-                Block::default()
-                    .borders(Borders::LEFT)
-                    .title_alignment(Alignment::Center)
-                    .title("Pokemon List"),
-            )
+            .block(Block::default()
+            .borders(Borders::LEFT))
             .highlight_style(
                 Style::default()
                     .bg(Color::LightGreen)
                     .add_modifier(Modifier::BOLD),
             )
-            .render(layout[0], buf, &mut state.state);
+            .render(layout[0], buf, &mut pm.state);
     }
 }
