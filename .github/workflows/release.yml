@@ -18,21 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
-      - name: Install rust
-        uses: actions-rs/toolchain@v1
+      - name: Setup rust
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           components: rustfmt
-          profile: minimal
-          override: true
 
       - name: cargo fmt -- --check
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+        run: cargo fmt --all -- --check
 
 
   test:
@@ -42,43 +36,29 @@ jobs:
 
     strategy:
       matrix:
-        build: [stable, beta, nightly]
+        build: [stable, nightly]
         include:
-          - build: beta
-            rust: beta
           - build: nightly
-            rust: nightly
             benches: true
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
-      - name: Install rust
-        uses: actions-rs/toolchain@v1
+      - name: Setup rust
+        uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: ${{ matrix.rust || 'stable' }}
-          profile: minimal
-          override: true
+          toolchain: ${{ matrix.build || 'stable' }}
 
       - name: Build debug
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: ${{ matrix.features }}
+        run: cargo build
 
       - name: Test
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: ${{ matrix.features }}
+        run: cargo test --all-features
 
       - name: Test all benches
         if: matrix.benches
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --benches ${{ matrix.features }}
+        run: cargo test --benches --all-features
   deploy:
     name: deploy
     permissions:
@@ -91,21 +71,15 @@ jobs:
         target: [aarch64-unknown-linux-gnu, armv7-unknown-linux-gnueabihf, i686-unknown-linux-gnu, i686-unknown-linux-musl, mips-unknown-linux-gnu, mips64-unknown-linux-gnuabi64, mips64el-unknown-linux-gnuabi64, mipsel-unknown-linux-gnu, powerpc-unknown-linux-gnu, powerpc64-unknown-linux-gnu, powerpc64le-unknown-linux-gnu, arm-unknown-linux-gnueabi ,x86_64-unknown-linux-gnu ,x86_64-unknown-linux-musl]
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install rust
-        uses: actions-rs/toolchain@v1
+        uses: actions/checkout@v3
+
+      - name: Setup rust
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          profile: minimal
-          override: true
-          target: ${{ matrix.target }}
+          targets: ${{ matrix.target }}
 
       - name: Build target
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --release --target ${{ matrix.target }}
+        run: cargo build --release --target ${{ matrix.target }}
 
       - name: Package
         shell: bash
