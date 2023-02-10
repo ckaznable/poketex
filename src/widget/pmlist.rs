@@ -131,6 +131,10 @@ impl StatefulWidget for PokemonList {
             .items
             .iter()
             .filter(|item| {
+                if state.query.eq("") {
+                    return true
+                }
+
                 let title = get_name(item);
                 title.to_lowercase().contains(state.query.to_lowercase().as_str())
             })
