@@ -1,7 +1,8 @@
 use tui::{
     buffer::Buffer,
-    layout::{Constraint, Layout, Rect, Direction},
-    widgets::{Block, Borders, Widget, Gauge}, style::{Style, Color, Modifier},
+    layout::{Constraint, Direction, Layout, Rect},
+    style::{Color, Modifier, Style},
+    widgets::{Block, Borders, Gauge, Widget},
 };
 
 use crate::pokemon::PokemonIV;
@@ -21,16 +22,20 @@ impl<'a> IVStatusBar<'a> {
 impl<'a> Widget for IVStatusBar<'a> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let mut constraints = vec![];
-        for _ in 0..12 { constraints.push(Constraint::Length(1)) }
+        for _ in 0..12 {
+            constraints.push(Constraint::Length(1))
+        }
 
         let layout = Layout::default()
             .direction(Direction::Horizontal)
-            .constraints([Constraint::Percentage(10), Constraint::Percentage(60), Constraint::Min(0)])
+            .constraints([
+                Constraint::Percentage(10),
+                Constraint::Percentage(60),
+                Constraint::Min(0),
+            ])
             .split(area);
 
-        Block::default()
-            .title(self.title)
-            .render(layout[0], buf);
+        Block::default().title(self.title).render(layout[0], buf);
 
         Gauge::default()
             .block(Block::default().borders(Borders::NONE))
@@ -53,7 +58,7 @@ pub struct IVStatus {
 impl Default for IVStatus {
     fn default() -> IVStatus {
         IVStatus {
-            iv: PokemonIV::default()
+            iv: PokemonIV::default(),
         }
     }
 }
@@ -64,14 +69,26 @@ impl IVStatus {
     }
 
     pub fn get_pokemon_iv_highest(&self) -> f32 {
-        *vec![self.iv.hp, self.iv.att, self.iv.def, self.iv.s_att, self.iv.s_def, self.iv.spd].iter().max().unwrap() as f32
+        *vec![
+            self.iv.hp,
+            self.iv.att,
+            self.iv.def,
+            self.iv.s_att,
+            self.iv.s_def,
+            self.iv.spd,
+        ]
+        .iter()
+        .max()
+        .unwrap() as f32
     }
 }
 
 impl Widget for IVStatus {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let mut constraints = vec![];
-        for _ in 0..11 { constraints.push(Constraint::Length(1)) }
+        for _ in 0..11 {
+            constraints.push(Constraint::Length(1))
+        }
 
         let layout = Layout::default()
             .direction(tui::layout::Direction::Vertical)
@@ -80,22 +97,11 @@ impl Widget for IVStatus {
 
         let max = self.get_pokemon_iv_highest();
 
-        IVStatusBar::new("HP", self.iv.hp, max)
-            .render(layout[0], buf);
-
-        IVStatusBar::new("Atk", self.iv.att, max)
-            .render(layout[2], buf);
-
-        IVStatusBar::new("Def", self.iv.def, max)
-            .render(layout[4], buf);
-
-        IVStatusBar::new("S.Atk", self.iv.s_att, max)
-            .render(layout[6], buf);
-
-        IVStatusBar::new("S.Def", self.iv.s_def, max)
-            .render(layout[8], buf);
-
-        IVStatusBar::new("Spd", self.iv.spd, max)
-            .render(layout[10], buf);
+        IVStatusBar::new("HP", self.iv.hp, max).render(layout[0], buf);
+        IVStatusBar::new("Atk", self.iv.att, max).render(layout[2], buf);
+        IVStatusBar::new("Def", self.iv.def, max).render(layout[4], buf);
+        IVStatusBar::new("S.Atk", self.iv.s_att, max).render(layout[6], buf);
+        IVStatusBar::new("S.Def", self.iv.s_def, max).render(layout[8], buf);
+        IVStatusBar::new("Spd", self.iv.spd, max).render(layout[10], buf);
     }
 }

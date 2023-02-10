@@ -5,7 +5,11 @@ use tui::{
     widgets::{Block, Borders, List, ListItem, ListState, StatefulWidget},
 };
 
-use crate::{pokemon::{DictType, Pokemon}, constant::LIST_H_MARGIN, AppState};
+use crate::{
+    constant::LIST_H_MARGIN,
+    pokemon::{DictType, Pokemon},
+    AppState,
+};
 
 use super::dex::{PokemonDex, PokemonDexState};
 
@@ -116,7 +120,12 @@ impl Default for PokemonList {
 impl StatefulWidget for PokemonList {
     type State = AppState;
 
-    fn render(self, area: tui::layout::Rect, buf: &mut tui::buffer::Buffer, state: &mut Self::State) {
+    fn render(
+        self,
+        area: tui::layout::Rect,
+        buf: &mut tui::buffer::Buffer,
+        state: &mut Self::State,
+    ) {
         let AppState { pm, .. } = state;
 
         let layout = Layout::default()
@@ -125,7 +134,11 @@ impl StatefulWidget for PokemonList {
             .split(area);
 
         let get_name = |item: &Pokemon| -> String {
-            format!("#{} {}", item.no.to_string().as_str(), item.name.get_name().as_str())
+            format!(
+                "#{} {}",
+                item.no.to_string().as_str(),
+                item.name.get_name().as_str()
+            )
         };
         let items: Vec<ListItem> = pm
             .items
@@ -135,8 +148,9 @@ impl StatefulWidget for PokemonList {
                     return true;
                 }
 
-                let title = get_name(item);
-                title.to_lowercase().contains(state.query.to_lowercase().as_str())
+                get_name(item)
+                    .to_lowercase()
+                    .contains(state.query.to_lowercase().as_str())
             })
             .map(|item| {
                 let title = get_name(item);
@@ -145,8 +159,7 @@ impl StatefulWidget for PokemonList {
             .collect();
 
         List::new(items)
-            .block(Block::default()
-            .borders(Borders::LEFT))
+            .block(Block::default().borders(Borders::LEFT))
             .highlight_style(
                 Style::default()
                     .bg(Color::LightGreen)

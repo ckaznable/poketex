@@ -20,6 +20,6 @@ pub fn get_type_bg_color(t: &str) -> Color {
         "dark" => Color::Rgb(119, 85, 68),
         "steel" => Color::Rgb(170, 170, 187),
         "fairy" => Color::Rgb(255, 170, 255),
-        _ => Color::Black
+        _ => Color::Black,
     }
 }

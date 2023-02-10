@@ -14,10 +14,7 @@ pub struct TopInfo {
 
 impl TopInfo {
     pub fn new(name: String, pm_type: (String, Option<String>)) -> Self {
-        TopInfo {
-            name,
-            pm_type
-        }
+        TopInfo { name, pm_type }
     }
 }
 
@@ -44,7 +41,9 @@ impl Widget for TopInfo {
                 if !t.eq("unknow") {
                     type_span.push(Span::styled(
                         t.clone(),
-                        Style::default().bg(get_type_bg_color(t.as_str())).fg(Color::White),
+                        Style::default()
+                            .bg(get_type_bg_color(t.as_str()))
+                            .fg(Color::White),
                     ));
                 }
                 ()

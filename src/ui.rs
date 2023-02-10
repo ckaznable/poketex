@@ -39,7 +39,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 crate::InputMode::Normal => 1,
                 crate::InputMode::Editing => 3,
             }),
-            Constraint::Min(0)
+            Constraint::Min(0),
         ])
         .split(chunks[1]);
 

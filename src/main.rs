@@ -1,30 +1,30 @@
-mod pokemon;
-mod ui;
-mod env;
-mod widget;
-mod util;
 mod args;
 mod constant;
+mod env;
+mod pokemon;
+mod ui;
+mod util;
+mod widget;
 
 use clap::Parser;
-use pokemon::*;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use widget::pmlist::PokemonListStatus;
+use pokemon::*;
+use serde_json::from_str;
 use std::{error::Error, io};
 use tui::{
     backend::{Backend, CrosstermBackend},
     Terminal,
 };
-use serde_json::from_str;
-use tui_input::{Input, backend::crossterm::EventHandler};
+use tui_input::{backend::crossterm::EventHandler, Input};
+use widget::pmlist::PokemonListStatus;
 
 pub enum InputMode {
     Normal,
-    Editing
+    Editing,
 }
 
 pub struct AppState {
@@ -68,7 +68,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Err(_) => {
             print!("data error");
             std::process::exit(2);
-        },
+        }
     };
 
     // setup terminal
@@ -142,7 +142,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                         app.input.handle_event(&Event::Key(key));
                         app.query = app.input.value().to_owned();
                     }
-                }
+                },
             }
         }
     }

@@ -1,13 +1,10 @@
-use serde::Deserialize;
 use crate::env::LOCALES;
+use serde::Deserialize;
 
 pub static mut DEF_LOCALES: &'static str = "en";
 
 fn get_dict_pm_type(pm_type: &Vec<String>) -> (String, Option<String>) {
-    (
-        pm_type[0].clone(),
-        pm_type.get(1).cloned(),
-    )
+    (pm_type[0].clone(), pm_type.get(1).cloned())
 }
 
 pub trait DictType {
@@ -36,7 +33,7 @@ impl PokemonName {
                 "en" => self.en.to_owned(),
                 "zh" => self.zh.to_owned(),
                 "ja" => self.jp.to_owned(),
-                _ => self.en.to_owned()
+                _ => self.en.to_owned(),
             }
         }
     }
@@ -47,7 +44,7 @@ impl Default for PokemonName {
         PokemonName {
             zh: "".to_string(),
             en: "".to_string(),
-            jp: "".to_string()
+            jp: "".to_string(),
         }
     }
 }
@@ -70,7 +67,7 @@ impl Default for PokemonIV {
             def: 0,
             s_att: 0,
             s_def: 0,
-            spd: 0
+            spd: 0,
         }
     }
 }

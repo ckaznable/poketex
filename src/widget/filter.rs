@@ -1,9 +1,10 @@
 use tui::{
-    layout::{Constraint, Layout, Alignment},
-    widgets::{StatefulWidget, Block, Borders, Paragraph, Widget}, style::{Color, Style},
+    layout::{Alignment, Constraint, Layout},
+    style::{Color, Style},
+    widgets::{Block, Borders, Paragraph, StatefulWidget, Widget},
 };
 
-use crate::{InputMode, constant::LIST_H_MARGIN, AppState};
+use crate::{constant::LIST_H_MARGIN, AppState, InputMode};
 
 pub struct Filter {}
 
@@ -25,7 +26,12 @@ impl Filter {
 impl StatefulWidget for Filter {
     type State = AppState;
 
-    fn render(self, area: tui::layout::Rect, buf: &mut tui::buffer::Buffer, state: &mut Self::State) {
+    fn render(
+        self,
+        area: tui::layout::Rect,
+        buf: &mut tui::buffer::Buffer,
+        state: &mut Self::State,
+    ) {
         let layout = Layout::default()
             .constraints([Constraint::Min(0)])
             .horizontal_margin(LIST_H_MARGIN)
