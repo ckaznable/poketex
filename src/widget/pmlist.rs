@@ -132,7 +132,7 @@ impl StatefulWidget for PokemonList {
             .iter()
             .filter(|item| {
                 if state.query.eq("") {
-                    return true
+                    return true;
                 }
 
                 let title = get_name(item);
