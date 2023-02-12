@@ -29,7 +29,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         .split(f.size());
 
     let block = PokemonDexBlock::default();
-    f.render_stateful_widget(block, chunks[0], &mut app.pm.dex);
+    f.render_stateful_widget(block, chunks[0], app);
 
     // right chunks
     let chunks = Layout::default()

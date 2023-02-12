@@ -3,15 +3,16 @@ use tui::{
     widgets::{Block, StatefulWidget, Widget},
 };
 
-use crate::pokemon::PokemonIV;
+use crate::{pokemon::PokemonIV, AppState};
 
-use super::{iv::IVStatus, topinfo::TopInfo};
+use super::{ability::AbilityInfo, iv::IVStatus, topinfo::TopInfo};
 
 #[derive(Clone)]
 pub struct PokemonDex {
     pub name: String,
     pub pm_type: (String, Option<String>),
     pub iv: PokemonIV,
+    pub ability: Vec<u16>,
 }
 
 pub struct PokemonDexState {
@@ -55,7 +56,7 @@ impl Default for PokemonDexBlock {
 }
 
 impl StatefulWidget for PokemonDexBlock {
-    type State = PokemonDexState;
+    type State = AppState;
 
     fn render(
         self,
@@ -69,28 +70,32 @@ impl StatefulWidget for PokemonDexBlock {
                 Constraint::Length(1),
                 Constraint::Length(1),
                 Constraint::Length(11),
+                Constraint::Length(1),
                 Constraint::Min(0),
                 Constraint::Length(1),
             ])
             .split(area);
 
-        let current = state.current();
+        let dex = &state.pm.dex;
+        let current = dex.current();
         // pm type block
         TopInfo::new(current.name.clone(), current.pm_type.clone()).render(layout[0], buf);
 
         IVStatus::new(current.iv).render(layout[2], buf);
 
+        AbilityInfo::new(current.ability.clone(), state.ability.clone()).render(layout[4], buf);
+
         let title = format!(
             "<- {} / {} ->",
-            state.page.to_string().as_str(),
-            state.items.len().to_string().as_str()
+            dex.page.to_string().as_str(),
+            dex.items.len().to_string().as_str()
         );
 
-        if state.items.len() > 1 {
+        if dex.items.len() > 1 {
             Block::default()
                 .title(title)
                 .title_alignment(Alignment::Center)
-                .render(layout[4], buf);
+                .render(layout[5], buf);
         }
     }
 }

@@ -26,6 +26,7 @@ fn flat_dex(pm: &Pokemon) -> PokemonDexState {
         name: name.clone(),
         iv: pm.iv,
         pm_type: pm.get_type(),
+        ability: pm.ability.clone(),
     }];
 
     match &pm.form {
@@ -37,6 +38,7 @@ fn flat_dex(pm: &Pokemon) -> PokemonDexState {
                     name,
                     iv: f.iv,
                     pm_type: f.get_type(),
+                    ability: f.ability.clone(),
                 });
             }
         }
