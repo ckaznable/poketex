@@ -51,7 +51,7 @@ impl AppState {
 }
 
 fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
-    let contents = include_str!("data.json");
+    let contents = include_str!("data/data.json");
     let pokemon: Result<Vec<Pokemon>, serde_json::Error> = from_str(&contents);
     pokemon
 }
