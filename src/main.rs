@@ -14,6 +14,7 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use env::DEF_LOCALES;
 use pokemon::*;
 use serde_json::from_str;
 use std::{collections::HashMap, error::Error, io};

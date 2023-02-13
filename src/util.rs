@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use tui::style::Color;
 
-use crate::{env::LOCALES, pokemon::DEF_LOCALES};
+use crate::{env::{LOCALES, DEF_LOCALES}};
 
 #[derive(Deserialize, Clone)]
 pub struct TranslateName {

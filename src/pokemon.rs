@@ -2,8 +2,6 @@ use serde::Deserialize;
 
 use crate::util::TranslateName;
 
-pub static mut DEF_LOCALES: &'static str = "en";
-
 fn get_dict_pm_type(pm_type: &Vec<String>) -> (String, Option<String>) {
     (pm_type[0].clone(), pm_type.get(1).cloned())
 }
