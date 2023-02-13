@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use tui::{
     layout::{Constraint, Direction, Layout},
     text::Spans,
-    widgets::{Block, Borders, Paragraph, Widget},
+    widgets::{Block, Borders, Paragraph, Widget, Wrap},
 };
 
 use crate::ability::Ability;
@@ -46,12 +46,15 @@ impl Widget for AbilityInfo {
             },
         };
 
-        for i in 0..(self.ability.len() - 1) {
+        let len = self.ability.len();
+        let j = if len.eq(&1) { 1 } else { len - 1 };
+        for i in 0..j {
             setter(i);
         }
 
         Paragraph::new(span)
             .block(Block::default().title("Ability").borders(Borders::ALL))
+            .wrap(Wrap { trim: false })
             .render(layout[0], buf);
     }
 }

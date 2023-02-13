@@ -66,7 +66,7 @@ impl StatefulWidget for PokemonDexBlock {
     ) {
         let dex = &state.pm.dex;
         let current = dex.current();
-        let ability_len = &current.ability.len() * 2 + 1;
+        let ability_len = &current.ability.len() * 2 + 3;
 
         let layout = Layout::default()
             .direction(Direction::Vertical)
@@ -75,7 +75,6 @@ impl StatefulWidget for PokemonDexBlock {
                 Constraint::Length(1),
                 Constraint::Length(11),
                 Constraint::Length(1),
-                Constraint::Length(ability_len as u16),
                 Constraint::Min(0),
                 Constraint::Length(1),
             ])
@@ -98,7 +97,7 @@ impl StatefulWidget for PokemonDexBlock {
             Block::default()
                 .title(title)
                 .title_alignment(Alignment::Center)
-                .render(layout[6], buf);
+                .render(layout[5], buf);
         }
     }
 }
