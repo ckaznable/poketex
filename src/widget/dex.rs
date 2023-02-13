@@ -66,7 +66,6 @@ impl StatefulWidget for PokemonDexBlock {
     ) {
         let dex = &state.pm.dex;
         let current = dex.current();
-        let ability_len = &current.ability.len() * 2 + 3;
 
         let layout = Layout::default()
             .direction(Direction::Vertical)
