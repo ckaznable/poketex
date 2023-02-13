@@ -25,7 +25,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
         .margin(2)
-        .constraints([Constraint::Percentage(66), Constraint::Percentage(34)].as_ref())
+        .constraints([Constraint::Ratio(2, 3), Constraint::Ratio(1, 3)])
         .split(f.size());
 
     let block = PokemonDexBlock::default();

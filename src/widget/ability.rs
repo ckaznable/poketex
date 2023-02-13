@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use tui::{
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Widget},
+    text::Spans,
+    widgets::{Block, Borders, Paragraph, Widget},
 };
 
 use crate::ability::Ability;
@@ -26,32 +27,31 @@ impl Widget for AbilityInfo {
     fn render(self, area: tui::layout::Rect, buf: &mut tui::buffer::Buffer) {
         let layout = Layout::default()
             .direction(Direction::Vertical)
-            .constraints([
-                Constraint::Percentage(33),
-                Constraint::Percentage(33),
-                Constraint::Percentage(33),
-                Constraint::Min(0),
-            ])
+            .constraints([Constraint::Percentage(100)])
             .split(area);
 
+        let mut span: Vec<Spans> = vec![];
         let mut setter = |x: usize| match self.ability.get(x) {
             None => (),
             Some(id) => match self.get_ability_from_map(*id) {
                 None => (),
                 Some(a) => {
-                    let chunks = Layout::default()
-                        .direction(Direction::Vertical)
-                        .constraints([Constraint::Length(1), Constraint::Min(0)])
-                        .split(layout[x]);
+                    if x > 0 {
+                        span.push(Spans::from(""));
+                    }
 
-                    Block::default().title(a.name()).render(chunks[0], buf);
-                    Block::default().title(a.desc()).render(chunks[1], buf);
+                    span.push(Spans::from(a.name()));
+                    span.push(Spans::from(a.desc()));
                 }
             },
         };
 
-        setter(0);
-        setter(1);
-        setter(2);
+        for i in 0..(self.ability.len() - 1) {
+            setter(i);
+        }
+
+        Paragraph::new(span)
+            .block(Block::default().title("Ability").borders(Borders::ALL))
+            .render(layout[0], buf);
     }
 }

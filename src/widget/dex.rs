@@ -64,6 +64,10 @@ impl StatefulWidget for PokemonDexBlock {
         buf: &mut tui::buffer::Buffer,
         state: &mut Self::State,
     ) {
+        let dex = &state.pm.dex;
+        let current = dex.current();
+        let ability_len = &current.ability.len() * 2 + 1;
+
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints([
@@ -71,13 +75,12 @@ impl StatefulWidget for PokemonDexBlock {
                 Constraint::Length(1),
                 Constraint::Length(11),
                 Constraint::Length(1),
+                Constraint::Length(ability_len as u16),
                 Constraint::Min(0),
                 Constraint::Length(1),
             ])
             .split(area);
 
-        let dex = &state.pm.dex;
-        let current = dex.current();
         // pm type block
         TopInfo::new(current.name.clone(), current.pm_type.clone()).render(layout[0], buf);
 
@@ -95,7 +98,7 @@ impl StatefulWidget for PokemonDexBlock {
             Block::default()
                 .title(title)
                 .title_alignment(Alignment::Center)
-                .render(layout[5], buf);
+                .render(layout[6], buf);
         }
     }
 }

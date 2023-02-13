@@ -13,12 +13,13 @@ pub struct TranslateName {
 impl TranslateName {
     pub fn get_name(&self) -> String {
         let sp: Vec<&str> = LOCALES.as_str().split("-").collect();
+        let env_locales = *sp.get(0).unwrap();
 
         unsafe {
-            let loc = if !DEF_LOCALES.eq("en") {
+            let loc = if !DEF_LOCALES.eq(env_locales) {
                 DEF_LOCALES
             } else {
-                *sp.get(0).unwrap()
+                env_locales
             };
 
             match loc {
