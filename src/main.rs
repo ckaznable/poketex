@@ -1,3 +1,4 @@
+mod ability;
 mod args;
 mod constant;
 mod env;
@@ -6,6 +7,7 @@ mod ui;
 mod util;
 mod widget;
 
+use ability::Ability;
 use clap::Parser;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
@@ -14,7 +16,7 @@ use crossterm::{
 };
 use pokemon::*;
 use serde_json::from_str;
-use std::{error::Error, io};
+use std::{collections::HashMap, error::Error, io};
 use tui::{
     backend::{Backend, CrosstermBackend},
     Terminal,
@@ -32,12 +34,14 @@ pub struct AppState {
     input_mode: InputMode,
     input: Input,
     query: String,
+    ability: HashMap<String, Ability>,
 }
 
 impl AppState {
-    fn new(pm: PokemonListStatus) -> Self {
+    fn new(pm: PokemonListStatus, ability: HashMap<String, Ability>) -> Self {
         AppState {
             pm,
+            ability,
             input_mode: InputMode::Normal,
             input: Input::default(),
             query: String::from(""),
@@ -56,6 +60,12 @@ fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
     pokemon
 }
 
+fn get_ability_data() -> Result<HashMap<String, Ability>, serde_json::Error> {
+    let contents = include_str!("data/ability.json");
+    let map: Result<HashMap<String, Ability>, serde_json::Error> = from_str(&contents);
+    map
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let args = args::Args::parse();
 
@@ -63,10 +73,18 @@ fn main() -> Result<(), Box<dyn Error>> {
         DEF_LOCALES = Box::leak(args.locale.into_boxed_str());
     }
 
+    let ability = match get_ability_data() {
+        Ok(r) => r,
+        Err(_) => {
+            print!("ability data error");
+            std::process::exit(2);
+        }
+    };
+
     let pokemon = match get_pokemon_data() {
         Ok(r) => r,
         Err(_) => {
-            print!("data error");
+            print!("pokemon data error");
             std::process::exit(2);
         }
     };
@@ -80,7 +98,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // create app and run it
     let pm = PokemonListStatus::new(pokemon);
-    let app = AppState::new(pm);
+    let app = AppState::new(pm, ability);
     let res = run_app(&mut terminal, app);
 
     // restore terminal

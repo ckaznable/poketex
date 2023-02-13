@@ -1,4 +1,46 @@
+use serde::Deserialize;
 use tui::style::Color;
+
+use crate::{env::LOCALES, pokemon::DEF_LOCALES};
+
+#[derive(Deserialize, Clone)]
+pub struct TranslateName {
+    pub zh: String,
+    pub en: String,
+    pub jp: String,
+}
+
+impl TranslateName {
+    pub fn get_name(&self) -> String {
+        let sp: Vec<&str> = LOCALES.as_str().split("-").collect();
+        let env_locales = *sp.get(0).unwrap();
+
+        unsafe {
+            let loc = if !DEF_LOCALES.eq(env_locales) {
+                DEF_LOCALES
+            } else {
+                env_locales
+            };
+
+            match loc {
+                "en" => self.en.to_owned(),
+                "zh" => self.zh.to_owned(),
+                "ja" => self.jp.to_owned(),
+                _ => self.en.to_owned(),
+            }
+        }
+    }
+}
+
+impl Default for TranslateName {
+    fn default() -> Self {
+        TranslateName {
+            zh: "".to_string(),
+            en: "".to_string(),
+            jp: "".to_string(),
+        }
+    }
+}
 
 pub fn get_type_bg_color(t: &str) -> Color {
     match t {
