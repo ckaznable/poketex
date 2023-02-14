@@ -36,7 +36,7 @@ jobs:
 
     strategy:
       matrix:
-        build: [stable, nightly]
+        build: [stable, beta, nightly]
         include:
           - build: nightly
             benches: true
@@ -59,8 +59,9 @@ jobs:
       - name: Test all benches
         if: matrix.benches
         run: cargo test --benches --all-features
-  deploy:
-    name: deploy
+
+  deploy-linux:
+    name: deploy-${{ matrix.target }}
     permissions:
       contents: write
     needs: [test]
@@ -69,6 +70,77 @@ jobs:
     strategy:
       matrix:
         target: [aarch64-unknown-linux-gnu, armv7-unknown-linux-gnueabihf, i686-unknown-linux-gnu, i686-unknown-linux-musl, mips-unknown-linux-gnu, mips64-unknown-linux-gnuabi64, mips64el-unknown-linux-gnuabi64, mipsel-unknown-linux-gnu, powerpc-unknown-linux-gnu, powerpc64-unknown-linux-gnu, powerpc64le-unknown-linux-gnu, arm-unknown-linux-gnueabi ,x86_64-unknown-linux-gnu ,x86_64-unknown-linux-musl]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build target
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          #strip target/${{ matrix.target }}/release/poketex
+          cd target/${{ matrix.target }}/release
+          tar czvf ../../../poketex-${{ matrix.target }}.tar.gz poketex
+          cd -
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          files: 'poketex*'
+
+  deploy-macos:
+    name: deploy-${{ matrix.target }}
+    permissions:
+      contents: write
+    needs: [test]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        target: [x86_64-apple-darwin, aarch64-apple-darwin]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - run: rustup target add aarch64-apple-darwin
+        if: matrix.target == 'aarch64-apple-darwin'
+
+      - name: Build target
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          #strip target/${{ matrix.target }}/release/poketex
+          cd target/${{ matrix.target }}/release
+          tar czvf ../../../poketex-${{ matrix.target }}.tar.gz poketex
+          cd -
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          files: 'poketex*'
+
+  deploy-windows:
+    name: deploy-${{ matrix.target }}
+    permissions:
+      contents: write
+    needs: [test]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        target: [x86_64-pc-windows-msvc]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
