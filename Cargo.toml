@@ -1,5 +1,7 @@
 [package]
 name = "poketex"
+authors = ["CK Aznable"]
+description = "simple pokedex tui"
 version = "1.0.0"
 edition = "2021"
 
