@@ -62,6 +62,16 @@ impl DictType for Pokemon {
     }
 }
 
+impl Pokemon {
+    pub fn get_list_name(&self) -> String {
+        format!(
+            "#{} {}",
+            self.no.to_string().as_str(),
+            self.name.get_name().as_str()
+        )
+    }
+}
+
 #[derive(Deserialize, Clone)]
 pub struct PokemonForm {
     pub form: Vec<String>,

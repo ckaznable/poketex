@@ -13,13 +13,6 @@ use crate::{
 
 use super::dex::{PokemonDex, PokemonDexState};
 
-pub struct PokemonListStatus {
-    pub state: ListState,
-    pub items: Vec<Pokemon>,
-    pub current: Pokemon,
-    pub dex: PokemonDexState,
-}
-
 fn flat_dex(pm: &Pokemon) -> PokemonDexState {
     let name = pm.name.get_name();
     let mut list = vec![PokemonDex {
@@ -51,6 +44,15 @@ fn flat_dex(pm: &Pokemon) -> PokemonDexState {
     state
 }
 
+pub struct PokemonListStatus {
+    pub state: ListState,
+    pub items: Vec<Pokemon>,
+    pub current: Pokemon,
+    pub dex: PokemonDexState,
+
+    items_clone: Vec<Pokemon>,
+}
+
 impl PokemonListStatus {
     pub fn new(mut items: Vec<Pokemon>) -> PokemonListStatus {
         // make sure items has def pokemon
@@ -68,6 +70,7 @@ impl PokemonListStatus {
             state,
             dex: flat_dex(&current),
             current,
+            items_clone: items.clone(),
             items,
         }
     }
@@ -83,7 +86,6 @@ impl PokemonListStatus {
             }
             None => 0,
         };
-        self.state.select(Some(i));
         self.current(i);
     }
 
@@ -98,16 +100,38 @@ impl PokemonListStatus {
             }
             None => 0,
         };
-        self.state.select(Some(i));
         self.current(i);
     }
 
+    pub fn set_list_filter(&mut self, filter: String) {
+        if filter.eq("") {
+            self.items = self.items_clone.clone();
+        } else {
+            self.items = self
+                .items
+                .iter()
+                .filter(|item| {
+                    item.get_list_name()
+                        .to_lowercase()
+                        .contains(filter.to_lowercase().as_str())
+                })
+                .map(|x| x.clone())
+                .collect();
+        }
+
+        self.current(0);
+    }
+
     fn current(&mut self, index: usize) {
+        self.state.select(Some(index));
         self.current = match self.items.get(index) {
-            Some(pm) => pm.clone(),
-            None => self.items.get(0).unwrap().clone(),
+            Some(pm) => {
+                let _pm = pm.clone();
+                self.dex = flat_dex(&_pm);
+                _pm
+            }
+            None => Pokemon::default(),
         };
-        self.dex = flat_dex(&self.current);
     }
 }
 
@@ -154,10 +178,7 @@ impl StatefulWidget for PokemonList {
                     .to_lowercase()
                     .contains(state.query.to_lowercase().as_str())
             })
-            .map(|item| {
-                let title = get_name(item);
-                ListItem::new(vec![Spans::from(title)])
-            })
+            .map(|item| ListItem::new(vec![Spans::from(item.get_list_name())]))
             .collect();
 
         List::new(items)

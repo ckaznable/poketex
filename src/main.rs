@@ -53,6 +53,11 @@ impl AppState {
         self.input_mode = InputMode::Normal;
         self.input.reset();
     }
+
+    fn query(&mut self, q: String) {
+        self.query = q.clone();
+        self.pm.set_list_filter(q);
+    }
 }
 
 fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
@@ -142,24 +147,22 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                     KeyCode::Char('/') => {
                         app.input_mode = InputMode::Editing;
                     }
-                    KeyCode::Esc => {
-                        app.query = String::from("");
-                    }
+                    KeyCode::Esc => app.query(String::from("")),
                     _ => {}
                 },
 
                 InputMode::Editing => match key.code {
                     KeyCode::Enter => {
-                        app.query = app.input.value().to_owned();
+                        app.query(app.input.value().to_owned());
                         app.reset();
                     }
                     KeyCode::Esc => {
                         app.reset();
-                        app.query = String::from("");
+                        app.query(String::from(""));
                     }
                     _ => {
                         app.input.handle_event(&Event::Key(key));
-                        app.query = app.input.value().to_owned();
+                        app.query(app.input.value().to_owned());
                     }
                 },
             }
