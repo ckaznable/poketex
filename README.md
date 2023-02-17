@@ -1,14 +1,44 @@
-# Poketex
+<h1 align="center">
+  📖 Poketex
+</h1>
+
+<p align="center">
+  Simple TUI based Pokedex
+</p>
 
 ![demo](doc/demo.png)
 
-A simple pokedex tui
-
 data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/poke-data-cralwer)
 
-## Using
+## Installation
 
-🚧 WIP
+Download the last version binary depending on your configuration here: [Release Page](https://github.com/ckaznable/poketex/releases/tag/v1.0.0)
+
+Then you just need to enter this command in your terminal:
+
+```shell
+tar -xf <downloaded_archive> poketext && sudo mv poketext /usr/local/bin
+```
+
+## Usage
+
+```shell
+Poketex, Simple TUI based Pokedex
+
+Usage: poketex [OPTIONS]
+
+Options:
+  -l, --locale <LOCALE>  locales [zh, ja, en] [default: en]
+  -h, --help             Print help
+  -V, --version          Print version
+```
+
+## Feature
+
+1. All Pokemon (until Pokemon SV)
+2. All Region Form (until Pokemon SV)
+3. Searchable
+4. include english, chinese, japanese info data
 
 ## Todo
 
