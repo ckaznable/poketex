@@ -6,6 +6,11 @@
   Simple Pokedex based on TUI(Terminal User Interface)
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/github/actions/workflow/status/ckaznable/poketex/CI.yml?style=flat-square" />
+  
+</p>
+
 ![demo](doc/demo.png)
 
 data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/poke-data-cralwer)
