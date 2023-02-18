@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  Simple TUI based Pokedex
+  Simple Pokedex based on TUI(Terminal User Interface)
 </p>
 
 ![demo](doc/demo.png)
@@ -23,7 +23,7 @@ tar -xf <downloaded_archive> poketext && sudo mv poketext /usr/local/bin
 ## Usage
 
 ```shell
-Poketex, Simple TUI based Pokedex
+Poketex, Simple Pokedex based on TUI(Terminal User Interface)
 
 Usage: poketex [OPTIONS]
 
