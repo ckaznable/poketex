@@ -14,8 +14,6 @@
 
 ![demo](doc/demo.png)
 
-data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/poke-data-cralwer)
-
 ## Installation
 
 ### Install from Github Release
@@ -81,3 +79,7 @@ Options:
   - [x] --locale [en, ja, zh]
 - [ ] feature tab
   - [ ] damage calculator
+
+## Pokemon data source
+
+data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/poke-data-cralwer)
