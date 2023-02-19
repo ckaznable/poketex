@@ -14,6 +14,13 @@
 
 ![demo](doc/demo.png)
 
+## Feature
+
+1. All Pokemon (until Pokemon SV)
+2. All Region Form (until Pokemon SV)
+3. Searchable
+4. include English, Chinese, Japanese locales data
+
 ## Installation
 
 ### Install from Github Release
@@ -58,13 +65,6 @@ Options:
   -V, --version          Print version
 ```
 
-## Feature
-
-1. All Pokemon (until Pokemon SV)
-2. All Region Form (until Pokemon SV)
-3. Searchable
-4. include english, chinese, japanese info data
-
 ## Todo
 
 - [x] show pokemon iv and type
@@ -79,6 +79,7 @@ Options:
   - [x] --locale [en, ja, zh]
 - [ ] feature tab
   - [ ] damage calculator
+- [ ] help key
 
 ## Pokemon data source
 
