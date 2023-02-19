@@ -1,7 +1,14 @@
 [package]
 name = "poketex"
 authors = ["CK Aznable"]
-description = "simple pokedex tui"
+description = "Simple Pokedex based on TUI(Terminal User Interface)"
+homepage = "https://github.com/ckaznable/poketex"
+repository = "https://github.com/ckaznable/poketex"
+keywords = ["tui", "pokemon", "pokedex"]
+exclude = [".github/"]
+categories = ["visualization"]
+license = "BSD-3-Clause"
+readme = "README.md"
 version = "1.0.0"
 edition = "2021"
 
