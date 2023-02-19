@@ -28,7 +28,7 @@ Then you just need to enter this command in your terminal:
 tar -xf <downloaded_archive> poketext && sudo mv poketext /usr/local/bin
 ```
 
-### Install from crate.io
+### Install from crates.io
 
 If you're a Rust programmer, poketex can be installed with cargo.
 
