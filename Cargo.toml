@@ -7,9 +7,9 @@ repository = "https://github.com/ckaznable/poketex"
 keywords = ["tui", "pokemon", "pokedex"]
 exclude = [".github/"]
 categories = ["visualization"]
-license = "BSD-3-Clause"
+license = "MIT"
 readme = "README.md"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
