@@ -8,7 +8,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/actions/workflow/status/ckaznable/poketex/CI.yml?style=flat-square" />
-  
+  <img alt="Crates.io" src="https://img.shields.io/crates/v/poketex?style=flat-square">
+  <img alt="Crates.io" src="https://img.shields.io/crates/l/poketex?style=flat-square">
 </p>
 
 ![demo](doc/demo.png)
@@ -17,12 +18,33 @@ data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/p
 
 ## Installation
 
+### Install from Github Release
+
 Download the last version binary depending on your configuration here: [Release Page](https://github.com/ckaznable/poketex/releases/tag/v1.0.0)
 
 Then you just need to enter this command in your terminal:
 
 ```shell
 tar -xf <downloaded_archive> poketext && sudo mv poketext /usr/local/bin
+```
+
+### Install from crate.io
+
+If you're a Rust programmer, poketex can be installed with cargo.
+
+```shell
+cargo install poketex
+```
+
+## Building
+
+poketex is written in Rust, so you'll need to grab a [Rust installation](https://www.rust-lang.org/) in order to compile it.
+
+```shell
+git clone https://github.com/ckaznable/poketex
+cd poketex
+cargo build --release
+./target/release/poketex
 ```
 
 ## Usage
