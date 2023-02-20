@@ -55,8 +55,6 @@ cargo build --release
 ## Usage
 
 ```shell
-Poketex, Simple Pokedex based on TUI(Terminal User Interface)
-
 Usage: poketex [OPTIONS]
 
 Options:
