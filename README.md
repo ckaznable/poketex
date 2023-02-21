@@ -77,8 +77,6 @@ Options:
   - [x] Paldea
 - [x] add cli variable
   - [x] --locale [en, ja, zh]
-- [ ] feature tab
-  - [ ] damage calculator
 - [ ] help key
 
 ## Pokemon data source
