@@ -75,11 +75,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install gcc-multilib
+      - name: Install prerequisites
+        shell: bash
         run: |
-            sudo add-apt-repository --remove ppa:ubuntu-toolchain-r/test
-            sudo apt-get update
-            sudo apt-get install gcc-multilib -y
+          sudo add-apt-repository --remove ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib
+          case ${{ matrix.target }} in
+            arm-unknown-linux-*) sudo apt-get -y install gcc-arm-linux-gnueabihf ;;
+            aarch64-unknown-linux-gnu) sudo apt-get -y install gcc-aarch64-linux-gnu ;;
+          esac
 
       - name: Setup rust
         uses: dtolnay/rust-toolchain@stable
