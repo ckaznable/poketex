@@ -41,6 +41,14 @@ If you're a Rust programmer, poketex can be installed with cargo.
 cargo install poketex
 ```
 
+### Install from the AUR
+
+If you're using Arch Linux, you can install poketex with using an [AUR helper](https://wiki.archlinux.org/title/AUR_helpers). For example:
+
+```shell
+paru -S poketex
+```
+
 ## Building
 
 poketex is written in Rust, so you'll need to grab a [Rust installation](https://www.rust-lang.org/) in order to compile it.
