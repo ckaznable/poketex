@@ -103,6 +103,33 @@ impl PokemonListStatus {
         self.current(i);
     }
 
+    pub fn scroll_down(&mut self, amount: u8) {
+        if let Some(i) = self
+            .state
+            .selected()
+            .and_then(|v| v.checked_add(amount.into()))
+            .map(|mut index| {
+                if index > self.items.len() {
+                    index = self.items.len() - 1;
+                }
+                index
+            })
+        {
+            self.current(i);
+        }
+    }
+
+    pub fn scroll_up(&mut self, amount: u8) {
+        if let Some(i) = self
+            .state
+            .selected()
+            .and_then(|v| v.checked_sub(amount.into()))
+            .or(Some(0))
+        {
+            self.current(i);
+        }
+    }
+
     pub fn set_list_filter(&mut self, filter: String) {
         if filter.eq("") {
             self.items = self.items_clone.clone();
