@@ -134,9 +134,11 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
 
                     KeyCode::Down => app.pm.next(),
                     KeyCode::Char('j') => app.pm.next(),
+                    KeyCode::PageDown => app.pm.scroll_down(4),
 
                     KeyCode::Up => app.pm.previous(),
                     KeyCode::Char('k') => app.pm.previous(),
+                    KeyCode::PageUp => app.pm.scroll_up(4),
 
                     KeyCode::Left => app.pm.dex.previous(),
                     KeyCode::Char('h') => app.pm.dex.previous(),
