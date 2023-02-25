@@ -10,7 +10,7 @@ mod widget;
 use ability::Ability;
 use clap::Parser;
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
+    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyModifiers},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -35,7 +35,9 @@ pub struct AppState {
     input_mode: InputMode,
     input: Input,
     query: String,
+    no: String,
     ability: HashMap<String, Ability>,
+    go_top: bool,
 }
 
 impl AppState {
@@ -46,6 +48,8 @@ impl AppState {
             input_mode: InputMode::Normal,
             input: Input::default(),
             query: String::from(""),
+            no: String::from(""),
+            go_top: false,
         }
     }
 
@@ -57,6 +61,20 @@ impl AppState {
     fn query(&mut self, q: String) {
         self.query = q.clone();
         self.pm.set_list_filter(q);
+    }
+
+    fn no(&mut self, no: String) {
+        self.no = no;
+    }
+
+    fn jump(&mut self, i: usize) {
+        if i > 0 || i - 1 > self.pm.items.len() {
+            self.pm.current(i - 1);
+        }
+    }
+
+    fn go_top(&mut self, f: bool) {
+        self.go_top = f;
     }
 }
 
@@ -135,10 +153,20 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                     KeyCode::Down => app.pm.next(),
                     KeyCode::Char('j') => app.pm.next(),
                     KeyCode::PageDown => app.pm.scroll_down(4),
+                    KeyCode::Char('f') => {
+                        if key.modifiers == KeyModifiers::CONTROL {
+                            app.pm.scroll_down(4)
+                        }
+                    },
 
                     KeyCode::Up => app.pm.previous(),
                     KeyCode::Char('k') => app.pm.previous(),
                     KeyCode::PageUp => app.pm.scroll_up(4),
+                    KeyCode::Char('b') => {
+                        if key.modifiers == KeyModifiers::CONTROL {
+                            app.pm.scroll_up(4)
+                        }
+                    },
 
                     KeyCode::Left => app.pm.dex.previous(),
                     KeyCode::Char('h') => app.pm.dex.previous(),
@@ -146,10 +174,32 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                     KeyCode::Right => app.pm.dex.next(),
                     KeyCode::Char('l') => app.pm.dex.next(),
 
-                    KeyCode::Char('/') => {
-                        app.input_mode = InputMode::Editing;
-                    }
+                    KeyCode::Char('/') => app.input_mode = InputMode::Editing, 
                     KeyCode::Esc => app.query(String::from("")),
+
+                    KeyCode::Char('g') => {
+                        if app.go_top {
+                            app.jump(1);
+                            app.go_top(false);
+                        } else {
+                            app.go_top(true);
+                        }
+                    },
+                    KeyCode::Char('G') => {
+                        if app.no.eq("") {
+                            app.jump(app.pm.items.len());
+                        } else {
+                            let index = app.no.trim().parse::<usize>().unwrap();
+                            app.jump(index);
+                        }
+
+                        app.no(String::from(""));
+                        app.go_top(false);
+                    },
+                    KeyCode::Char(c) => if ('0'..='9').contains(&c) {
+                        app.no(app.no.clone() + &c.to_string());
+                        app.go_top(false);
+                    },
                     _ => {}
                 },
 

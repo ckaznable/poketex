@@ -149,7 +149,7 @@ impl PokemonListStatus {
         self.current(0);
     }
 
-    fn current(&mut self, index: usize) {
+    pub fn current(&mut self, index: usize) {
         self.state.select(Some(index));
         self.current = match self.items.get(index) {
             Some(pm) => {
