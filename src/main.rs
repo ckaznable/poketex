@@ -157,7 +157,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                         if key.modifiers == KeyModifiers::CONTROL {
                             app.pm.scroll_down(4)
                         }
-                    },
+                    }
 
                     KeyCode::Up => app.pm.previous(),
                     KeyCode::Char('k') => app.pm.previous(),
@@ -166,7 +166,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                         if key.modifiers == KeyModifiers::CONTROL {
                             app.pm.scroll_up(4)
                         }
-                    },
+                    }
 
                     KeyCode::Left => app.pm.dex.previous(),
                     KeyCode::Char('h') => app.pm.dex.previous(),
@@ -174,7 +174,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                     KeyCode::Right => app.pm.dex.next(),
                     KeyCode::Char('l') => app.pm.dex.next(),
 
-                    KeyCode::Char('/') => app.input_mode = InputMode::Editing, 
+                    KeyCode::Char('/') => app.input_mode = InputMode::Editing,
                     KeyCode::Esc => app.query(String::from("")),
 
                     KeyCode::Char('g') => {
@@ -184,7 +184,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                         } else {
                             app.go_top(true);
                         }
-                    },
+                    }
                     KeyCode::Char('G') => {
                         if app.no.eq("") {
                             app.jump(app.pm.items.len());
@@ -195,11 +195,13 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
 
                         app.no(String::from(""));
                         app.go_top(false);
-                    },
-                    KeyCode::Char(c) => if ('0'..='9').contains(&c) {
-                        app.no(app.no.clone() + &c.to_string());
-                        app.go_top(false);
-                    },
+                    }
+                    KeyCode::Char(c) => {
+                        if ('0'..='9').contains(&c) {
+                            app.no(app.no.clone() + &c.to_string());
+                            app.go_top(false);
+                        }
+                    }
                     _ => {}
                 },
 
