@@ -10,7 +10,9 @@ mod widget;
 use ability::Ability;
 use clap::Parser;
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyModifiers},
+    event::{
+        self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEvent, KeyModifiers,
+    },
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -75,6 +77,10 @@ impl AppState {
 
     fn go_top(&mut self, f: bool) {
         self.go_top = f;
+    }
+
+    fn cancel_last_cmd(&mut self) {
+        self.no = String::from("");
     }
 }
 
@@ -142,70 +148,100 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Result<()> {
+    const PAGE_NUM: u8 = 4;
+
     loop {
         terminal.draw(|f| ui::ui(f, &mut app))?;
 
-        if let Event::Key(key) = event::read()? {
+        if let Event::Key(event) = event::read()? {
+            match event {
+                // handle key with control
+                KeyEvent {
+                    code: c,
+                    modifiers: KeyModifiers::CONTROL,
+                    kind: _,
+                    state: _,
+                } => {
+                    match c {
+                        KeyCode::Char('f') => app.pm.scroll_down(PAGE_NUM),
+                        KeyCode::Char('b') => app.pm.scroll_up(PAGE_NUM),
+                        _ => {
+                            continue;
+                        }
+                    }
+                    app.cancel_last_cmd();
+                }
+
+                // handle number key
+                KeyEvent {
+                    code: KeyCode::Char(c),
+                    modifiers: _,
+                    kind: _,
+                    state: _,
+                } if ('0'..='9').contains(&c) => {
+                    app.no(app.no.clone() + &c.to_string());
+                    app.go_top(false);
+                }
+
+                // handle other key
+                KeyEvent {
+                    code: c,
+                    modifiers: _,
+                    kind: _,
+                    state: _,
+                } => {
+                    match c {
+                        KeyCode::Char('q') => return Ok(()),
+
+                        KeyCode::Down => app.pm.next(),
+                        KeyCode::Char('j') => app.pm.next(),
+                        KeyCode::PageDown => app.pm.scroll_down(PAGE_NUM),
+
+                        KeyCode::Up => app.pm.previous(),
+                        KeyCode::Char('k') => app.pm.previous(),
+                        KeyCode::PageUp => app.pm.scroll_up(PAGE_NUM),
+
+                        KeyCode::Left => app.pm.dex.previous(),
+                        KeyCode::Char('h') => app.pm.dex.previous(),
+
+                        KeyCode::Right => app.pm.dex.next(),
+                        KeyCode::Char('l') => app.pm.dex.next(),
+
+                        KeyCode::Char('/') => app.input_mode = InputMode::Editing,
+                        KeyCode::Esc => app.query(String::from("")),
+
+                        KeyCode::Home => app.jump(1),
+                        KeyCode::End => app.jump(app.pm.items.len()),
+
+                        KeyCode::Char('g') => {
+                            if app.go_top {
+                                app.jump(1);
+                                app.go_top(false);
+                            } else {
+                                app.go_top(true);
+                            }
+                        }
+                        KeyCode::Char('G') => {
+                            if app.no.eq("") {
+                                app.jump(app.pm.items.len());
+                            } else {
+                                let index = app.no.trim().parse::<usize>().unwrap();
+                                app.jump(index);
+                            }
+
+                            app.no(String::from(""));
+                            app.go_top(false);
+                        }
+
+                        _ => {}
+                    }
+
+                    app.cancel_last_cmd();
+                }
+            }
+
             match app.input_mode {
-                InputMode::Normal => match key.code {
-                    KeyCode::Char('q') => return Ok(()),
-
-                    KeyCode::Down => app.pm.next(),
-                    KeyCode::Char('j') => app.pm.next(),
-                    KeyCode::PageDown => app.pm.scroll_down(4),
-                    KeyCode::Char('f') => {
-                        if key.modifiers == KeyModifiers::CONTROL {
-                            app.pm.scroll_down(4)
-                        }
-                    }
-
-                    KeyCode::Up => app.pm.previous(),
-                    KeyCode::Char('k') => app.pm.previous(),
-                    KeyCode::PageUp => app.pm.scroll_up(4),
-                    KeyCode::Char('b') => {
-                        if key.modifiers == KeyModifiers::CONTROL {
-                            app.pm.scroll_up(4)
-                        }
-                    }
-
-                    KeyCode::Left => app.pm.dex.previous(),
-                    KeyCode::Char('h') => app.pm.dex.previous(),
-
-                    KeyCode::Right => app.pm.dex.next(),
-                    KeyCode::Char('l') => app.pm.dex.next(),
-
-                    KeyCode::Char('/') => app.input_mode = InputMode::Editing,
-                    KeyCode::Esc => app.query(String::from("")),
-
-                    KeyCode::Char('g') => {
-                        if app.go_top {
-                            app.jump(1);
-                            app.go_top(false);
-                        } else {
-                            app.go_top(true);
-                        }
-                    }
-                    KeyCode::Char('G') => {
-                        if app.no.eq("") {
-                            app.jump(app.pm.items.len());
-                        } else {
-                            let index = app.no.trim().parse::<usize>().unwrap();
-                            app.jump(index);
-                        }
-
-                        app.no(String::from(""));
-                        app.go_top(false);
-                    }
-                    KeyCode::Char(c) => {
-                        if ('0'..='9').contains(&c) {
-                            app.no(app.no.clone() + &c.to_string());
-                            app.go_top(false);
-                        }
-                    }
-                    _ => {}
-                },
-
-                InputMode::Editing => match key.code {
+                InputMode::Editing => match event.code {
                     KeyCode::Enter => {
                         app.query(app.input.value().to_owned());
                         app.reset();
@@ -215,10 +251,11 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
                         app.query(String::from(""));
                     }
                     _ => {
-                        app.input.handle_event(&Event::Key(key));
+                        app.input.handle_event(&Event::Key(event));
                         app.query(app.input.value().to_owned());
                     }
                 },
+                _ => {}
             }
         }
     }
