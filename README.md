@@ -25,7 +25,7 @@
 
 ### Install from Github Release
 
-Download the last version binary depending on your configuration here: [Release Page](https://github.com/ckaznable/poketex/releases/tag/v1.0.0)
+Download the last version binary depending on your configuration here: [Release Page](https://github.com/ckaznable/poketex/releases/latest)
 
 Then you just need to enter this command in your terminal:
 
