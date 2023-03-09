@@ -2,18 +2,16 @@ mod ability;
 mod args;
 mod constant;
 mod env;
+mod keybinding;
 mod pokemon;
 mod ui;
 mod util;
 mod widget;
-mod keybinding;
 
 use ability::Ability;
 use clap::Parser;
 use crossterm::{
-    event::{
-        self, DisableMouseCapture, EnableMouseCapture, Event
-    },
+    event::{self, DisableMouseCapture, EnableMouseCapture, Event},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
