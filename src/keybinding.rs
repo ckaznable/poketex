@@ -5,7 +5,7 @@ use crate::{AppState, InputMode};
 
 static PAGE_NUM: u8 = 4;
 
-pub fn handle_key(mut app: &mut AppState, event: KeyEvent) {
+pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
     match event {
         // handle key with control
         KeyEvent {
@@ -18,7 +18,7 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) {
                 KeyCode::Char('f') => app.pm.scroll_down(PAGE_NUM),
                 KeyCode::Char('b') => app.pm.scroll_up(PAGE_NUM),
                 _ => {
-                    return;
+                    return Option::None;
                 }
             }
             app.cancel_last_cmd();
@@ -43,7 +43,7 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) {
             state: _,
         } => {
             match c {
-                KeyCode::Char('q') => return,
+                KeyCode::Char('q') => return Option::Some(true),
 
                 KeyCode::Down => app.pm.next(),
                 KeyCode::Char('j') => app.pm.next(),
@@ -109,4 +109,6 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) {
         },
         _ => {}
     };
+
+    Option::None
 }

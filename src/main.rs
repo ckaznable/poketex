@@ -154,7 +154,9 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
         terminal.draw(|f| ui::ui(f, &mut app))?;
 
         if let Event::Key(event) = event::read()? {
-            handle_key(&mut app, event);
+            if handle_key(&mut app, event).is_some() {
+                return Ok(());
+            }
         }
     }
 }
