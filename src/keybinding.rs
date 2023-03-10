@@ -6,6 +6,26 @@ use crate::{AppState, InputMode};
 static PAGE_NUM: u8 = 4;
 
 pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
+    // in edit mode
+    if let InputMode::Editing = app.input_mode {
+        match event.code {
+            KeyCode::Enter => {
+                app.query(app.input.value().to_owned());
+                app.reset();
+            }
+            KeyCode::Esc => {
+                app.reset();
+                app.query(String::from(""));
+            }
+            _ => {
+                app.input.handle_event(&Event::Key(event));
+                app.query(app.input.value().to_owned());
+            }
+        };
+
+        return None;
+    };
+
     match event {
         // handle key with control
         KeyEvent {
@@ -18,7 +38,7 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
                 KeyCode::Char('f') => app.pm.scroll_down(PAGE_NUM),
                 KeyCode::Char('b') => app.pm.scroll_up(PAGE_NUM),
                 _ => {
-                    return Option::None;
+                    return None;
                 }
             }
             app.cancel_last_cmd();
@@ -43,7 +63,7 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
             state: _,
         } => {
             match c {
-                KeyCode::Char('q') => return Option::Some(true),
+                KeyCode::Char('q') => return Some(true),
 
                 KeyCode::Down => app.pm.next(),
                 KeyCode::Char('j') => app.pm.next(),
@@ -92,23 +112,5 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
         }
     };
 
-    match app.input_mode {
-        InputMode::Editing => match event.code {
-            KeyCode::Enter => {
-                app.query(app.input.value().to_owned());
-                app.reset();
-            }
-            KeyCode::Esc => {
-                app.reset();
-                app.query(String::from(""));
-            }
-            _ => {
-                app.input.handle_event(&Event::Key(event));
-                app.query(app.input.value().to_owned());
-            }
-        },
-        _ => {}
-    };
-
-    Option::None
+    None
 }

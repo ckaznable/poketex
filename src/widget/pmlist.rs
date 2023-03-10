@@ -139,7 +139,7 @@ impl PokemonListStatus {
             self.items = self.items_clone.clone();
         } else {
             self.items = self
-                .items
+                .items_clone
                 .iter()
                 .filter(|item| {
                     item.get_list_name()
