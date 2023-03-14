@@ -40,6 +40,7 @@ pub struct AppState {
     no: String,
     ability: HashMap<String, Ability>,
     go_top: bool,
+    show_help: bool,
 }
 
 impl AppState {
@@ -52,6 +53,7 @@ impl AppState {
             query: String::from(""),
             no: String::from(""),
             go_top: false,
+            show_help: false,
         }
     }
 
@@ -81,6 +83,10 @@ impl AppState {
 
     fn cancel_last_cmd(&mut self) {
         self.no = String::from("");
+    }
+
+    fn toggle_help(&mut self) {
+        self.show_help = !self.show_help;
     }
 }
 

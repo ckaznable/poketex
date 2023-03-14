@@ -1,12 +1,12 @@
 use tui::{
     backend::Backend,
-    layout::{Alignment, Constraint, Direction, Layout},
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
     widgets::{Block, BorderType, Borders},
     Frame,
 };
 
 use crate::{
-    widget::{dex::PokemonDexBlock, filter::Filter, pmlist::PokemonList},
+    widget::{dex::PokemonDexBlock, filter::Filter, help::Help, pmlist::PokemonList},
     AppState,
 };
 
@@ -48,4 +48,35 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     // pm list
     f.render_stateful_widget(PokemonList::default(), chunks[1], app);
+
+    if app.show_help {
+        let area = centered_rect(50, 70, size);
+        f.render_widget(Help, area);
+    }
+}
+
+fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
+    let popup_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(
+            [
+                Constraint::Percentage((100 - percent_y) / 2),
+                Constraint::Percentage(percent_y),
+                Constraint::Percentage((100 - percent_y) / 2),
+            ]
+            .as_ref(),
+        )
+        .split(r);
+
+    Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(
+            [
+                Constraint::Percentage((100 - percent_x) / 2),
+                Constraint::Percentage(percent_x),
+                Constraint::Percentage((100 - percent_x) / 2),
+            ]
+            .as_ref(),
+        )
+        .split(popup_layout[1])[1]
 }

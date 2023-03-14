@@ -71,6 +71,20 @@ Options:
   -V, --version          Print version
 ```
 
+## Keyboard Navigation Instructions
+
+Use arrow keys or `hjkl` to move around.
+
+Press `Page Up` or `Page Down` to move 4 steps at a time.
+
+Press `q` to exit.
+
+Press `H` to display help information.
+
+Press `gg` to go to the top and `G` to go to the bottom.
+
+Press `/` to enter search mode.
+
 ## Todo
 
 - [x] show pokemon iv and type
@@ -83,7 +97,7 @@ Options:
   - [x] Paldea
 - [x] add cli variable
   - [x] --locale [en, ja, zh]
-- [ ] help key
+- [x] help key
 
 ## Pokemon data source
 
