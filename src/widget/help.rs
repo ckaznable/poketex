@@ -21,10 +21,10 @@ impl Widget for Help {
 Use arrow keys or hjkl to move\n
 Press page up or page down to move 4 lines at a time\n
 Press q to exit\n
-Press h for help\n
+Press H for help\n
 Press gg to go to the top and G to go to the bottom\n
 Use / to enter search mode\n\n\n\n
-Press h to exit help";
+Press H to exit help";
 
         Paragraph::new(text)
             .style(Style::default().fg(Color::Black))

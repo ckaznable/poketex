@@ -105,6 +105,10 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
                     app.go_top(false);
                 }
 
+                KeyCode::Char('H') => {
+                    app.toggle_help();
+                }
+
                 _ => {}
             }
 

@@ -49,8 +49,10 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     // pm list
     f.render_stateful_widget(PokemonList::default(), chunks[1], app);
 
-    let area = centered_rect(50, 70, size);
-    f.render_widget(Help, area);
+    if app.show_help {
+        let area = centered_rect(50, 70, size);
+        f.render_widget(Help, area);
+    }
 }
 
 fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
