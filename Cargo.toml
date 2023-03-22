@@ -16,8 +16,8 @@ edition = "2021"
 
 [dependencies]
 ratatui = "0.20"
-tui-input = "0.6.1"
-crossterm = "0.25.0"
+tui-input = "0.7.0"
+crossterm = "0.26.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 sys-locale = "0.2.3"
