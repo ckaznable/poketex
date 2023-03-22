@@ -102,3 +102,7 @@ Press `/` to enter search mode.
 ## Pokemon data source
 
 data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/poke-data-cralwer)
+
+## License
+
+[MIT](./LICENSE)
