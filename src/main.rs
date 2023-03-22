@@ -18,12 +18,12 @@ use crossterm::{
 use env::DEF_LOCALES;
 use keybinding::handle_key;
 use pokemon::*;
-use serde_json::from_str;
-use std::{collections::HashMap, error::Error, io};
 use ratatui::{
     backend::{Backend, CrosstermBackend},
     Terminal,
 };
+use serde_json::from_str;
+use std::{collections::HashMap, error::Error, io};
 use tui_input::Input;
 use widget::pmlist::PokemonListStatus;
 
