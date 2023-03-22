@@ -1,4 +1,4 @@
-use tui::{
+use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
@@ -91,7 +91,7 @@ impl Widget for IVStatus {
         }
 
         let layout = Layout::default()
-            .direction(tui::layout::Direction::Vertical)
+            .direction(ratatui::layout::Direction::Vertical)
             .constraints(constraints.as_ref())
             .split(area);
 

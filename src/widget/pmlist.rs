@@ -1,4 +1,4 @@
-use tui::{
+use ratatui::{
     layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
     text::Spans,
@@ -179,8 +179,8 @@ impl StatefulWidget for PokemonList {
 
     fn render(
         self,
-        area: tui::layout::Rect,
-        buf: &mut tui::buffer::Buffer,
+        area: ratatui::layout::Rect,
+        buf: &mut ratatui::buffer::Buffer,
         state: &mut Self::State,
     ) {
         let AppState { pm, .. } = state;

@@ -1,4 +1,4 @@
-use tui::{
+use ratatui::{
     layout::{Alignment, Constraint, Layout},
     style::{Color, Style},
     widgets::{Block, Borders, Paragraph, StatefulWidget, Widget},
@@ -28,8 +28,8 @@ impl StatefulWidget for Filter {
 
     fn render(
         self,
-        area: tui::layout::Rect,
-        buf: &mut tui::buffer::Buffer,
+        area: ratatui::layout::Rect,
+        buf: &mut ratatui::buffer::Buffer,
         state: &mut Self::State,
     ) {
         let layout = Layout::default()

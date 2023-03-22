@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use tui::style::Color;
+use ratatui::style::Color;
 
 use crate::env::{DEF_LOCALES, LOCALES};
 

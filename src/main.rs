@@ -20,7 +20,7 @@ use keybinding::handle_key;
 use pokemon::*;
 use serde_json::from_str;
 use std::{collections::HashMap, error::Error, io};
-use tui::{
+use ratatui::{
     backend::{Backend, CrosstermBackend},
     Terminal,
 };

@@ -1,4 +1,4 @@
-use tui::{
+use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout},
     widgets::{Block, StatefulWidget, Widget},
 };
@@ -60,8 +60,8 @@ impl StatefulWidget for PokemonDexBlock {
 
     fn render(
         self,
-        area: tui::layout::Rect,
-        buf: &mut tui::buffer::Buffer,
+        area: ratatui::layout::Rect,
+        buf: &mut ratatui::buffer::Buffer,
         state: &mut Self::State,
     ) {
         let dex = &state.pm.dex;

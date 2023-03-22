@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use tui::{
+use ratatui::{
     layout::{Constraint, Direction, Layout},
     text::Spans,
     widgets::{Block, Borders, Paragraph, Widget, Wrap},
@@ -24,7 +24,7 @@ impl AbilityInfo {
 }
 
 impl Widget for AbilityInfo {
-    fn render(self, area: tui::layout::Rect, buf: &mut tui::buffer::Buffer) {
+    fn render(self, area: ratatui::layout::Rect, buf: &mut ratatui::buffer::Buffer) {
         let layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints([Constraint::Percentage(100)])
