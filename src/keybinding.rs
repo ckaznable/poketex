@@ -65,19 +65,14 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
             match c {
                 KeyCode::Char('q') => return Some(true),
 
-                KeyCode::Down => app.pm.next(),
-                KeyCode::Char('j') => app.pm.next(),
+                KeyCode::Down | KeyCode::Char('j') => app.pm.next(),
                 KeyCode::PageDown => app.pm.scroll_down(PAGE_NUM),
 
-                KeyCode::Up => app.pm.previous(),
-                KeyCode::Char('k') => app.pm.previous(),
+                KeyCode::Up | KeyCode::Char('k') => app.pm.previous(),
                 KeyCode::PageUp => app.pm.scroll_up(PAGE_NUM),
 
-                KeyCode::Left => app.pm.dex.previous(),
-                KeyCode::Char('h') => app.pm.dex.previous(),
-
-                KeyCode::Right => app.pm.dex.next(),
-                KeyCode::Char('l') => app.pm.dex.next(),
+                KeyCode::Left | KeyCode::Char('h') => app.pm.dex.previous(),
+                KeyCode::Right | KeyCode::Char('l') => app.pm.dex.next(),
 
                 KeyCode::Char('/') => app.input_mode = InputMode::Editing,
                 KeyCode::Esc => app.query(String::from("")),
