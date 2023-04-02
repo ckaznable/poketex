@@ -24,7 +24,7 @@
 - [Building](#building)
 - [Usage](#usage)
 - [Keyboard Navigation Instructions](#keyboard-navigation-instructions)
-- [Todo](#todo)
+- [Roadmap](#roadmap)
 - [Pokemon data source](#pokemon-data-source)
 - [License](#license)
 
@@ -99,7 +99,7 @@ Press `gg` to go to the top and `G` to go to the bottom.
 
 Press `/` to enter search mode.
 
-## Todo
+## Roadmap
 
 - [x] show pokemon iv and type
 - [x] pokemon list searchable
