@@ -14,6 +14,20 @@
 
 ![demo](doc/demo.png)
 
+## Table of Contents
+
+- [Feature](#feature)
+- [Installation](#installation)
+  - [Install from Github Release](#install-from-github-release)
+  - [Install from crates.io](#install-from-cratesio)
+  - [Install from the AUR](#install-from-the-aur)
+- [Building](#building)
+- [Usage](#usage)
+- [Keyboard Navigation Instructions](#keyboard-navigation-instructions)
+- [Todo](#todo)
+- [Pokemon data source](#pokemon-data-source)
+- [License](#license)
+
 ## Feature
 
 1. All Pokemon (until Pokemon SV)
