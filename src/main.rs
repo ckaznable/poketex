@@ -92,13 +92,13 @@ impl AppState {
 
 fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
     let contents = include_str!("data/data.json");
-    let pokemon: Result<Vec<Pokemon>, serde_json::Error> = from_str(&contents);
+    let pokemon: Result<Vec<Pokemon>, serde_json::Error> = from_str(contents);
     pokemon
 }
 
 fn get_ability_data() -> Result<HashMap<String, Ability>, serde_json::Error> {
     let contents = include_str!("data/ability.json");
-    let map: Result<HashMap<String, Ability>, serde_json::Error> = from_str(&contents);
+    let map: Result<HashMap<String, Ability>, serde_json::Error> = from_str(contents);
     map
 }
 

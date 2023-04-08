@@ -37,11 +37,10 @@ fn flat_dex(pm: &Pokemon) -> PokemonDexState {
         }
     }
 
-    let state = PokemonDexState {
+    PokemonDexState {
         items: list,
         page: 1,
-    };
-    state
+    }
 }
 
 pub struct PokemonListStatus {
@@ -56,7 +55,7 @@ pub struct PokemonListStatus {
 impl PokemonListStatus {
     pub fn new(mut items: Vec<Pokemon>) -> PokemonListStatus {
         // make sure items has def pokemon
-        if items.len() == 0 {
+        if items.is_empty() {
             items.push(Pokemon::default());
         };
 
@@ -64,7 +63,7 @@ impl PokemonListStatus {
         let mut state = ListState::default();
         state.select(Some(0));
 
-        let current = (&items).get(0).unwrap().clone();
+        let current = items.get(0).unwrap().clone();
 
         PokemonListStatus {
             state,
@@ -93,7 +92,7 @@ impl PokemonListStatus {
         let i = match self.state.selected() {
             Some(i) => {
                 if i == 0 {
-                    if self.items.len() > 0 {
+                    if !self.items.is_empty() {
                         self.items.len() - 1
                     } else {
                         i
@@ -146,7 +145,7 @@ impl PokemonListStatus {
                         .to_lowercase()
                         .contains(filter.to_lowercase().as_str())
                 })
-                .map(|x| x.clone())
+                .cloned()
                 .collect();
         }
 
@@ -166,13 +165,8 @@ impl PokemonListStatus {
     }
 }
 
+#[derive(Default)]
 pub struct PokemonList;
-
-impl Default for PokemonList {
-    fn default() -> Self {
-        PokemonList {}
-    }
-}
 
 impl StatefulWidget for PokemonList {
     type State = AppState;

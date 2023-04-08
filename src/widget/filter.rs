@@ -6,16 +6,11 @@ use ratatui::{
 
 use crate::{constant::LIST_H_MARGIN, AppState, InputMode};
 
-pub struct Filter {}
-
-impl Default for Filter {
-    fn default() -> Self {
-        Filter {}
-    }
-}
+#[derive(Default)]
+pub struct Filter;
 
 impl Filter {
-    fn paragraph<'a>(self, scroll: usize, state: &'a mut AppState) -> Paragraph<'a> {
+    fn paragraph(self, scroll: usize, state: &mut AppState) -> Paragraph {
         Paragraph::new(state.input.value())
             .style(Style::default().fg(Color::Yellow))
             .scroll((0, scroll as u16))

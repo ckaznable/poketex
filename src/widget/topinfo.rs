@@ -26,7 +26,7 @@ impl Widget for TopInfo {
             .split(area);
 
         let mut type_span = vec![
-            Span::from(String::from(self.name) + " "),
+            Span::from(self.name + " "),
             Span::styled(
                 self.pm_type.0.clone(),
                 Style::default()
@@ -36,20 +36,16 @@ impl Widget for TopInfo {
             Span::from(" "),
         ];
 
-        match self.pm_type.1 {
-            Some(t) => {
-                if !t.eq("unknow") {
-                    type_span.push(Span::styled(
-                        t.clone(),
-                        Style::default()
-                            .bg(get_type_bg_color(t.as_str()))
-                            .fg(Color::White),
-                    ));
-                }
-                ()
+        if let Some(t) = self.pm_type.1 {
+            if t != "unknown" {
+                type_span.push(Span::styled(
+                    t.clone(),
+                    Style::default()
+                        .bg(get_type_bg_color(t.as_str()))
+                        .fg(Color::White),
+                ));
             }
-            None => (),
-        };
+        }
 
         Block::default()
             .title(type_span)

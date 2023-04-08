@@ -2,21 +2,11 @@ use serde::Deserialize;
 
 use crate::util::TranslateName;
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Default)]
 pub struct Ability {
     pub no: u16,
     name: TranslateName,
     desc: TranslateName,
-}
-
-impl Default for Ability {
-    fn default() -> Self {
-        Ability {
-            no: 0,
-            name: TranslateName::default(),
-            desc: TranslateName::default(),
-        }
-    }
 }
 
 impl Ability {

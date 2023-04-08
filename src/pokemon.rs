@@ -2,7 +2,7 @@ use serde::Deserialize;
 
 use crate::util::TranslateName;
 
-fn get_dict_pm_type(pm_type: &Vec<String>) -> (String, Option<String>) {
+fn get_dict_pm_type(pm_type: &[String]) -> (String, Option<String>) {
     (pm_type[0].clone(), pm_type.get(1).cloned())
 }
 
@@ -10,7 +10,7 @@ pub trait DictType {
     fn get_type(&self) -> (String, Option<String>);
 }
 
-#[derive(Deserialize, Clone, Copy)]
+#[derive(Deserialize, Clone, Copy, Default)]
 pub struct PokemonIV {
     pub hp: u16,
     pub att: u16,
@@ -18,19 +18,6 @@ pub struct PokemonIV {
     pub s_att: u16,
     pub s_def: u16,
     pub spd: u16,
-}
-
-impl Default for PokemonIV {
-    fn default() -> Self {
-        PokemonIV {
-            hp: 0,
-            att: 0,
-            def: 0,
-            s_att: 0,
-            s_def: 0,
-            spd: 0,
-        }
-    }
 }
 
 #[derive(Deserialize, Clone)]

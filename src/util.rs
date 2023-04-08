@@ -12,8 +12,8 @@ pub struct TranslateName {
 
 impl TranslateName {
     pub fn get_name(&self) -> String {
-        let sp: Vec<&str> = LOCALES.as_str().split("-").collect();
-        let env_locales = *sp.get(0).unwrap();
+        let sp: Vec<&str> = LOCALES.as_str().split('-').collect();
+        let env_locales = *sp.first().unwrap();
 
         unsafe {
             let loc = if !DEF_LOCALES.eq(env_locales) {

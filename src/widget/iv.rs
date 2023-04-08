@@ -50,17 +50,9 @@ impl<'a> Widget for IVStatusBar<'a> {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub struct IVStatus {
     iv: PokemonIV,
-}
-
-impl Default for IVStatus {
-    fn default() -> IVStatus {
-        IVStatus {
-            iv: PokemonIV::default(),
-        }
-    }
 }
 
 impl IVStatus {
