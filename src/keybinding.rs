@@ -50,7 +50,7 @@ pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
             modifiers: _,
             kind: _,
             state: _,
-        } if ('0'..='9').contains(&c) => {
+        } if c.is_ascii_digit() => {
             app.no(app.no.clone() + &c.to_string());
             app.go_top(false);
         }
