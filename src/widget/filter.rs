@@ -43,6 +43,7 @@ impl StatefulWidget for Filter {
 
         match state.input_mode {
             InputMode::Normal => {
+                state.cursor = None;
                 Block::default()
                     .title_alignment(Alignment::Center)
                     .title("Press '/' search")
@@ -53,6 +54,12 @@ impl StatefulWidget for Filter {
                 let width = area.width.max(3) - 3;
                 let scroll = state.input.visual_scroll(width as usize);
                 self.paragraph(scroll, state).render(wrapper[0], buf);
+                state.cursor = Some((
+                    wrapper[0].x
+                        + ((state.input.visual_cursor()).max(scroll) - scroll) as u16
+                        + 1,
+                    wrapper[0].y + 1
+                ))
             }
         }
     }

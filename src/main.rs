@@ -41,6 +41,7 @@ pub struct AppState {
     ability: HashMap<String, Ability>,
     go_top: bool,
     show_help: bool,
+    cursor: Option<(u16, u16)>,
 }
 
 impl AppState {
@@ -54,6 +55,7 @@ impl AppState {
             no: String::from(""),
             go_top: false,
             show_help: false,
+            cursor: None,
         }
     }
 

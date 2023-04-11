@@ -49,6 +49,11 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     // pm list
     f.render_stateful_widget(PokemonList::default(), chunks[1], app);
 
+    // search input cursor
+    if let Some((x, y)) = app.cursor {
+        f.set_cursor(x, y)
+    };
+
     if app.show_help {
         let area = centered_rect(50, 70, size);
         f.render_widget(Help, area);
