@@ -55,10 +55,8 @@ impl StatefulWidget for Filter {
                 let scroll = state.input.visual_scroll(width as usize);
                 self.paragraph(scroll, state).render(wrapper[0], buf);
                 state.cursor = Some((
-                    wrapper[0].x
-                        + ((state.input.visual_cursor()).max(scroll) - scroll) as u16
-                        + 1,
-                    wrapper[0].y + 1
+                    wrapper[0].x + ((state.input.visual_cursor()).max(scroll) - scroll) as u16 + 1,
+                    wrapper[0].y + 1,
                 ))
             }
         }
