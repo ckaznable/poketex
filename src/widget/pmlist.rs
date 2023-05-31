@@ -1,7 +1,7 @@
 use ratatui::{
     layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
-    text::Spans,
+    text::Line,
     widgets::{Block, Borders, List, ListItem, ListState, StatefulWidget},
 };
 
@@ -203,7 +203,7 @@ impl StatefulWidget for PokemonList {
                     .to_lowercase()
                     .contains(state.query.to_lowercase().as_str())
             })
-            .map(|item| ListItem::new(vec![Spans::from(item.get_list_name())]))
+            .map(|item| ListItem::new(vec![Line::from(item.get_list_name())]))
             .collect();
 
         List::new(items)

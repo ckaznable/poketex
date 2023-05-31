@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use ratatui::{
     layout::{Constraint, Direction, Layout},
-    text::Spans,
+    text::Line,
     widgets::{Block, Borders, Paragraph, Widget, Wrap},
 };
 
@@ -30,18 +30,18 @@ impl Widget for AbilityInfo {
             .constraints([Constraint::Percentage(100)])
             .split(area);
 
-        let mut span: Vec<Spans> = vec![];
+        let mut span: Vec<Line> = vec![];
         let mut setter = |x: usize| match self.ability.get(x) {
             None => (),
             Some(id) => match self.get_ability_from_map(*id) {
                 None => (),
                 Some(a) => {
                     if x > 0 {
-                        span.push(Spans::from(""));
+                        span.push(Line::from(""));
                     }
 
-                    span.push(Spans::from(a.name()));
-                    span.push(Spans::from(a.desc()));
+                    span.push(Line::from(a.name()));
+                    span.push(Line::from(a.desc()));
                 }
             },
         };
