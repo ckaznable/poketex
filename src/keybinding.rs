@@ -1,4 +1,4 @@
-use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers, KeyEventKind};
+use crossterm::event::{Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use tui_input::backend::crossterm::EventHandler;
 
 use crate::{AppState, InputMode};
@@ -7,8 +7,9 @@ static PAGE_NUM: u8 = 4;
 
 pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
     if event.kind == KeyEventKind::Release {
-        return None
+        return None;
     }
+
     // in edit mode
     if let InputMode::Editing = app.input_mode {
         match event.code {
