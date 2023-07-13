@@ -99,7 +99,7 @@ Press `gg` to go to the top and `G` to go to the bottom.
 
 Press `/` to enter search mode.
 
-## Roadmap
+## RoadMap
 
 - [x] show pokemon iv and type
 - [x] pokemon list searchable
