@@ -114,7 +114,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let ability = match get_ability_data() {
         Ok(r) => r,
         Err(_) => {
-            print!("ability data error");
+            println!("ability data error");
             std::process::exit(2);
         }
     };
@@ -122,7 +122,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let pokemon = match get_pokemon_data() {
         Ok(r) => r,
         Err(_) => {
-            print!("pokemon data error");
+            println!("pokemon data error");
             std::process::exit(2);
         }
     };
