@@ -2,7 +2,7 @@ use ratatui::{
     layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
     text::Line,
-    widgets::{Block, Borders, List, ListItem, ListState, StatefulWidget},
+    widgets::{Block, Borders, List, ListItem, ListState, StatefulWidget, Scrollbar, ScrollbarOrientation},
 };
 
 use crate::{
@@ -215,5 +215,8 @@ impl StatefulWidget for PokemonList {
                     .add_modifier(Modifier::BOLD),
             )
             .render(layout[0], buf, &mut pm.state);
+        Scrollbar::new(ScrollbarOrientation::VerticalRight)
+            .style(Style::default().bg(Color::DarkGray))
+            .render(layout[0], buf, &mut state.list_scrollbar_state);
     }
 }
