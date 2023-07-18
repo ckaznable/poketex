@@ -5,7 +5,7 @@ use crate::{AppState, InputMode};
 
 static PAGE_NUM: u8 = 4;
 
-pub fn handle_key(mut app: &mut AppState, event: KeyEvent) -> Option<bool> {
+pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
     if event.kind == KeyEventKind::Release {
         return None;
     }

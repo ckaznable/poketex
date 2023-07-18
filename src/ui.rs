@@ -28,7 +28,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         .constraints([Constraint::Ratio(2, 3), Constraint::Ratio(1, 3)])
         .split(f.size());
 
-    let block = PokemonDexBlock::default();
+    let block = PokemonDexBlock;
     f.render_stateful_widget(block, chunks[0], app);
 
     // right chunks
@@ -44,10 +44,10 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         .split(chunks[1]);
 
     // search input
-    f.render_stateful_widget(Filter::default(), chunks[0], app);
+    f.render_stateful_widget(Filter, chunks[0], app);
 
     // pm list
-    f.render_stateful_widget(PokemonList::default(), chunks[1], app);
+    f.render_stateful_widget(PokemonList, chunks[1], app);
 
     // search input cursor
     if let Some((x, y)) = app.cursor {
