@@ -68,11 +68,23 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
             match c {
                 KeyCode::Char('q') => return Some(true),
 
-                KeyCode::Down | KeyCode::Char('j') => app.pm.next(),
-                KeyCode::PageDown => app.pm.scroll_down(PAGE_NUM),
+                KeyCode::Down | KeyCode::Char('j') => {
+                    app.pm.next();
+                    app.list_scrollbar_state.next();
+                }
+                KeyCode::PageDown => {
+                    app.pm.scroll_down(PAGE_NUM);
+                    (0..PAGE_NUM).for_each(|_| app.list_scrollbar_state.next());
+                }
 
-                KeyCode::Up | KeyCode::Char('k') => app.pm.previous(),
-                KeyCode::PageUp => app.pm.scroll_up(PAGE_NUM),
+                KeyCode::Up | KeyCode::Char('k') => {
+                    app.pm.previous();
+                    app.list_scrollbar_state.prev();
+                }
+                KeyCode::PageUp => {
+                    app.pm.scroll_up(PAGE_NUM);
+                    (0..PAGE_NUM).for_each(|_| app.list_scrollbar_state.prev());
+                }
 
                 KeyCode::Left | KeyCode::Char('h') => app.pm.dex.previous(),
                 KeyCode::Right | KeyCode::Char('l') => app.pm.dex.next(),
@@ -86,6 +98,7 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
                 KeyCode::Char('g') => {
                     if app.go_top {
                         app.jump(1);
+                        app.list_scrollbar_state.first();
                         app.go_top(false);
                     } else {
                         app.go_top(true);
@@ -94,9 +107,11 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
                 KeyCode::Char('G') => {
                     if app.no.eq("") {
                         app.jump(app.pm.items.len());
+                        app.list_scrollbar_state.last();
                     } else {
                         let index = app.no.trim().parse::<usize>().unwrap();
                         app.jump(index);
+                        app.list_scrollbar_state.position(index as u16);
                     }
 
                     app.no(String::from(""));

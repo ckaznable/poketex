@@ -20,6 +20,7 @@ use keybinding::handle_key;
 use pokemon::*;
 use ratatui::{
     backend::{Backend, CrosstermBackend},
+    widgets::ScrollbarState,
     Terminal,
 };
 use serde_json::from_str;
@@ -27,11 +28,14 @@ use std::{collections::HashMap, error::Error, io};
 use tui_input::Input;
 use widget::pmlist::PokemonListStatus;
 
+#[derive(Default)]
 pub enum InputMode {
+    #[default]
     Normal,
     Editing,
 }
 
+#[derive(Default)]
 pub struct AppState {
     pm: PokemonListStatus,
     input_mode: InputMode,
@@ -42,20 +46,18 @@ pub struct AppState {
     go_top: bool,
     show_help: bool,
     cursor: Option<(u16, u16)>,
+    list_scrollbar_state: ScrollbarState,
 }
 
 impl AppState {
     fn new(pm: PokemonListStatus, ability: HashMap<String, Ability>) -> Self {
+        let list_scrollbar_state = ScrollbarState::default().content_length(pm.items.len() as u16);
+
         AppState {
             pm,
             ability,
-            input_mode: InputMode::Normal,
-            input: Input::default(),
-            query: String::from(""),
-            no: String::from(""),
-            go_top: false,
-            show_help: false,
-            cursor: None,
+            list_scrollbar_state,
+            ..Default::default()
         }
     }
 

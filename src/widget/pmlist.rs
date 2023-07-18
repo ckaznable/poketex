@@ -2,7 +2,9 @@ use ratatui::{
     layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
     text::Line,
-    widgets::{Block, Borders, List, ListItem, ListState, StatefulWidget},
+    widgets::{
+        Block, Borders, List, ListItem, ListState, Scrollbar, ScrollbarOrientation, StatefulWidget,
+    },
 };
 
 use crate::{
@@ -43,6 +45,7 @@ fn flat_dex(pm: &Pokemon) -> PokemonDexState {
     }
 }
 
+#[derive(Default)]
 pub struct PokemonListStatus {
     pub state: ListState,
     pub items: Vec<Pokemon>,
@@ -75,21 +78,21 @@ impl PokemonListStatus {
     }
 
     pub fn next(&mut self) {
-        let i = match self.state.selected() {
+        let index = match self.state.selected() {
             Some(i) => {
                 if i >= self.items.len() - 1 {
                     0
                 } else {
-                    i + 1
+                    i.saturating_add(1)
                 }
             }
             None => 0,
         };
-        self.current(i);
+        self.current(index);
     }
 
     pub fn previous(&mut self) {
-        let i = match self.state.selected() {
+        let index = match self.state.selected() {
             Some(i) => {
                 if i == 0 {
                     if !self.items.is_empty() {
@@ -98,12 +101,12 @@ impl PokemonListStatus {
                         i
                     }
                 } else {
-                    i - 1
+                    i.saturating_sub(1)
                 }
             }
             None => 0,
         };
-        self.current(i);
+        self.current(index);
     }
 
     pub fn scroll_down(&mut self, amount: u8) {
@@ -214,5 +217,8 @@ impl StatefulWidget for PokemonList {
                     .add_modifier(Modifier::BOLD),
             )
             .render(layout[0], buf, &mut pm.state);
+        Scrollbar::new(ScrollbarOrientation::VerticalRight)
+            .style(Style::default().bg(Color::DarkGray))
+            .render(layout[0], buf, &mut state.list_scrollbar_state);
     }
 }
