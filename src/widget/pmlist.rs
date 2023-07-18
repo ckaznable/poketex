@@ -2,7 +2,9 @@ use ratatui::{
     layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
     text::Line,
-    widgets::{Block, Borders, List, ListItem, ListState, StatefulWidget, Scrollbar, ScrollbarOrientation},
+    widgets::{
+        Block, Borders, List, ListItem, ListState, Scrollbar, ScrollbarOrientation, StatefulWidget,
+    },
 };
 
 use crate::{

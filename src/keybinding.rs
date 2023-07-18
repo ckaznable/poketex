@@ -71,20 +71,20 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
                 KeyCode::Down | KeyCode::Char('j') => {
                     app.pm.next();
                     app.list_scrollbar_state.next();
-                },
+                }
                 KeyCode::PageDown => {
                     app.pm.scroll_down(PAGE_NUM);
                     (0..PAGE_NUM).for_each(|_| app.list_scrollbar_state.next());
-                },
+                }
 
                 KeyCode::Up | KeyCode::Char('k') => {
                     app.pm.previous();
                     app.list_scrollbar_state.prev();
-                },
+                }
                 KeyCode::PageUp => {
                     app.pm.scroll_up(PAGE_NUM);
                     (0..PAGE_NUM).for_each(|_| app.list_scrollbar_state.prev());
-                },
+                }
 
                 KeyCode::Left | KeyCode::Char('h') => app.pm.dex.previous(),
                 KeyCode::Right | KeyCode::Char('l') => app.pm.dex.next(),
