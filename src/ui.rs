@@ -16,7 +16,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     // Surrounding block
     let block = Block::default()
         .borders(Borders::ALL)
-        .title("poketex")
+        .title("Poketex")
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Rounded);
     f.render_widget(block, size);
