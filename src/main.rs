@@ -27,11 +27,14 @@ use std::{collections::HashMap, error::Error, io};
 use tui_input::Input;
 use widget::pmlist::PokemonListStatus;
 
+#[derive(Default)]
 pub enum InputMode {
+    #[default]
     Normal,
     Editing,
 }
 
+#[derive(Default)]
 pub struct AppState {
     pm: PokemonListStatus,
     input_mode: InputMode,
@@ -49,13 +52,7 @@ impl AppState {
         AppState {
             pm,
             ability,
-            input_mode: InputMode::Normal,
-            input: Input::default(),
-            query: String::from(""),
-            no: String::from(""),
-            go_top: false,
-            show_help: false,
-            cursor: None,
+            ..Default::default()
         }
     }
 

@@ -43,6 +43,7 @@ fn flat_dex(pm: &Pokemon) -> PokemonDexState {
     }
 }
 
+#[derive(Default)]
 pub struct PokemonListStatus {
     pub state: ListState,
     pub items: Vec<Pokemon>,
@@ -75,21 +76,21 @@ impl PokemonListStatus {
     }
 
     pub fn next(&mut self) {
-        let i = match self.state.selected() {
+        let index = match self.state.selected() {
             Some(i) => {
                 if i >= self.items.len() - 1 {
                     0
                 } else {
-                    i + 1
+                    i.saturating_add(1)
                 }
             }
             None => 0,
         };
-        self.current(i);
+        self.current(index);
     }
 
     pub fn previous(&mut self) {
-        let i = match self.state.selected() {
+        let index = match self.state.selected() {
             Some(i) => {
                 if i == 0 {
                     if !self.items.is_empty() {
@@ -98,12 +99,12 @@ impl PokemonListStatus {
                         i
                     }
                 } else {
-                    i - 1
+                    i.saturating_sub(1)
                 }
             }
             None => 0,
         };
-        self.current(i);
+        self.current(index);
     }
 
     pub fn scroll_down(&mut self, amount: u8) {
