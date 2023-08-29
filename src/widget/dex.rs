@@ -5,7 +5,7 @@ use ratatui::{
 
 use crate::{pokemon::PokemonIV, AppState};
 
-use super::{ability::AbilityInfo, iv::IVStatus, topinfo::TopInfo};
+use super::{ability::AbilityInfo, iv::IVStatus, metainfo::Metainfo};
 
 #[derive(Clone)]
 pub struct PokemonDex {
@@ -79,11 +79,8 @@ impl StatefulWidget for PokemonDexBlock {
             ])
             .split(area);
 
-        // pm type block
-        TopInfo::new(current.name.clone(), current.pm_type.clone()).render(layout[0], buf);
-
+        Metainfo::new(current.name.clone(), current.pm_type.clone()).render(layout[0], buf);
         IVStatus::new(current.iv).render(layout[2], buf);
-
         AbilityInfo::new(current.ability.clone(), state.ability.clone()).render(layout[4], buf);
 
         let title = format!(

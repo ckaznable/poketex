@@ -61,7 +61,7 @@ impl IVStatus {
     }
 
     pub fn get_pokemon_iv_highest(&self) -> f32 {
-        *vec![
+        *[
             self.iv.hp,
             self.iv.att,
             self.iv.def,

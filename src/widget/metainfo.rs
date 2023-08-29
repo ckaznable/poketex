@@ -7,18 +7,18 @@ use ratatui::{
 
 use crate::util::get_type_bg_color;
 
-pub struct TopInfo {
+pub struct Metainfo {
     name: String,
     pm_type: (String, Option<String>),
 }
 
-impl TopInfo {
+impl Metainfo {
     pub fn new(name: String, pm_type: (String, Option<String>)) -> Self {
-        TopInfo { name, pm_type }
+        Metainfo { name, pm_type }
     }
 }
 
-impl Widget for TopInfo {
+impl Widget for Metainfo {
     fn render(self, area: ratatui::layout::Rect, buf: &mut ratatui::buffer::Buffer) {
         let layout = Layout::default()
             .direction(Direction::Horizontal)
