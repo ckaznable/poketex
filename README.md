@@ -112,6 +112,7 @@ Press `/` to enter search mode.
 - [x] add cli variable
   - [x] --locale [en, ja, zh]
 - [x] help key
+- [ ] gen 9 DLC data
 
 ## Pokemon data source
 
