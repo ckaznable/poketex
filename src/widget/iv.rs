@@ -67,7 +67,7 @@ impl IVStatus {
             self.iv.def,
             self.iv.s_att,
             self.iv.s_def,
-            self.iv.spd
+            self.iv.spd,
         ]
         .iter()
         .max()
