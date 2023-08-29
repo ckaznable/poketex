@@ -12,7 +12,7 @@
   <img alt="Crates.io" src="https://img.shields.io/crates/l/poketex?style=flat-square">
 </p>
 
-![demo](doc/demo.png)
+![demo](doc/demo.gif)
 
 ## Table of Contents
 
