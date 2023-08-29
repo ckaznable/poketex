@@ -13,9 +13,9 @@ version = "1.4.0"
 edition = "2021"
 
 [dependencies]
-ratatui = "0.22.0"
-tui-input = "0.7.0"
-crossterm = "0.26.1"
+ratatui = "0.23.0"
+tui-input = "0.8.0"
+crossterm = "0.27.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 sys-locale = "0.3.0"
@@ -23,7 +23,7 @@ lazy_static = "1.4"
 clap = { version = "4.1.4", features = ["derive"] }
 
 [profile.release]
-opt-level = "z"  # Optimize for size.
+opt-level = "z"
 lto = true
 codegen-units = 1
 panic = 'abort'
