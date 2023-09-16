@@ -112,7 +112,8 @@ Press `/` to enter search mode.
 - [x] add cli variable
   - [x] --locale [en, ja, zh]
 - [x] help key
-- [ ] gen 9 DLC data
+- [x] gen 9 DLC - The Teal Mask
+- [ ] gen 9 DLC - The Indigo Disk
 
 ## Pokemon data source
 
