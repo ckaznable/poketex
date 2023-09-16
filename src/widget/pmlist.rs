@@ -166,6 +166,22 @@ impl PokemonListStatus {
             None => Pokemon::default(),
         };
     }
+
+    pub fn is_current_head(&self) -> bool {
+        if let Some(i) = self.state.selected() {
+            i == 0
+        } else {
+            false
+        }
+    }
+
+    pub fn is_current_tail(&self) -> bool {
+        if let Some(i) = self.state.selected() {
+            i == self.items.len() - 1
+        } else {
+            false
+        }
+    }
 }
 
 #[derive(Default)]

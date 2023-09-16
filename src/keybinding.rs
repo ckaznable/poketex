@@ -69,8 +69,13 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
                 KeyCode::Char('q') => return Some(true),
 
                 KeyCode::Down | KeyCode::Char('j') => {
+                    if app.pm.is_current_tail() {
+                        app.list_scrollbar_state.first();
+                    } else {
+                        app.list_scrollbar_state.next();
+                    }
+
                     app.pm.next();
-                    app.list_scrollbar_state.next();
                 }
                 KeyCode::PageDown => {
                     app.pm.scroll_down(PAGE_NUM);
@@ -78,8 +83,13 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
                 }
 
                 KeyCode::Up | KeyCode::Char('k') => {
+                    if app.pm.is_current_head() {
+                        app.list_scrollbar_state.last();
+                    } else {
+                        app.list_scrollbar_state.prev();
+                    }
+
                     app.pm.previous();
-                    app.list_scrollbar_state.prev();
                 }
                 KeyCode::PageUp => {
                     app.pm.scroll_up(PAGE_NUM);
