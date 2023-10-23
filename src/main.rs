@@ -51,7 +51,7 @@ pub struct AppState {
 
 impl AppState {
     fn new(pm: PokemonListStatus, ability: HashMap<String, Ability>) -> Self {
-        let list_scrollbar_state = ScrollbarState::default().content_length(pm.items.len() as u16);
+        let list_scrollbar_state = ScrollbarState::default().content_length(pm.items.len());
 
         AppState {
             pm,

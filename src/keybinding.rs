@@ -121,7 +121,7 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
                     } else {
                         let index = app.no.trim().parse::<usize>().unwrap();
                         app.jump(index);
-                        app.list_scrollbar_state.position(index as u16);
+                        app.list_scrollbar_state.position(index);
                     }
 
                     app.no(String::from(""));

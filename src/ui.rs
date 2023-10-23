@@ -1,5 +1,4 @@
 use ratatui::{
-    backend::Backend,
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     widgets::{Block, BorderType, Borders},
     Frame,
@@ -10,7 +9,7 @@ use crate::{
     AppState,
 };
 
-pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
+pub fn ui(f: &mut Frame, app: &mut AppState) {
     let size = f.size();
 
     // Surrounding block
