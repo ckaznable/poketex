@@ -84,7 +84,7 @@ impl Widget for IVStatus {
 
         let layout = Layout::default()
             .direction(ratatui::layout::Direction::Vertical)
-            .constraints(constraints.as_ref())
+            .constraints::<Vec<_>>(constraints)
             .split(area);
 
         let max = self.get_pokemon_iv_highest();
