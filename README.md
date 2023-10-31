@@ -114,6 +114,7 @@ Press `/` to enter search mode.
 - [x] help key
 - [x] gen 9 DLC - The Teal Mask
 - [ ] gen 9 DLC - The Indigo Disk
+- [ ] Image support [#21](https://github.com/ckaznable/poketex/issues/21)
 
 ## Pokemon data source
 
