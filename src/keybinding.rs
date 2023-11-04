@@ -5,9 +5,24 @@ use crate::{AppState, InputMode};
 
 static PAGE_NUM: u8 = 4;
 
-pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
+#[derive(Default, Eq, PartialEq)]
+pub enum KeyHandleResult {
+    #[default]
+    Continue,
+    Exit,
+}
+
+impl KeyHandleResult {
+    pub fn is_exit(&self) -> bool {
+        matches!(self, KeyHandleResult::Exit)
+    }
+}
+
+pub fn handle_key(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
+    use KeyHandleResult::*;
+
     if event.kind == KeyEventKind::Release {
-        return None;
+        return Continue;
     }
 
     // in edit mode
@@ -27,7 +42,7 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
             }
         };
 
-        return None;
+        return Continue;
     };
     match event {
         // handle key with control
@@ -41,7 +56,7 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
                 KeyCode::Char('f') => app.pm.scroll_down(PAGE_NUM),
                 KeyCode::Char('b') => app.pm.scroll_up(PAGE_NUM),
                 _ => {
-                    return None;
+                    return Continue;
                 }
             }
             app.cancel_last_cmd();
@@ -66,7 +81,7 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
             state: _,
         } => {
             match c {
-                KeyCode::Char('q') => return Some(true),
+                KeyCode::Char('q') => return Exit,
 
                 KeyCode::Down | KeyCode::Char('j') => {
                     if app.pm.is_current_tail() {
@@ -139,5 +154,5 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> Option<bool> {
         }
     };
 
-    None
+    Continue
 }

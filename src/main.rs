@@ -143,7 +143,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
         terminal.draw(|f| ui::ui(f, &mut app))?;
 
         if let Event::Key(event) = event::read()? {
-            if handle_key(&mut app, event).is_some() {
+            if handle_key(&mut app, event).is_exit() {
                 return Ok(());
             }
         }
