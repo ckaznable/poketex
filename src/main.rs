@@ -17,7 +17,6 @@ use crossterm::{
 };
 use env::DEF_LOCALES;
 use keybinding::handle_key;
-use pokemon::*;
 use ratatui::{
     backend::{Backend, CrosstermBackend},
     widgets::ScrollbarState,
@@ -94,18 +93,6 @@ impl AppState {
     }
 }
 
-fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
-    let contents = include_str!("data/data.json");
-    let pokemon: Result<Vec<Pokemon>, serde_json::Error> = from_str(contents);
-    pokemon
-}
-
-fn get_ability_data() -> Result<HashMap<String, Ability>, serde_json::Error> {
-    let contents = include_str!("data/ability.json");
-    let map: Result<HashMap<String, Ability>, serde_json::Error> = from_str(contents);
-    map
-}
-
 fn main() -> Result<(), Box<dyn Error>> {
     let args = args::Args::parse();
 
@@ -113,20 +100,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         DEF_LOCALES = Box::leak(args.locale.into_boxed_str());
     }
 
-    let ability = match get_ability_data() {
-        Ok(r) => r,
-        Err(_) => {
-            println!("ability data error");
-            std::process::exit(2);
-        }
+    let Ok(ability) = from_str(include_str!("data/ability.json")) else {
+        println!("ability data error");
+        std::process::exit(2);
     };
 
-    let pokemon = match get_pokemon_data() {
-        Ok(r) => r,
-        Err(_) => {
-            println!("pokemon data error");
-            std::process::exit(2);
-        }
+    let Ok(pokemon) = from_str(include_str!("data/data.json")) else {
+        println!("pokemon data error");
+        std::process::exit(2);
     };
 
     // setup terminal
