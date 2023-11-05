@@ -5,7 +5,7 @@ use ratatui::{
     widgets::{Block, Borders, Gauge, Widget},
 };
 
-use crate::pokemon::PokemonIV;
+use crate::pokemon::pokemon::PokemonIV;
 
 pub struct IVStatusBar<'a> {
     title: &'a str,

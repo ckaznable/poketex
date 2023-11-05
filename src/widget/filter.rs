@@ -1,31 +1,27 @@
 use ratatui::{
     layout::{Alignment, Constraint, Layout},
     style::{Color, Style},
-    widgets::{Block, Borders, Paragraph, StatefulWidget, Widget},
+    widgets::{Block, Borders, Paragraph, Widget},
 };
 
-use crate::{constant::LIST_H_MARGIN, AppState, InputMode};
+use crate::{constant::LIST_H_MARGIN, state::{AppState, InputMode}};
 
-#[derive(Default)]
-pub struct Filter;
+pub struct Filter<'a>(pub &'a AppState<'a>);
 
-impl Filter {
-    fn paragraph(self, scroll: usize, state: &mut AppState) -> Paragraph {
-        Paragraph::new(state.input.value())
+impl<'a> Filter<'a> {
+    fn paragraph(self, scroll: usize, value: &str) -> Paragraph {
+        Paragraph::new(value)
             .style(Style::default().fg(Color::Yellow))
             .scroll((0, scroll as u16))
             .block(Block::default().borders(Borders::ALL))
     }
 }
 
-impl StatefulWidget for Filter {
-    type State = AppState;
-
+impl<'a> Widget for Filter<'a> {
     fn render(
         self,
         area: ratatui::layout::Rect,
         buf: &mut ratatui::buffer::Buffer,
-        state: &mut Self::State,
     ) {
         let layout = Layout::default()
             .constraints([Constraint::Min(0)])
@@ -41,9 +37,9 @@ impl StatefulWidget for Filter {
             .borders(Borders::LEFT)
             .render(layout[0], buf);
 
-        match state.input_mode {
+        match self.0.tui.input_mode {
             InputMode::Normal => {
-                state.cursor = None;
+                self.0.tui.cursor = None;
                 Block::default()
                     .title_alignment(Alignment::Center)
                     .title("Press '/' search")
@@ -52,10 +48,10 @@ impl StatefulWidget for Filter {
 
             InputMode::Editing => {
                 let width = area.width.max(3) - 3;
-                let scroll = state.input.visual_scroll(width as usize);
-                self.paragraph(scroll, state).render(wrapper[0], buf);
-                state.cursor = Some((
-                    wrapper[0].x + ((state.input.visual_cursor()).max(scroll) - scroll) as u16 + 1,
+                let scroll = self.0.key_handle.input.visual_scroll(width as usize);
+                self.paragraph(scroll, self.0.key_handle.input.value()).render(wrapper[0], buf);
+                self.0.tui.cursor = Some((
+                    wrapper[0].x + ((self.0.key_handle.input.visual_cursor()).max(scroll) - scroll) as u16 + 1,
                     wrapper[0].y + 1,
                 ))
             }

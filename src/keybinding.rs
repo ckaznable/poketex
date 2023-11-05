@@ -1,7 +1,7 @@
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use tui_input::backend::crossterm::EventHandler;
 
-use crate::{AppState, InputMode};
+use crate::state::{AppState, InputMode};
 
 static PAGE_NUM: u8 = 4;
 
@@ -14,36 +14,31 @@ pub enum KeyHandleResult {
 
 impl KeyHandleResult {
     pub fn is_exit(&self) -> bool {
-        matches!(self, KeyHandleResult::Exit)
+        *self == KeyHandleResult::Exit
     }
 }
 
-pub fn handle_key(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
-    use KeyHandleResult::*;
+fn on_editing(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
+    use KeyCode::*;
 
-    if event.kind == KeyEventKind::Release {
-        return Continue;
-    }
-
-    // in edit mode
-    if let InputMode::Editing = app.input_mode {
-        match event.code {
-            KeyCode::Enter => {
-                app.query(app.input.value().to_owned());
-                app.reset();
-            }
-            KeyCode::Esc => {
-                app.reset();
-                app.query(String::from(""));
-            }
-            _ => {
-                app.input.handle_event(&Event::Key(event));
-                app.query(app.input.value().to_owned());
-            }
-        };
-
-        return Continue;
+    match event.code {
+        Esc => {
+            app.reset();
+            app.pokemon_list.filter_query.clear();
+        }
+        _ => {
+            app.key_handle.input.handle_event(&Event::Key(event));
+            app.pokemon_list.filter_query.clear();
+            app.pokemon_list.filter_query.push_str(app.key_handle.input.value());
+        }
     };
+
+    KeyHandleResult::Continue
+}
+
+fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
+    use KeyCode::*;
+
     match event {
         // handle key with control
         KeyEvent {
@@ -53,24 +48,22 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             state: _,
         } => {
             match c {
-                KeyCode::Char('f') => app.pm.scroll_down(PAGE_NUM),
-                KeyCode::Char('b') => app.pm.scroll_up(PAGE_NUM),
-                _ => {
-                    return Continue;
-                }
+                Char('f') => app.pokemon_list.scroll_down(PAGE_NUM),
+                Char('b') => app.pokemon_list.scroll_up(PAGE_NUM),
+                _ => return KeyHandleResult::Continue
             }
-            app.cancel_last_cmd();
+            // app.cancel_last_cmd();
         }
 
         // handle number key
         KeyEvent {
-            code: KeyCode::Char(c),
+            code: Char(c),
             modifiers: _,
             kind: _,
             state: _,
         } if c.is_ascii_digit() => {
-            app.no(app.no.clone() + &c.to_string());
-            app.go_top(false);
+            app.pokemon_list.filter_query.push(c);
+            // app.go_top(false);
         }
 
         // handle other key
@@ -81,78 +74,91 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             state: _,
         } => {
             match c {
-                KeyCode::Char('q') => return Exit,
+                Char('q') => return KeyHandleResult::Exit,
 
-                KeyCode::Down | KeyCode::Char('j') => {
-                    if app.pm.is_current_tail() {
-                        app.list_scrollbar_state.first();
+                Down | Char('j') => {
+                    if app.pokemon_list.is_scroll_tail() {
+                        app.pokemon_list.list_scrollbar_state.first();
                     } else {
-                        app.list_scrollbar_state.next();
+                        app.pokemon_list.list_scrollbar_state.next();
                     }
 
-                    app.pm.next();
+                    app.pokemon_list.next();
                 }
-                KeyCode::PageDown => {
-                    app.pm.scroll_down(PAGE_NUM);
-                    (0..PAGE_NUM).for_each(|_| app.list_scrollbar_state.next());
+                PageDown => {
+                    app.pokemon_list.scroll_down(PAGE_NUM);
+                    (0..PAGE_NUM).for_each(|_| app.pokemon_list.list_scrollbar_state.next());
                 }
 
-                KeyCode::Up | KeyCode::Char('k') => {
-                    if app.pm.is_current_head() {
-                        app.list_scrollbar_state.last();
+                Up | Char('k') => {
+                    if app.pokemon_list.is_scroll_head() {
+                        app.pokemon_list.list_scrollbar_state.last();
                     } else {
-                        app.list_scrollbar_state.prev();
+                        app.pokemon_list.list_scrollbar_state.prev();
                     }
 
-                    app.pm.previous();
+                    app.pokemon_list.previous();
                 }
-                KeyCode::PageUp => {
-                    app.pm.scroll_up(PAGE_NUM);
-                    (0..PAGE_NUM).for_each(|_| app.list_scrollbar_state.prev());
-                }
-
-                KeyCode::Left | KeyCode::Char('h') => app.pm.dex.previous(),
-                KeyCode::Right | KeyCode::Char('l') => app.pm.dex.next(),
-
-                KeyCode::Char('/') => app.input_mode = InputMode::Editing,
-                KeyCode::Esc => app.query(String::from("")),
-
-                KeyCode::Home => app.jump(1),
-                KeyCode::End => app.jump(app.pm.items.len()),
-
-                KeyCode::Char('g') => {
-                    if app.go_top {
-                        app.jump(1);
-                        app.list_scrollbar_state.first();
-                        app.go_top(false);
-                    } else {
-                        app.go_top(true);
-                    }
-                }
-                KeyCode::Char('G') => {
-                    if app.no.eq("") {
-                        app.jump(app.pm.items.len());
-                        app.list_scrollbar_state.last();
-                    } else {
-                        let index = app.no.trim().parse::<usize>().unwrap();
-                        app.jump(index);
-                        app.list_scrollbar_state.position(index);
-                    }
-
-                    app.no(String::from(""));
-                    app.go_top(false);
+                PageUp => {
+                    app.pokemon_list.scroll_up(PAGE_NUM);
+                    (0..PAGE_NUM).for_each(|_| app.pokemon_list.list_scrollbar_state.prev());
                 }
 
-                KeyCode::Char('H') => {
+                Left | Char('h') => app.pokemon_list.previous_profile_page(),
+                Right | Char('l') => app.pokemon_list.next_profile_page(),
+
+                Char('/') => app.tui.input_mode = InputMode::Editing,
+                Esc => app.tui.query.clear(),
+
+                Home => app.jump(1),
+                End => app.jump(app.pokemon_list.len()),
+
+                Char('g') => {
+                    // if app.go_top {
+                    //     app.jump(1);
+                    //     app.pokemon_list.list_scrollbar_state.first();
+                    //     app.go_top(false);
+                    // } else {
+                    //     app.go_top(true);
+                    // }
+                }
+                Char('G') => {
+                    // if app.no.eq("") {
+                    //     app.jump(app.pokemon_list.len());
+                    //     app.pokemon_list.list_scrollbar_state.last();
+                    // } else {
+                    //     let index = app.no.trim().parse::<usize>().unwrap();
+                    //     app.jump(index);
+                    //     app.pokemon_list.list_scrollbar_state.position(index);
+                    // }
+
+                    // app.no(String::from(""));
+                    // app.go_top(false);
+                }
+
+                Char('H') => {
                     app.toggle_help();
                 }
 
                 _ => {}
             }
 
-            app.cancel_last_cmd();
+            // app.cancel_last_cmd();
         }
-    };
+    }
 
-    Continue
+    KeyHandleResult::Continue
+}
+
+pub fn handle_key(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
+    use KeyHandleResult::*;
+
+    if event.kind == KeyEventKind::Release {
+        return Continue;
+    }
+
+    match app.tui.input_mode {
+        InputMode::Editing => on_editing(app, event),
+        InputMode::Normal => on_normal(app, event)
+    }
 }
