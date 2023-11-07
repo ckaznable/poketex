@@ -1,9 +1,10 @@
+#[allow(clippy::module_inception)]
 pub mod pokemon;
 pub mod ability;
 
 use std::{rc::Rc, collections::HashMap};
 
-use pokemon::*;
+pub use pokemon::*;
 use ability::*;
 use serde::Deserialize;
 
@@ -13,7 +14,7 @@ pub type AbilityMap = HashMap<u16, Ability>;
 
 #[derive(Default)]
 pub struct PokemonBundle {
-    pub pokemon: Rc<Vec<PokemonEntity>>,
+    pub pokemon: Vec<Rc<PokemonEntity>>,
     pub ability: Rc<AbilityMap>,
 }
 
@@ -67,8 +68,8 @@ pub struct TranslateText {
     jp: String,
 }
 
-impl<'a> TranslateText {
-    pub fn get(&self) -> &'a str {
+impl TranslateText {
+    pub fn get(&self) -> String {
         unsafe {
             let loc = if !DEF_LOCALES.eq(LOCALES.as_str()) {
                 DEF_LOCALES
@@ -77,16 +78,16 @@ impl<'a> TranslateText {
             };
 
             let text = match loc {
-                "en" => self.en.as_str(),
-                "zh" => self.zh.as_str(),
-                "ja" => self.jp.as_str(),
-                _ => self.en.as_str(),
+                "en" => &self.en,
+                "zh" => &self.zh,
+                "ja" => &self.jp,
+                _ => &self.en,
             };
 
             if !text.is_empty() {
-                text
+                text.to_string()
             } else {
-                self.en.as_str()
+                self.en.clone()
             }
         }
     }

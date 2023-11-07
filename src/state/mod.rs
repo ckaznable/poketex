@@ -20,13 +20,13 @@ pub struct KeyHandleState {
 }
 
 #[derive(Default)]
-pub struct AppState<'a> {
+pub struct AppState {
     pub tui: TuiState,
     pub key_handle: KeyHandleState,
-    pub pokemon_list: PokemonListState<'a>,
+    pub pokemon_list: PokemonListState,
 }
 
-impl<'a> AppState<'a> {
+impl AppState {
     pub fn reset(&mut self) {
         self.tui.input_mode = InputMode::Normal;
         self.key_handle.input.reset();

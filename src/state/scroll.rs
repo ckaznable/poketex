@@ -2,24 +2,19 @@ use std::rc::Rc;
 
 use ratatui::widgets::{ScrollbarState, ListState};
 
-use crate::pokemon::{PokemonBundle, pokemon::PokemonEntity, AbilityMap};
+use crate::pokemon::{PokemonBundle, PokemonEntity, AbilityMap};
 
 #[derive(Default)]
-pub struct PokemonListState<'a> {
+pub struct PokemonListState {
     pub list_scrollbar_state: ScrollbarState,
     pub list_state: ListState,
-    pub list_item: &'a [PokemonEntity],
+    pub filtered_list: Vec<Rc<PokemonEntity>>,
     pub filter_query: String,
     pub bundle: Rc<PokemonBundle>,
     pub profile_page: u8,
-    pub profile: Option<&'a PokemonEntity>,
 }
 
-impl<'a> PokemonListState<'a> {
-    pub fn pokemons(&self) -> Rc<Vec<PokemonEntity>> {
-        self.bundle.pokemon
-    }
-
+impl<'a> PokemonListState {
     pub fn len(&self) -> usize {
         self.bundle.pokemon.len()
     }
@@ -29,7 +24,7 @@ impl<'a> PokemonListState<'a> {
     }
 
     pub fn ability_map(&self) -> Rc<AbilityMap> {
-        self.bundle.ability
+        self.bundle.ability.clone()
     }
 
     pub fn scroll_length(mut self, len: usize) -> Self {
@@ -97,22 +92,20 @@ impl<'a> PokemonListState<'a> {
     }
 
     pub fn set_list_filter(&mut self, filter: String) {
-        self.filter_query = filter;
+        self.filter_query = filter.clone();
 
-        self.list_item = if filter == "" {
-            self.bundle.pokemon.as_slice()
-        } else {
-            self.bundle
-                .pokemon
-                .iter()
-                .filter(|item| item
-                    .name_with_no()
-                    .to_lowercase()
-                    .contains(filter.to_lowercase().as_str())
-                )
-                .cloned()
-                .collect::<Vec<_>>()
-                .as_slice()
+        self.filtered_list.clear();
+        if !filter.is_empty() {
+            self.filtered_list.extend(
+            self.bundle.pokemon
+                    .iter()
+                    .filter(|item| item
+                        .name_with_no()
+                        .to_lowercase()
+                        .contains(&filter.to_lowercase())
+                    )
+                    .cloned()
+            );
         };
 
         self.select(0);
@@ -138,14 +131,22 @@ impl<'a> PokemonListState<'a> {
         }
     }
 
-    pub fn profile(&self) -> Option<&'a PokemonEntity> {
-        self.pokemons().get(self.list_state.selected()?)
+    pub fn profile(&'a self) -> Option<Rc<PokemonEntity>> {
+        let index = self.list_state.selected()?;
+        if self.filter_query.is_empty() {
+            self.bundle.pokemon.get(index).cloned()
+        } else {
+            self.filtered_list.get(index).cloned()
+        }
     }
 
-    pub fn profile_with_region_form(&self) -> Option<&'a PokemonEntity> {
+    pub fn profile_with_region_form(&'a self) -> Option<Rc<PokemonEntity>> {
         let profile = self.profile()?;
         if self.profile_page > 0 {
-            Some(profile.region_form()?.get((self.profile_page as usize).saturating_sub(1))?)
+            profile
+                .region_form()?
+                .get((self.profile_page as usize).saturating_sub(1))
+                .map(|x| Rc::new(x.clone()))
         } else {
             Some(profile)
         }

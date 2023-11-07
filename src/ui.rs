@@ -27,8 +27,8 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
         .constraints([Constraint::Ratio(2, 3), Constraint::Ratio(1, 3)])
         .split(f.size());
 
-    let block = PokemonProfileWidget(&app.pokemon_list);
-    f.render_widget(block, chunks[0]);
+    let block = PokemonProfileWidget;
+    f.render_stateful_widget(block, chunks[0], &mut app.pokemon_list);
 
     // right chunks
     let chunks = Layout::default()
@@ -43,10 +43,10 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
         .split(chunks[1]);
 
     // search input
-    f.render_widget(Filter(&app), chunks[0]);
+    f.render_stateful_widget(Filter, chunks[0], app);
 
     // pm list
-    f.render_widget(PokemonList(&app), chunks[1]);
+    f.render_stateful_widget(PokemonList, chunks[1], app);
 
     // search input cursor
     if let Some((x, y)) = app.tui.cursor {

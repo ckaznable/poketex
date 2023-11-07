@@ -4,7 +4,7 @@ mod ability;
 
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout},
-    widgets::{Block, Widget},
+    widgets::{Block, StatefulWidget, Widget},
 };
 
 use crate::state::PokemonListState;
@@ -13,15 +13,18 @@ use self::ability::AbilityParaGraph;
 
 use {iv::IVStatus, overview::Overview};
 
-pub struct PokemonProfileWidget<'a>(pub &'a PokemonListState<'a>);
+pub struct PokemonProfileWidget;
 
-impl<'a> Widget for PokemonProfileWidget<'a> {
+impl StatefulWidget for PokemonProfileWidget {
+    type State = PokemonListState;
+
     fn render(
         self,
         area: ratatui::layout::Rect,
         buf: &mut ratatui::buffer::Buffer,
+        state: &mut Self::State
     ) {
-        let Some(profile) = self.0.profile_with_region_form() else {
+        let Some(profile) = state.profile_with_region_form() else {
             return;
         };
 
@@ -37,20 +40,17 @@ impl<'a> Widget for PokemonProfileWidget<'a> {
             ])
             .split(area);
 
-        Overview {
-            name: profile.name.get().to_string(),
-            pm_type: profile.r#type.clone()
-        }.render(layout[0], buf);
+        Overview::new(profile.name.get(), profile.r#type).render(layout[0], buf);
 
         IVStatus::new(profile.iv).render(layout[2], buf);
 
-        AbilityParaGraph(self.0.bundle.get_ability_text(&profile)).render(layout[4], buf);
+        AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(layout[4], buf);
 
-        let page_num = self.0.region_form_len();
+        let page_num = state.region_form_len();
         if page_num > 1 {
             let title = format!(
                 "<- {} / {} ->",
-                self.0.profile_page,
+                state.profile_page,
                 page_num,
             );
 

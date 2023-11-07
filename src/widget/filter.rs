@@ -1,14 +1,14 @@
 use ratatui::{
     layout::{Alignment, Constraint, Layout},
     style::{Color, Style},
-    widgets::{Block, Borders, Paragraph, Widget},
+    widgets::{Block, Borders, Paragraph, Widget, StatefulWidget},
 };
 
 use crate::{constant::LIST_H_MARGIN, state::{AppState, InputMode}};
 
-pub struct Filter<'a>(pub &'a AppState<'a>);
+pub struct Filter;
 
-impl<'a> Filter<'a> {
+impl Filter {
     fn paragraph(self, scroll: usize, value: &str) -> Paragraph {
         Paragraph::new(value)
             .style(Style::default().fg(Color::Yellow))
@@ -17,11 +17,14 @@ impl<'a> Filter<'a> {
     }
 }
 
-impl<'a> Widget for Filter<'a> {
+impl StatefulWidget for Filter {
+    type State = AppState;
+
     fn render(
         self,
         area: ratatui::layout::Rect,
         buf: &mut ratatui::buffer::Buffer,
+        state: &mut Self::State,
     ) {
         let layout = Layout::default()
             .constraints([Constraint::Min(0)])
@@ -37,9 +40,9 @@ impl<'a> Widget for Filter<'a> {
             .borders(Borders::LEFT)
             .render(layout[0], buf);
 
-        match self.0.tui.input_mode {
+        match state.tui.input_mode {
             InputMode::Normal => {
-                self.0.tui.cursor = None;
+                state.tui.cursor = None;
                 Block::default()
                     .title_alignment(Alignment::Center)
                     .title("Press '/' search")
@@ -48,10 +51,10 @@ impl<'a> Widget for Filter<'a> {
 
             InputMode::Editing => {
                 let width = area.width.max(3) - 3;
-                let scroll = self.0.key_handle.input.visual_scroll(width as usize);
-                self.paragraph(scroll, self.0.key_handle.input.value()).render(wrapper[0], buf);
-                self.0.tui.cursor = Some((
-                    wrapper[0].x + ((self.0.key_handle.input.visual_cursor()).max(scroll) - scroll) as u16 + 1,
+                let scroll = state.key_handle.input.visual_scroll(width as usize);
+                self.paragraph(scroll, state.key_handle.input.value()).render(wrapper[0], buf);
+                state.tui.cursor = Some((
+                    wrapper[0].x + ((state.key_handle.input.visual_cursor()).max(scroll) - scroll) as u16 + 1,
                     wrapper[0].y + 1,
                 ))
             }

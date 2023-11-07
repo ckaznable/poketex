@@ -9,12 +9,12 @@ pub struct Ability {
     desc: TranslateText,
 }
 
-impl<'a> Ability {
-    pub fn name(&self) -> &'a str {
+impl Ability {
+    pub fn name(&self) -> String {
         self.name.get()
     }
 
-    pub fn desc(&self) -> &'a str {
+    pub fn desc(&self) -> String {
         self.desc.get()
     }
 }

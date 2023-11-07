@@ -35,11 +35,6 @@ pub struct PokemonEntity {
     pub iv: PokemonIV,
     pub form: Option<PokemonRegionForm>,
     pub ability: PokemonAbility,
-
-    /// for cache string
-    name_of_list: Option<String>,
-    /// for cache region form
-    _form: Option<Vec<PokemonEntity>>,
 }
 
 impl Pokemon for PokemonEntity {
@@ -69,40 +64,30 @@ impl Pokemon for PokemonEntity {
     }
 }
 
-impl<'a> PokemonEntity {
+impl PokemonEntity {
     fn name_of_list<T: AsRef<str>>(no: T, name: T) -> String {
         format!("#{} {}", no.as_ref(), name.as_ref())
     }
 
-    pub fn name_with_no(&'a mut self) -> &'a str {
-        if self.name_of_list.is_none() || self.name_of_list.unwrap().is_empty() {
-            self.name_of_list = Some(PokemonEntity::name_of_list(self.no.to_string(), self.name.get().to_string()));
-        }
-
-        self.name_of_list.unwrap().as_str()
+    pub fn name_with_no(&self) -> String {
+        PokemonEntity::name_of_list(self.no.to_string(), self.name.get().to_string())
     }
 
-    pub fn region_form(&mut self) -> Option<&Vec<PokemonEntity>> {
-        if self.form.is_none() {
-            return None;
-        }
+    pub fn region_form(&self) -> Option<Vec<PokemonEntity>> {
+        let form = self.form
+            .clone()?
+            .iter()
+            .map(|f| PokemonEntity {
+                no: self.no,
+                r#type: f.r#type,
+                name: self.name.clone(),
+                ability: f.ability,
+                iv: f.iv,
+                ..Default::default()
+            })
+            .collect::<Vec<_>>();
 
-        if self._form.is_none() {
-            self._form = Some(self.form
-                .unwrap()
-                .iter()
-                .map(|f| PokemonEntity {
-                    no: self.no,
-                    r#type: f.r#type,
-                    name: self.name.clone(),
-                    ability: f.ability,
-                    iv: f.iv,
-                    ..Default::default()
-                })
-                .collect::<Vec<_>>());
-        }
-
-        Some(&self._form.unwrap())
+        Some(form)
     }
 }
 

@@ -5,11 +5,17 @@ use ratatui::{
     widgets::{Block, Borders, Widget},
 };
 
-use crate::pokemon::pokemon::{PokemonType, PokemonTypeKind};
+use crate::pokemon::{PokemonType, PokemonTypeKind};
 
 pub struct Overview {
     pub name: String,
     pub pm_type: PokemonType,
+}
+
+impl Overview {
+    pub fn new(name: String, pm_type: PokemonType) -> Self {
+        Self { name, pm_type }
+    }
 }
 
 impl Widget for Overview {
