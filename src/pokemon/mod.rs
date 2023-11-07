@@ -19,8 +19,7 @@ pub struct PokemonBundle {
 }
 
 impl PokemonBundle {
-    fn get_ability(&self, id: Option<u16>) -> Option<PokemonAbilityText> {
-        let id = id?;
+    fn get_ability(&self, id: u16) -> Option<PokemonAbilityText> {
         let ability = self.ability.get(&id)?;
         Some(PokemonAbilityText {
             name: ability.name().to_string(),
@@ -29,30 +28,10 @@ impl PokemonBundle {
     }
 
     pub fn get_ability_text(&self, pm: &PokemonEntity) -> Vec<PokemonAbilityText> {
-        let ability = pm.ability();
-        let mut list = vec![];
-
-        if let Some(a) = self.get_ability(Some(ability.0)) {
-            list.push(a)
-        };
-
-        if let Some(a) = self.get_ability(ability.1) {
-            list.push(a)
-        }
-
-        if let Some(a) = self.get_ability(ability.2) {
-            list.push(a)
-        }
-
-        if let Some(a) = self.get_ability(ability.3) {
-            list.push(a)
-        }
-
-        if let Some(a) = self.get_ability(ability.4) {
-            list.push(a)
-        }
-
-        list
+        pm.ability()
+            .iter()
+            .filter_map(|id| self.get_ability(*id))
+            .collect::<Vec<_>>()
     }
 }
 

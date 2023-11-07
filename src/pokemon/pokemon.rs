@@ -5,11 +5,11 @@ use serde::{
     de::{self, Visitor},
     Deserialize, Deserializer,
 };
+use serde_json::Value;
 
 use super::TranslateText;
 
-pub type PokemonType = (PokemonTypeKind, Option<PokemonTypeKind>);
-pub type PokemonAbility = (u16, Option<u16>, Option<u16>, Option<u16>, Option<u16>);
+pub type PokemonAbility = Vec<u16>;
 pub type PokemonRegionForm = Vec<PokemonRegionFormEntity>;
 
 pub trait Pokemon {
@@ -63,7 +63,7 @@ impl Pokemon for PokemonEntity {
 
     #[inline]
     fn ability(&self) -> PokemonAbility {
-        self.ability
+        self.ability.clone()
     }
 }
 
@@ -85,7 +85,7 @@ impl PokemonEntity {
                 no: self.no,
                 r#type: f.r#type,
                 name: self.name.clone(),
-                ability: f.ability,
+                ability: f.ability.clone(),
                 iv: f.iv,
                 ..Default::default()
             })
@@ -226,6 +226,38 @@ impl<'de> Visitor<'de> for PokemonTypeKindVisitor {
             "steel" => Ok(Steel),
             "fairy" => Ok(Fairy),
             _ => Ok(Other),
+        }
+    }
+}
+
+#[derive(Default, Clone, Copy)]
+pub struct PokemonType(pub PokemonTypeKind, pub Option<PokemonTypeKind>);
+
+impl<'de> Deserialize<'de> for PokemonType {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let v: Value = Deserialize::deserialize(deserializer)?;
+
+        if let Some(array) = v.as_array() {
+            match array.len() {
+                1 => {
+                    let first = serde_json::from_value(array[0].clone()).expect("wrong type");
+                    Ok(PokemonType(first, None))
+                }
+                2 => {
+                    let first = serde_json::from_value(array[0].clone()).expect("wrong type");
+                    let second = serde_json::from_value(array[1].clone()).expect("wrong type");
+                    Ok(PokemonType(first, Some(second)))
+                }
+                _ => Err(serde::de::Error::invalid_length(
+                    array.len(),
+                    &"array with one or two elements",
+                )),
+            }
+        } else {
+            Err(serde::de::Error::custom("expected an array"))
         }
     }
 }
