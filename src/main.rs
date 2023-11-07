@@ -6,7 +6,13 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use poketex::{env::DEF_LOCALES, pokemon::{PokemonEntity, AbilityMap, PokemonBundle}, ui::ui, keybinding::handle_key, state::{AppState, PokemonListState}};
+use poketex::{
+    env::DEF_LOCALES,
+    keybinding::handle_key,
+    pokemon::{AbilityMap, PokemonBundle, PokemonEntity},
+    state::{AppState, PokemonListState},
+    ui::ui,
+};
 use ratatui::{
     backend::{Backend, CrosstermBackend},
     Terminal,
@@ -84,7 +90,9 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
 }
 
 fn load_data() -> Result<(Vec<PokemonEntity>, AbilityMap), ()> {
-    let pokemon: Vec<PokemonEntity> = from_str(include_str!("data/data.json")).expect("load pokemon data error");
-    let ability: AbilityMap = from_str(include_str!("data/ability.json")).expect("load ability data error");
+    let pokemon: Vec<PokemonEntity> =
+        from_str(include_str!("data/data.json")).expect("load pokemon data error");
+    let ability: AbilityMap =
+        from_str(include_str!("data/ability.json")).expect("load ability data error");
     Ok((pokemon, ability))
 }

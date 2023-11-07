@@ -5,8 +5,10 @@ use ratatui::{
 };
 
 use crate::{
-    widget::{filter::Filter, help::Help, pokemon_list::PokemonList, profile::PokemonProfileWidget},
-    state::{InputMode, AppState},
+    state::{AppState, InputMode},
+    widget::{
+        filter::Filter, help::Help, pokemon_list::PokemonList, profile::PokemonProfileWidget,
+    },
 };
 
 pub fn ui(f: &mut Frame, app: &mut AppState) {

@@ -1,10 +1,13 @@
 use ratatui::{
     layout::{Alignment, Constraint, Layout},
     style::{Color, Style},
-    widgets::{Block, Borders, Paragraph, Widget, StatefulWidget},
+    widgets::{Block, Borders, Paragraph, StatefulWidget, Widget},
 };
 
-use crate::{constant::LIST_H_MARGIN, state::{AppState, InputMode}};
+use crate::{
+    constant::LIST_H_MARGIN,
+    state::{AppState, InputMode},
+};
 
 pub struct Filter;
 
@@ -52,9 +55,12 @@ impl StatefulWidget for Filter {
             InputMode::Editing => {
                 let width = area.width.max(3) - 3;
                 let scroll = state.key_handle.input.visual_scroll(width as usize);
-                self.paragraph(scroll, state.key_handle.input.value()).render(wrapper[0], buf);
+                self.paragraph(scroll, state.key_handle.input.value())
+                    .render(wrapper[0], buf);
                 state.tui.cursor = Some((
-                    wrapper[0].x + ((state.key_handle.input.visual_cursor()).max(scroll) - scroll) as u16 + 1,
+                    wrapper[0].x
+                        + ((state.key_handle.input.visual_cursor()).max(scroll) - scroll) as u16
+                        + 1,
                     wrapper[0].y + 1,
                 ))
             }

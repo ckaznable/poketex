@@ -1,11 +1,11 @@
+pub mod ability;
 #[allow(clippy::module_inception)]
 pub mod pokemon;
-pub mod ability;
 
-use std::{rc::Rc, collections::HashMap};
+use std::{collections::HashMap, rc::Rc};
 
-pub use pokemon::*;
 use ability::*;
+pub use pokemon::*;
 use serde::Deserialize;
 
 use crate::env::{DEF_LOCALES, LOCALES};

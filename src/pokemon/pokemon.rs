@@ -1,7 +1,10 @@
 use std::fmt::{self, Display};
 
 use ratatui::style::Color;
-use serde::{Deserialize, de::{Visitor, self}, Deserializer};
+use serde::{
+    de::{self, Visitor},
+    Deserialize, Deserializer,
+};
 
 use super::TranslateText;
 
@@ -74,7 +77,8 @@ impl PokemonEntity {
     }
 
     pub fn region_form(&self) -> Option<Vec<PokemonEntity>> {
-        let form = self.form
+        let form = self
+            .form
             .clone()?
             .iter()
             .map(|f| PokemonEntity {

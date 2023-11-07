@@ -29,9 +29,7 @@ impl Widget for Overview {
             Span::from(self.name + " "),
             Span::styled(
                 self.pm_type.0.to_string(),
-                Style::default()
-                    .bg(self.pm_type.0.color())
-                    .fg(Color::White),
+                Style::default().bg(self.pm_type.0.color()).fg(Color::White),
             ),
             Span::from(" "),
         ];
@@ -40,9 +38,7 @@ impl Widget for Overview {
             if kind != PokemonTypeKind::Other {
                 type_span.push(Span::styled(
                     kind.to_string(),
-                    Style::default()
-                        .bg(kind.color())
-                        .fg(Color::White),
+                    Style::default().bg(kind.color()).fg(Color::White),
                 ));
             }
         }

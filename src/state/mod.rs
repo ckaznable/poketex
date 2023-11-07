@@ -1,5 +1,5 @@
-pub mod tui;
 pub mod scroll;
+pub mod tui;
 
 pub use scroll::PokemonListState;
 

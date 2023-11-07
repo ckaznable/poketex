@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
-use ratatui::widgets::{ScrollbarState, ListState};
+use ratatui::widgets::{ListState, ScrollbarState};
 
-use crate::pokemon::{PokemonBundle, PokemonEntity, AbilityMap};
+use crate::pokemon::{AbilityMap, PokemonBundle, PokemonEntity};
 
 #[derive(Default)]
 pub struct PokemonListState {
@@ -97,14 +97,15 @@ impl<'a> PokemonListState {
         self.filtered_list.clear();
         if !filter.is_empty() {
             self.filtered_list.extend(
-            self.bundle.pokemon
+                self.bundle
+                    .pokemon
                     .iter()
-                    .filter(|item| item
-                        .name_with_no()
-                        .to_lowercase()
-                        .contains(&filter.to_lowercase())
-                    )
-                    .cloned()
+                    .filter(|item| {
+                        item.name_with_no()
+                            .to_lowercase()
+                            .contains(&filter.to_lowercase())
+                    })
+                    .cloned(),
             );
         };
 

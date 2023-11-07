@@ -29,7 +29,9 @@ fn on_editing(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
         _ => {
             app.key_handle.input.handle_event(&Event::Key(event));
             app.pokemon_list.filter_query.clear();
-            app.pokemon_list.filter_query.push_str(app.key_handle.input.value());
+            app.pokemon_list
+                .filter_query
+                .push_str(app.key_handle.input.value());
         }
     };
 
@@ -50,7 +52,7 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             match c {
                 Char('f') => app.pokemon_list.scroll_down(PAGE_NUM),
                 Char('b') => app.pokemon_list.scroll_up(PAGE_NUM),
-                _ => return KeyHandleResult::Continue
+                _ => return KeyHandleResult::Continue,
             }
             // app.cancel_last_cmd();
         }
@@ -159,6 +161,6 @@ pub fn handle_key(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
 
     match app.tui.input_mode {
         InputMode::Editing => on_editing(app, event),
-        InputMode::Normal => on_normal(app, event)
+        InputMode::Normal => on_normal(app, event),
     }
 }

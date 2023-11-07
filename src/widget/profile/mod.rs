@@ -1,6 +1,6 @@
+mod ability;
 mod iv;
 mod overview;
-mod ability;
 
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout},
@@ -22,7 +22,7 @@ impl StatefulWidget for PokemonProfileWidget {
         self,
         area: ratatui::layout::Rect,
         buf: &mut ratatui::buffer::Buffer,
-        state: &mut Self::State
+        state: &mut Self::State,
     ) {
         let Some(profile) = state.profile_with_region_form() else {
             return;
@@ -48,11 +48,7 @@ impl StatefulWidget for PokemonProfileWidget {
 
         let page_num = state.region_form_len();
         if page_num > 1 {
-            let title = format!(
-                "<- {} / {} ->",
-                state.profile_page,
-                page_num,
-            );
+            let title = format!("<- {} / {} ->", state.profile_page, page_num,);
 
             Block::default()
                 .title(title)
