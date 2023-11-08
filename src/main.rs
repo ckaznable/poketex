@@ -51,12 +51,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
+    let pokemon_list = PokemonListState::new(Rc::new(bundle));
+
     // create app and run it
     let app = AppState {
-        pokemon_list: PokemonListState {
-            bundle: Rc::new(bundle),
-            ..Default::default()
-        },
+        pokemon_list,
         ..Default::default()
     };
     let res = run_app(&mut terminal, app);

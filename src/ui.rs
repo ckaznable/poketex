@@ -48,7 +48,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     f.render_stateful_widget(Filter, chunks[0], app);
 
     // pm list
-    f.render_stateful_widget(PokemonList, chunks[1], app);
+    f.render_stateful_widget(PokemonList, chunks[1], &mut app.pokemon_list);
 
     // search input cursor
     if let Some((x, y)) = app.tui.cursor {

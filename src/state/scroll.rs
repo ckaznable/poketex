@@ -14,7 +14,25 @@ pub struct PokemonListState {
     pub profile_page: u8,
 }
 
-impl<'a> PokemonListState {
+impl PokemonListState {
+    pub fn new(bundle: Rc<PokemonBundle>) -> Self {
+        let pokemon_len = bundle.pokemon.len();
+        let list_scrollbar_state = ScrollbarState::default().content_length(pokemon_len);
+
+        let mut list_state = ListState::default();
+        list_state.select(Some(0));
+
+        let filtered_list = Vec::with_capacity(pokemon_len);
+
+        Self {
+            bundle,
+            list_state,
+            list_scrollbar_state,
+            filtered_list,
+            ..Default::default()
+        }
+    }
+
     pub fn len(&self) -> usize {
         self.bundle.pokemon.len()
     }
@@ -25,11 +43,6 @@ impl<'a> PokemonListState {
 
     pub fn ability_map(&self) -> Rc<AbilityMap> {
         self.bundle.ability.clone()
-    }
-
-    pub fn scroll_length(mut self, len: usize) -> Self {
-        self.list_scrollbar_state = self.list_scrollbar_state.content_length(len);
-        self
     }
 
     pub fn next(&mut self) {
@@ -132,7 +145,7 @@ impl<'a> PokemonListState {
         }
     }
 
-    pub fn profile(&'a self) -> Option<Rc<PokemonEntity>> {
+    pub fn profile(&self) -> Option<Rc<PokemonEntity>> {
         let index = self.list_state.selected()?;
         if self.filter_query.is_empty() {
             self.bundle.pokemon.get(index).cloned()
@@ -141,7 +154,7 @@ impl<'a> PokemonListState {
         }
     }
 
-    pub fn profile_with_region_form(&'a self) -> Option<Rc<PokemonEntity>> {
+    pub fn profile_with_region_form(&self) -> Option<Rc<PokemonEntity>> {
         let profile = self.profile()?;
         if self.profile_page > 0 {
             profile
@@ -176,6 +189,14 @@ impl<'a> PokemonListState {
         let len = self.region_form_len();
         if len > 0 && self.profile_page > 0 {
             self.profile_page = self.profile_page.saturating_sub(1);
+        }
+    }
+
+    pub fn list_items(&self) -> &Vec<Rc<PokemonEntity>> {
+        if self.filter_query.is_empty() {
+            &self.bundle.pokemon
+        } else {
+            &self.filtered_list
         }
     }
 }

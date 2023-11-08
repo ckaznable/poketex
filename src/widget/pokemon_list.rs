@@ -5,12 +5,12 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem, Scrollbar, ScrollbarOrientation, StatefulWidget},
 };
 
-use crate::{constant::LIST_H_MARGIN, state::AppState};
+use crate::{constant::LIST_H_MARGIN, state::PokemonListState };
 
 pub struct PokemonList;
 
 impl StatefulWidget for PokemonList {
-    type State = AppState;
+    type State = PokemonListState;
 
     fn render(
         self,
@@ -24,29 +24,25 @@ impl StatefulWidget for PokemonList {
             .split(area);
 
         let items: Vec<ListItem> = state
-            .pokemon_list
-            .filtered_list
+            .list_items()
             .iter()
             .map(|item| ListItem::new(vec![Line::from(item.name_with_no())]))
             .collect();
 
-        ratatui::widgets::Widget::render(
-            List::new(items)
-                .block(Block::default().borders(Borders::LEFT))
-                .highlight_style(
-                    Style::default()
-                        .bg(Color::LightGreen)
-                        .add_modifier(Modifier::BOLD),
-                ),
-            layout[0],
-            buf,
-        );
+        List::new(items)
+            .block(Block::default().borders(Borders::LEFT))
+            .highlight_style(
+                Style::default()
+                    .bg(Color::LightGreen)
+                    .add_modifier(Modifier::BOLD),
+            ).render(layout[0], buf, &mut state.list_state);
+
         Scrollbar::new(ScrollbarOrientation::VerticalRight)
             .style(Style::default().bg(Color::DarkGray))
             .render(
                 layout[0],
                 buf,
-                &mut state.pokemon_list.list_scrollbar_state.clone(),
+                &mut state.list_scrollbar_state,
             );
     }
 }
