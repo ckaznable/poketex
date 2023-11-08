@@ -126,6 +126,7 @@ impl PokemonListState {
     }
 
     pub fn select(&mut self, index: usize) {
+        self.profile_page = 0;
         self.list_state.select(Some(index));
     }
 

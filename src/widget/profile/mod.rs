@@ -48,7 +48,7 @@ impl StatefulWidget for PokemonProfileWidget {
 
         let page_num = state.region_form_len();
         if page_num > 1 {
-            let title = format!("<- {} / {} ->", state.profile_page, page_num,);
+            let title = format!("<- {} / {} ->", state.profile_page + 1, page_num,);
 
             Block::default()
                 .title(title)
