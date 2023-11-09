@@ -1,4 +1,5 @@
 pub mod ability;
+mod translate;
 #[allow(clippy::module_inception)]
 pub mod pokemon;
 
@@ -6,9 +7,7 @@ use std::{collections::HashMap, rc::Rc};
 
 use ability::*;
 pub use pokemon::*;
-use serde::Deserialize;
-
-use crate::env::{DEF_LOCALES, LOCALES};
+pub use translate::*;
 
 pub type AbilityMap = HashMap<u16, Ability>;
 
@@ -38,36 +37,4 @@ impl PokemonBundle {
 pub struct PokemonAbilityText {
     pub name: String,
     pub desc: String,
-}
-
-#[derive(Deserialize, Clone, Default)]
-pub struct TranslateText {
-    zh: String,
-    en: String,
-    jp: String,
-}
-
-impl TranslateText {
-    pub fn get(&self) -> String {
-        unsafe {
-            let loc = if !DEF_LOCALES.eq(LOCALES.as_str()) {
-                DEF_LOCALES
-            } else {
-                LOCALES.as_str()
-            };
-
-            let text = match loc {
-                "en" => &self.en,
-                "zh" => &self.zh,
-                "ja" => &self.jp,
-                _ => &self.en,
-            };
-
-            if !text.is_empty() {
-                text.to_string()
-            } else {
-                self.en.clone()
-            }
-        }
-    }
 }

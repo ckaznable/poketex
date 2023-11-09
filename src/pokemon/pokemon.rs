@@ -100,6 +100,7 @@ pub struct PokemonRegionFormEntity {
     pub r#type: PokemonType,
     pub iv: PokemonIV,
     pub ability: PokemonAbility,
+    pub form: Vec<String>,
 }
 
 #[derive(Debug, PartialEq, Default, Clone, Copy)]
