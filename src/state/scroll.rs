@@ -46,6 +46,12 @@ impl PokemonListState {
     }
 
     pub fn next(&mut self) {
+        if self.is_scroll_tail() {
+            self.list_scrollbar_state.first();
+        } else {
+            self.list_scrollbar_state.next();
+        }
+
         let index = match self.list_state.selected() {
             Some(i) => {
                 if i >= self.len() - 1 {
@@ -56,10 +62,17 @@ impl PokemonListState {
             }
             None => 0,
         };
+
         self.select(index);
     }
 
     pub fn previous(&mut self) {
+        if self.is_scroll_head() {
+            self.list_scrollbar_state.last();
+        } else {
+            self.list_scrollbar_state.prev();
+        }
+
         let index = match self.list_state.selected() {
             Some(i) => {
                 if i == 0 {
@@ -74,6 +87,7 @@ impl PokemonListState {
             }
             None => 0,
         };
+
         self.select(index);
     }
 
@@ -90,6 +104,7 @@ impl PokemonListState {
             })
         {
             self.select(i);
+            self.list_scrollbar_state = self.list_scrollbar_state.position(i);
         }
     }
 
@@ -101,6 +116,7 @@ impl PokemonListState {
             .or(Some(0))
         {
             self.select(i);
+            self.list_scrollbar_state = self.list_scrollbar_state.position(i);
         }
     }
 

@@ -66,7 +66,7 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             kind: _,
             state: _,
         } if c.is_ascii_digit() => {
-            app.pokemon_list.filter_query.push(c);
+            // app.pokemon_list.filter_query.push(c);
             // app.go_top(false);
         }
 
@@ -80,33 +80,11 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             match c {
                 Char('q') => return KeyHandleResult::Exit,
 
-                Down | Char('j') => {
-                    if app.pokemon_list.is_scroll_tail() {
-                        app.pokemon_list.list_scrollbar_state.first();
-                    } else {
-                        app.pokemon_list.list_scrollbar_state.next();
-                    }
+                Down | Char('j') => app.pokemon_list.next(),
+                PageDown => app.pokemon_list.scroll_down(PAGE_NUM),
 
-                    app.pokemon_list.next();
-                }
-                PageDown => {
-                    app.pokemon_list.scroll_down(PAGE_NUM);
-                    (0..PAGE_NUM).for_each(|_| app.pokemon_list.list_scrollbar_state.next());
-                }
-
-                Up | Char('k') => {
-                    if app.pokemon_list.is_scroll_head() {
-                        app.pokemon_list.list_scrollbar_state.last();
-                    } else {
-                        app.pokemon_list.list_scrollbar_state.prev();
-                    }
-
-                    app.pokemon_list.previous();
-                }
-                PageUp => {
-                    app.pokemon_list.scroll_up(PAGE_NUM);
-                    (0..PAGE_NUM).for_each(|_| app.pokemon_list.list_scrollbar_state.prev());
-                }
+                Up | Char('k') => app.pokemon_list.previous(),
+                PageUp => app.pokemon_list.scroll_up(PAGE_NUM),
 
                 Left | Char('h') => app.pokemon_list.previous_profile_page(),
                 Right | Char('l') => app.pokemon_list.next_profile_page(),
