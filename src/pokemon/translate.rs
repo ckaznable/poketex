@@ -40,6 +40,15 @@ pub struct TranslateRegionForm {
     form: Vec<String>,
 }
 
+impl TranslateRegionForm {
+    pub fn new(name: TranslateText, form: Vec<String>) -> Self {
+        Self {
+            name,
+            form,
+        }
+    }
+}
+
 impl From<TranslateRegionForm> for TranslateText {
     fn from(t: TranslateRegionForm) -> Self {
         let forms = t.form
@@ -48,7 +57,7 @@ impl From<TranslateRegionForm> for TranslateText {
 
         TranslateText {
             zh: format!(
-                "{} - {}",
+                "{}{}",
                 &t.name.zh,
                 &forms
                     .clone()
@@ -59,7 +68,7 @@ impl From<TranslateRegionForm> for TranslateText {
                     })
             ),
             en: format!(
-                "{} - {}",
+                "{}{}",
                 &t.name.en,
                 &forms
                     .clone()
@@ -70,7 +79,7 @@ impl From<TranslateRegionForm> for TranslateText {
                     })
             ),
             jp: format!(
-                "{} - {}",
+                "{}{}",
                 &t.name.jp,
                 &forms.fold(String::new(), |mut acc, t| {
                     acc.push_str(" - ");

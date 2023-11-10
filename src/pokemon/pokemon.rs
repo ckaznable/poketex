@@ -7,7 +7,7 @@ use serde::{
 };
 use serde_json::Value;
 
-use super::TranslateText;
+use super::{TranslateText, TranslateRegionForm};
 
 pub type PokemonAbility = Vec<u16>;
 pub type PokemonRegionForm = Vec<PokemonRegionFormEntity>;
@@ -84,7 +84,7 @@ impl PokemonEntity {
             .map(|f| PokemonEntity {
                 no: self.no,
                 r#type: f.r#type,
-                name: self.name.clone(),
+                name: TranslateRegionForm::new(self.name.clone(), f.form.clone()).into(),
                 ability: f.ability.clone(),
                 iv: f.iv,
                 ..Default::default()
