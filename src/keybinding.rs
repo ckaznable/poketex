@@ -26,12 +26,13 @@ fn on_editing(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             app.reset();
             app.pokemon_list.filter_query.clear();
         }
+        Enter => {
+            app.tui.input_mode = InputMode::Normal;
+        }
         _ => {
             app.key_handle.input.handle_event(&Event::Key(event));
             app.pokemon_list.filter_query.clear();
-            app.pokemon_list
-                .filter_query
-                .push_str(app.key_handle.input.value());
+            app.pokemon_list.set_list_filter(app.key_handle.input.value().to_string());
         }
     };
 

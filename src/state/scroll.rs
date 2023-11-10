@@ -107,8 +107,8 @@ impl PokemonListState {
     pub fn set_list_filter(&mut self, filter: String) {
         self.filter_query = filter.clone();
 
-        self.filtered_list.clear();
         if !filter.is_empty() {
+            self.filtered_list.clear();
             self.filtered_list.extend(
                 self.bundle
                     .pokemon
