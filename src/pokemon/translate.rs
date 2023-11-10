@@ -103,6 +103,41 @@ fn translate_region_form<T: AsRef<str>>(form: T) -> TranslateText {
             en: "Paldea form".to_string(),
             jp: "パルデアのすがた".to_string(),
         },
+        "Combat Breed" => TranslateText {
+            zh: "鬥戰種".to_string(),
+            en: "Combat Breed".to_string(),
+            jp: "コンバットしゅ".to_string(),
+        },
+        "Blaze Breed" => TranslateText {
+            zh: "火熾種".to_string(),
+            en: "Blaze Breed".to_string(),
+            jp: "ブレイズしゅ".to_string(),
+        },
+        "Aqua Breed" => TranslateText {
+            zh: "水瀾種".to_string(),
+            en: "Aqua Breed".to_string(),
+            jp: "ウォーターしゅ".to_string(),
+        },
+        "Zen Mode" => TranslateText {
+            zh: "達摩模式".to_string(),
+            en: "Zen Mode".to_string(),
+            jp: "ダルマモード".to_string(),
+        },
+        "Red-Striped" => TranslateText {
+            zh: "紅條紋".to_string(),
+            en: "Red-Striped".to_string(),
+            jp: "あかすじのすがた".to_string(),
+        },
+        "White-Striped" => TranslateText {
+            zh: "白條紋".to_string(),
+            en: "White-Striped".to_string(),
+            jp: "しろすじのすがた".to_string(),
+        },
+        "Blue-Striped" => TranslateText {
+            zh: "藍條紋".to_string(),
+            en: "Blue-Striped".to_string(),
+            jp: "あおすじのすがた".to_string(),
+        },
         _ => TranslateText::default(),
     }
 }
