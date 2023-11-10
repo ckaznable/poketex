@@ -5,7 +5,7 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem, Scrollbar, ScrollbarOrientation, StatefulWidget},
 };
 
-use crate::{constant::LIST_H_MARGIN, state::PokemonListState };
+use crate::{constant::LIST_H_MARGIN, state::PokemonListState};
 
 pub struct PokemonList;
 
@@ -35,14 +35,11 @@ impl StatefulWidget for PokemonList {
                 Style::default()
                     .bg(Color::LightGreen)
                     .add_modifier(Modifier::BOLD),
-            ).render(layout[0], buf, &mut state.list_state);
+            )
+            .render(layout[0], buf, &mut state.list_state);
 
         Scrollbar::new(ScrollbarOrientation::VerticalRight)
             .style(Style::default().bg(Color::DarkGray))
-            .render(
-                layout[0],
-                buf,
-                &mut state.list_scrollbar_state,
-            );
+            .render(layout[0], buf, &mut state.list_scrollbar_state);
     }
 }

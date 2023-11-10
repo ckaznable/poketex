@@ -32,7 +32,8 @@ fn on_editing(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
         _ => {
             app.key_handle.input.handle_event(&Event::Key(event));
             app.pokemon_list.filter_query.clear();
-            app.pokemon_list.set_list_filter(app.key_handle.input.value().to_string());
+            app.pokemon_list
+                .set_list_filter(app.key_handle.input.value().to_string());
         }
     };
 

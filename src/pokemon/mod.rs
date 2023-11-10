@@ -1,7 +1,7 @@
 pub mod ability;
-mod translate;
 #[allow(clippy::module_inception)]
 pub mod pokemon;
+mod translate;
 
 use std::{collections::HashMap, rc::Rc};
 

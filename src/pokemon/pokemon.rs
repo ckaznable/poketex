@@ -7,7 +7,7 @@ use serde::{
 };
 use serde_json::Value;
 
-use super::{TranslateText, TranslateRegionForm};
+use super::{TranslateRegionForm, TranslateText};
 
 pub type PokemonAbility = Vec<u16>;
 pub type PokemonRegionForm = Vec<PokemonRegionFormEntity>;
