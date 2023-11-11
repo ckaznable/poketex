@@ -56,12 +56,14 @@ impl AppState {
                 self.pokemon_list.scroll_to_end();
                 self.reset_command()
             }
-            s => if let Some(n) = Regex::new(r"(\d+)G").unwrap().captures(s) {
-                if let Ok(n) = n.get(1).unwrap().as_str().parse::<usize>() {
-                    self.pokemon_list.select(n.saturating_sub(1));
-                }
+            s => {
+                if let Some(n) = Regex::new(r"(\d+)G").unwrap().captures(s) {
+                    if let Ok(n) = n.get(1).unwrap().as_str().parse::<usize>() {
+                        self.pokemon_list.select(n.saturating_sub(1));
+                    }
 
-                self.reset_command()
+                    self.reset_command()
+                }
             }
         }
     }

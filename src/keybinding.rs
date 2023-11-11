@@ -65,33 +65,28 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             modifiers: _,
             kind: _,
             state: _,
-        } => {
-            match c {
-                Char('q') => return KeyHandleResult::Exit,
+        } => match c {
+            Char('q') => return KeyHandleResult::Exit,
+            Char('H') => app.toggle_help(),
 
-                Down | Char('j') => app.pokemon_list.next(),
-                PageDown => app.pokemon_list.scroll_down(PAGE_NUM),
+            Down | Char('j') => app.pokemon_list.next(),
+            PageDown => app.pokemon_list.scroll_down(PAGE_NUM),
 
-                Up | Char('k') => app.pokemon_list.previous(),
-                PageUp => app.pokemon_list.scroll_up(PAGE_NUM),
+            Up | Char('k') => app.pokemon_list.previous(),
+            PageUp => app.pokemon_list.scroll_up(PAGE_NUM),
 
-                Left | Char('h') => app.pokemon_list.previous_profile_page(),
-                Right | Char('l') => app.pokemon_list.next_profile_page(),
+            Left | Char('h') => app.pokemon_list.previous_profile_page(),
+            Right | Char('l') => app.pokemon_list.next_profile_page(),
 
-                Char('/') => app.tui.input_mode = InputMode::Editing,
+            Char('/') => app.tui.input_mode = InputMode::Editing,
 
-                Home => app.pokemon_list.scroll_to_first(),
-                End => app.pokemon_list.scroll_to_end(),
+            Home => app.pokemon_list.scroll_to_first(),
+            End => app.pokemon_list.scroll_to_end(),
 
-                Char('H') => {
-                    app.toggle_help();
-                }
-
-                Char(c) => app.command(c),
-                Enter|Esc => app.reset_command(),
-                _ => {}
-            }
-        }
+            Char(c) => app.command(c),
+            Enter | Esc => app.reset_command(),
+            _ => {}
+        },
     }
 
     KeyHandleResult::Continue
