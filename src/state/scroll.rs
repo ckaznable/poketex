@@ -45,13 +45,15 @@ impl PokemonListState {
         self.bundle.ability.clone()
     }
 
-    pub fn next(&mut self) {
-        if self.is_scroll_tail() {
-            self.list_scrollbar_state.first();
-        } else {
-            self.list_scrollbar_state.next();
-        }
+    pub fn scroll_to_first(&mut self) {
+        self.select(0)
+    }
 
+    pub fn scroll_to_end(&mut self) {
+        self.select(self.len() - 1)
+    }
+
+    pub fn next(&mut self) {
         let index = match self.list_state.selected() {
             Some(i) => {
                 if i >= self.len() - 1 {
@@ -67,12 +69,6 @@ impl PokemonListState {
     }
 
     pub fn previous(&mut self) {
-        if self.is_scroll_head() {
-            self.list_scrollbar_state.last();
-        } else {
-            self.list_scrollbar_state.prev();
-        }
-
         let index = match self.list_state.selected() {
             Some(i) => {
                 if i == 0 {
@@ -104,7 +100,6 @@ impl PokemonListState {
             })
         {
             self.select(i);
-            self.list_scrollbar_state = self.list_scrollbar_state.position(i);
         }
     }
 
@@ -116,7 +111,6 @@ impl PokemonListState {
             .or(Some(0))
         {
             self.select(i);
-            self.list_scrollbar_state = self.list_scrollbar_state.position(i);
         }
     }
 
@@ -144,6 +138,7 @@ impl PokemonListState {
     pub fn select(&mut self, index: usize) {
         self.profile_page = 0;
         self.list_state.select(Some(index));
+        self.list_scrollbar_state = self.list_scrollbar_state.position(index);
     }
 
     pub fn is_scroll_head(&self) -> bool {

@@ -59,17 +59,6 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             // app.cancel_last_cmd();
         }
 
-        // handle number key
-        KeyEvent {
-            code: Char(c),
-            modifiers: _,
-            kind: _,
-            state: _,
-        } if c.is_ascii_digit() => {
-            // app.pokemon_list.filter_query.push(c);
-            // app.go_top(false);
-        }
-
         // handle other key
         KeyEvent {
             code: c,
@@ -90,42 +79,18 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
                 Right | Char('l') => app.pokemon_list.next_profile_page(),
 
                 Char('/') => app.tui.input_mode = InputMode::Editing,
-                Esc => app.tui.query.clear(),
 
-                Home => app.jump(1),
-                End => app.jump(app.pokemon_list.len()),
-
-                Char('g') => {
-                    // if app.go_top {
-                    //     app.jump(1);
-                    //     app.pokemon_list.list_scrollbar_state.first();
-                    //     app.go_top(false);
-                    // } else {
-                    //     app.go_top(true);
-                    // }
-                }
-                Char('G') => {
-                    // if app.no.eq("") {
-                    //     app.jump(app.pokemon_list.len());
-                    //     app.pokemon_list.list_scrollbar_state.last();
-                    // } else {
-                    //     let index = app.no.trim().parse::<usize>().unwrap();
-                    //     app.jump(index);
-                    //     app.pokemon_list.list_scrollbar_state.position(index);
-                    // }
-
-                    // app.no(String::from(""));
-                    // app.go_top(false);
-                }
+                Home => app.pokemon_list.scroll_to_first(),
+                End => app.pokemon_list.scroll_to_end(),
 
                 Char('H') => {
                     app.toggle_help();
                 }
 
+                Char(c) => app.command(c),
+                Enter|Esc => app.reset_command(),
                 _ => {}
             }
-
-            // app.cancel_last_cmd();
         }
     }
 
