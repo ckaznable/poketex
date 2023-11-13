@@ -32,6 +32,7 @@ impl AppState {
     pub fn reset(&mut self) {
         self.tui.input_mode = InputMode::Normal;
         self.key_handle.input.reset();
+        self.pokemon_list.set_list_filter(String::from(""))
     }
 
     pub fn jump(&mut self, i: usize) {

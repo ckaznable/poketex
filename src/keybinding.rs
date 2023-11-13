@@ -22,13 +22,8 @@ fn on_editing(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
     use KeyCode::*;
 
     match event.code {
-        Esc => {
-            app.reset();
-            app.pokemon_list.filter_query.clear();
-        }
-        Enter => {
-            app.tui.input_mode = InputMode::Normal;
-        }
+        Esc => app.reset(),
+        Enter => app.tui.input_mode = InputMode::Normal,
         _ => {
             app.key_handle.input.handle_event(&Event::Key(event));
             app.pokemon_list.filter_query.clear();
