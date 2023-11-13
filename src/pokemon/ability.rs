@@ -1,20 +1,20 @@
 use serde::Deserialize;
 
-use crate::util::TranslateName;
+use super::TranslateText;
 
 #[derive(Deserialize, Clone, Default)]
 pub struct Ability {
     pub no: u16,
-    name: TranslateName,
-    desc: TranslateName,
+    name: TranslateText,
+    desc: TranslateText,
 }
 
 impl Ability {
     pub fn name(&self) -> String {
-        self.name.get_name()
+        self.name.get()
     }
 
     pub fn desc(&self) -> String {
-        self.desc.get_name()
+        self.desc.get()
     }
 }

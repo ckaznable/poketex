@@ -1,132 +1,47 @@
-mod ability;
-mod args;
-mod constant;
-mod env;
-mod keybinding;
-mod pokemon;
-mod ui;
-mod util;
-mod widget;
+use std::{error::Error, io, rc::Rc};
 
-use ability::Ability;
 use clap::Parser;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use env::DEF_LOCALES;
-use keybinding::handle_key;
-use pokemon::*;
+use poketex::{
+    env::DEF_LOCALES,
+    keybinding::handle_key,
+    pokemon::{AbilityMap, PokemonBundle, PokemonEntity},
+    state::{AppState, PokemonListState},
+    ui::ui,
+};
 use ratatui::{
     backend::{Backend, CrosstermBackend},
-    widgets::ScrollbarState,
     Terminal,
 };
 use serde_json::from_str;
-use std::{collections::HashMap, error::Error, io};
-use tui_input::Input;
-use widget::pmlist::PokemonListStatus;
 
-#[derive(Default)]
-pub enum InputMode {
-    #[default]
-    Normal,
-    Editing,
-}
-
-#[derive(Default)]
-pub struct AppState {
-    pm: PokemonListStatus,
-    input_mode: InputMode,
-    input: Input,
-    query: String,
-    no: String,
-    ability: HashMap<String, Ability>,
-    go_top: bool,
-    show_help: bool,
-    cursor: Option<(u16, u16)>,
-    list_scrollbar_state: ScrollbarState,
-}
-
-impl AppState {
-    fn new(pm: PokemonListStatus, ability: HashMap<String, Ability>) -> Self {
-        let list_scrollbar_state = ScrollbarState::default().content_length(pm.items.len());
-
-        AppState {
-            pm,
-            ability,
-            list_scrollbar_state,
-            ..Default::default()
-        }
-    }
-
-    fn reset(&mut self) {
-        self.input_mode = InputMode::Normal;
-        self.input.reset();
-    }
-
-    fn query(&mut self, q: String) {
-        self.query = q.clone();
-        self.pm.set_list_filter(q);
-    }
-
-    fn no(&mut self, no: String) {
-        self.no = no;
-    }
-
-    fn jump(&mut self, i: usize) {
-        if i > 0 || i - 1 > self.pm.items.len() {
-            self.pm.current(i - 1);
-        }
-    }
-
-    fn go_top(&mut self, f: bool) {
-        self.go_top = f;
-    }
-
-    fn cancel_last_cmd(&mut self) {
-        self.no = String::from("");
-    }
-
-    fn toggle_help(&mut self) {
-        self.show_help = !self.show_help;
-    }
-}
-
-fn get_pokemon_data() -> Result<Vec<Pokemon>, serde_json::Error> {
-    let contents = include_str!("data/data.json");
-    let pokemon: Result<Vec<Pokemon>, serde_json::Error> = from_str(contents);
-    pokemon
-}
-
-fn get_ability_data() -> Result<HashMap<String, Ability>, serde_json::Error> {
-    let contents = include_str!("data/ability.json");
-    let map: Result<HashMap<String, Ability>, serde_json::Error> = from_str(contents);
-    map
+#[derive(Parser)]
+#[command(author, version)]
+pub struct Args {
+    /// locales [zh, ja, en]
+    #[arg(short, long, default_value=&"en")]
+    pub locale: String,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let args = args::Args::parse();
+    let args = Args::parse();
 
     unsafe {
         DEF_LOCALES = Box::leak(args.locale.into_boxed_str());
     }
 
-    let ability = match get_ability_data() {
-        Ok(r) => r,
-        Err(_) => {
-            println!("ability data error");
-            std::process::exit(2);
-        }
+    let Ok((pokemon, ability)) = load_data() else {
+        println!("load data error");
+        std::process::exit(2);
     };
 
-    let pokemon = match get_pokemon_data() {
-        Ok(r) => r,
-        Err(_) => {
-            println!("pokemon data error");
-            std::process::exit(2);
-        }
+    let bundle = PokemonBundle {
+        ability: Rc::new(ability),
+        pokemon: pokemon.into_iter().map(Rc::new).collect(),
     };
 
     // setup terminal
@@ -136,9 +51,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
+    let pokemon_list = PokemonListState::new(Rc::new(bundle));
+
     // create app and run it
-    let pm = PokemonListStatus::new(pokemon);
-    let app = AppState::new(pm, ability);
+    let app = AppState {
+        pokemon_list,
+        ..Default::default()
+    };
     let res = run_app(&mut terminal, app);
 
     // restore terminal
@@ -159,12 +78,20 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Result<()> {
     loop {
-        terminal.draw(|f| ui::ui(f, &mut app))?;
+        terminal.draw(|f| ui(f, &mut app))?;
 
         if let Event::Key(event) = event::read()? {
-            if handle_key(&mut app, event).is_some() {
+            if handle_key(&mut app, event).is_exit() {
                 return Ok(());
             }
         }
     }
+}
+
+fn load_data() -> Result<(Vec<PokemonEntity>, AbilityMap), ()> {
+    let pokemon: Vec<PokemonEntity> =
+        from_str(include_str!("data/data.json")).expect("load pokemon data error");
+    let ability: AbilityMap =
+        from_str(include_str!("data/ability.json")).expect("load ability data error");
+    Ok((pokemon, ability))
 }
