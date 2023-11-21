@@ -45,13 +45,11 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             modifiers: KeyModifiers::CONTROL,
             kind: _,
             state: _,
-        } => {
-            match c {
-                Char('f') => app.pokemon_list.scroll_down(PAGE_NUM),
-                Char('b') => app.pokemon_list.scroll_up(PAGE_NUM),
-                _ => return KeyHandleResult::Continue,
-            }
-        }
+        } => match c {
+            Char('f') => app.pokemon_list.scroll_down(PAGE_NUM),
+            Char('b') => app.pokemon_list.scroll_up(PAGE_NUM),
+            _ => return KeyHandleResult::Continue,
+        },
 
         // handle other key
         KeyEvent {
