@@ -51,7 +51,6 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
                 Char('b') => app.pokemon_list.scroll_up(PAGE_NUM),
                 _ => return KeyHandleResult::Continue,
             }
-            // app.cancel_last_cmd();
         }
 
         // handle other key
