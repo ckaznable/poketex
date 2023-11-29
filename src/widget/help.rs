@@ -23,6 +23,7 @@ Press page up or page down to move 4 lines at a time\n
 Press q to exit\n
 Press H for help\n
 Press gg to go to the top and G to go to the bottom\n
+Press alt+j or alt+k to scroll up or down ability description\n
 Use / to enter search mode\n\n\n\n
 Press H to exit help";
 
