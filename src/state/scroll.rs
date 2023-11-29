@@ -10,6 +10,7 @@ pub struct PokemonListState {
     pub list_state: ListState,
     pub filtered_list: Vec<Rc<PokemonEntity>>,
     pub filter_query: String,
+    pub desc_scrollbar_state: ScrollableParagraphState,
     pub bundle: Rc<PokemonBundle>,
     pub profile_page: u8,
 }
@@ -137,6 +138,7 @@ impl PokemonListState {
 
     pub fn select(&mut self, index: usize) {
         self.profile_page = 0;
+        self.desc_scrollbar_state.reset();
         self.list_state.select(Some(index));
         self.list_scrollbar_state = self.list_scrollbar_state.position(index);
     }
@@ -210,5 +212,41 @@ impl PokemonListState {
         } else {
             &self.filtered_list
         }
+    }
+}
+
+#[derive(Default)]
+pub struct ScrollableParagraphState {
+    pub scrollbar_state: ScrollbarState,
+    pub position: usize,
+    pub height: usize,
+}
+
+impl ScrollableParagraphState {
+    pub fn set_height(&mut self, height: usize) {
+        self.scrollbar_state = self.scrollbar_state.content_length(height);
+        self.height = height;
+    }
+
+    pub fn reset(&mut self) {
+        self.position = 0;
+        self.update_scrollbar();
+    }
+
+    pub fn scroll_down(&mut self) {
+        if self.position < self.height.saturating_sub(2) {
+            self.position = self.position.saturating_add(1);
+        }
+
+        self.update_scrollbar();
+    }
+
+    pub fn scroll_up(&mut self) {
+        self.position = self.position.saturating_sub(1);
+        self.update_scrollbar();
+    }
+
+    fn update_scrollbar(&mut self) {
+        self.scrollbar_state = self.scrollbar_state.position(self.position)
     }
 }
