@@ -38,26 +38,30 @@ fn on_editing(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
 fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
     use KeyCode::*;
 
-    match event {
+    let KeyEvent {
+        code,
+        modifiers,
+        kind: _,
+        state: _,
+    } = event;
+
+    match (code, modifiers) {
         // handle key with control
-        KeyEvent {
-            code: c,
-            modifiers: KeyModifiers::CONTROL,
-            kind: _,
-            state: _,
-        } => match c {
+        (c, KeyModifiers::CONTROL) => match c {
             Char('f') => app.pokemon_list.scroll_down(PAGE_NUM),
             Char('b') => app.pokemon_list.scroll_up(PAGE_NUM),
             _ => return KeyHandleResult::Continue,
         },
 
+        // handle key with alt
+        (c, KeyModifiers::ALT) => match c {
+            Char('j') => app.pokemon_list.desc_scrollbar_state.scroll_down(),
+            Char('k') => app.pokemon_list.desc_scrollbar_state.scroll_up(),
+            _ => (),
+        },
+
         // handle other key
-        KeyEvent {
-            code: c,
-            modifiers: _,
-            kind: _,
-            state: _,
-        } => match c {
+        (c, _) => match c {
             Char('q') => return KeyHandleResult::Exit,
             Char('H') => app.toggle_help(),
 
@@ -77,7 +81,7 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
 
             Char(c) => app.command(c),
             Enter | Esc => app.reset_command(),
-            _ => {}
+            _ => (),
         },
     }
 

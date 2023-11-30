@@ -97,6 +97,8 @@ Press `H` to display help information.
 
 Press `gg` to go to the top and `G` to go to the bottom.
 
+Press `alt+j` or `alt+k` to scroll up or down ability description.
+
 Press `/` to enter search mode.
 
 ## RoadMap
