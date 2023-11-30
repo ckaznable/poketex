@@ -57,8 +57,8 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
         (c, KeyModifiers::ALT) => match c {
             Char('j') => app.pokemon_list.desc_scrollbar_state.scroll_down(),
             Char('k') => app.pokemon_list.desc_scrollbar_state.scroll_up(),
-            _ => ()
-        }
+            _ => (),
+        },
 
         // handle other key
         (c, _) => match c {
@@ -81,7 +81,7 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
 
             Char(c) => app.command(c),
             Enter | Esc => app.reset_command(),
-            _ => ()
+            _ => (),
         },
     }
 

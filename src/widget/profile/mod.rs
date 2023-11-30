@@ -44,7 +44,11 @@ impl StatefulWidget for PokemonProfileWidget {
 
         IVStatus::new(profile.iv).render(layout[2], buf);
 
-        AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(layout[4], buf, &mut state.desc_scrollbar_state);
+        AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
+            layout[4],
+            buf,
+            &mut state.desc_scrollbar_state,
+        );
 
         let page_num = state.region_form_len();
         if page_num > 1 {
