@@ -27,6 +27,36 @@ pub struct Args {
     pub locale: String,
 }
 
+struct Tui {
+    terminal: Terminal<CrosstermBackend<io::Stdout>>,
+}
+
+impl Tui {
+    fn init() -> Result<Self, Box<dyn Error>> {
+        // setup terminal
+        enable_raw_mode()?;
+        let mut stdout = io::stdout();
+        execute!(stdout, EnterAlternateScreen)?;
+        let backend = CrosstermBackend::new(stdout);
+        Ok(Self {
+            terminal: Terminal::new(backend)?,
+        })
+    }
+}
+
+impl Drop for Tui {
+    fn drop(&mut self) {
+        // restore terminal
+        let _ = disable_raw_mode();
+        let _ = execute!(
+            self.terminal.backend_mut(),
+            LeaveAlternateScreen,
+            DisableMouseCapture
+        );
+        let _ = self.terminal.show_cursor();
+    }
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
 
@@ -45,34 +75,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     // setup terminal
-    enable_raw_mode()?;
-    let mut stdout = io::stdout();
-    execute!(stdout, EnterAlternateScreen)?;
-    let backend = CrosstermBackend::new(stdout);
-    let mut terminal = Terminal::new(backend)?;
-
-    let pokemon_list = PokemonListState::new(Rc::new(bundle));
+    let mut tui = Tui::init()?;
 
     // create app and run it
     let app = AppState {
-        pokemon_list,
+        pokemon_list: PokemonListState::new(Rc::new(bundle)),
         ..Default::default()
     };
-    let res = run_app(&mut terminal, app);
 
-    // restore terminal
-    disable_raw_mode()?;
-    execute!(
-        terminal.backend_mut(),
-        LeaveAlternateScreen,
-        DisableMouseCapture
-    )?;
-    terminal.show_cursor()?;
-
-    if let Err(err) = res {
-        println!("{:?}", err)
-    }
-
+    run_app(&mut tui.terminal, app)?;
     Ok(())
 }
 
