@@ -62,27 +62,17 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
 }
 
 fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
-    let popup_layout = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints(
-            [
-                Constraint::Percentage((100 - percent_y) / 2),
-                Constraint::Percentage(percent_y),
-                Constraint::Percentage((100 - percent_y) / 2),
-            ]
-            .as_ref(),
-        )
-        .split(r);
+    let padding = (100 - percent_y) / 2;
+    let layout = Layout::new(
+        Direction::Vertical,
+        Constraint::from_percentages([padding, percent_y, padding]),
+    )
+    .split(r);
 
-    Layout::default()
-        .direction(Direction::Horizontal)
-        .constraints(
-            [
-                Constraint::Percentage((100 - percent_x) / 2),
-                Constraint::Percentage(percent_x),
-                Constraint::Percentage((100 - percent_x) / 2),
-            ]
-            .as_ref(),
-        )
-        .split(popup_layout[1])[1]
+    let padding = (100 - percent_x) / 2;
+    Layout::new(
+        Direction::Horizontal,
+        Constraint::from_percentages([padding, percent_x, padding]),
+    )
+    .split(layout[1])[1]
 }
