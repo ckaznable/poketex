@@ -20,10 +20,7 @@ impl Overview {
 
 impl Widget for Overview {
     fn render(self, area: ratatui::layout::Rect, buf: &mut ratatui::buffer::Buffer) {
-        let layout = Layout::default()
-            .direction(Direction::Horizontal)
-            .constraints([Constraint::Percentage(100)])
-            .split(area);
+        let layout = Layout::new(Direction::Horizontal, [Constraint::Percentage(100)]).split(area);
 
         let mut type_span = vec![
             Span::from(self.name + " "),

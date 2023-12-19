@@ -28,17 +28,18 @@ impl StatefulWidget for PokemonProfileWidget {
             return;
         };
 
-        let layout = Layout::default()
-            .direction(Direction::Vertical)
-            .constraints([
+        let layout = Layout::new(
+            Direction::Vertical,
+            [
                 Constraint::Length(1),
                 Constraint::Length(1),
                 Constraint::Length(11),
                 Constraint::Length(1),
                 Constraint::Min(0),
                 Constraint::Length(1),
-            ])
-            .split(area);
+            ],
+        )
+        .split(area);
 
         Overview::new(profile.name.get(), profile.r#type).render(layout[0], buf);
 

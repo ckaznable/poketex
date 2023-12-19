@@ -16,10 +16,7 @@ impl StatefulWidget for AbilityParaGraph {
     type State = ScrollableParagraphState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
-        let layout = Layout::default()
-            .direction(Direction::Vertical)
-            .constraints([Constraint::Percentage(100)])
-            .split(area);
+        let layout = Layout::new(Direction::Vertical, [Constraint::Percentage(100)]).split(area);
 
         let (span, count) =
             self.0
