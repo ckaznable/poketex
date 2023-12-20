@@ -101,8 +101,8 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
 
 fn load_data() -> Result<(Vec<PokemonEntity>, AbilityMap), ()> {
     let pokemon: Vec<PokemonEntity> =
-        from_str(include_str!("data/data.json")).expect("load pokemon data error");
+        from_str(include_str!("../assets/data/data.json")).expect("load pokemon data error");
     let ability: AbilityMap =
-        from_str(include_str!("data/ability.json")).expect("load ability data error");
+        from_str(include_str!("../assets/data/ability.json")).expect("load ability data error");
     Ok((pokemon, ability))
 }
