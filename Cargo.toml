@@ -23,6 +23,9 @@ lazy_static = "1.4"
 clap = { version = "4.4.7", features = ["derive"] }
 regex = "1.10.2"
 textwrap = "0.16.0"
+image = "0.24.7"
+ratatui-image = { git = "https://github.com/ckaznable/ratatui-image.git" }
+anyhow = "1.0.75"
 
 [profile.release]
 opt-level = "z"

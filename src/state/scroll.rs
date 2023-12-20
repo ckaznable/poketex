@@ -1,6 +1,7 @@
 use std::rc::Rc;
 
 use ratatui::widgets::{ListState, ScrollbarState};
+use ratatui_image::protocol::ResizeProtocol;
 
 use crate::pokemon::{AbilityMap, PokemonBundle, PokemonEntity};
 
@@ -13,6 +14,7 @@ pub struct PokemonListState {
     pub desc_scrollbar_state: ScrollableParagraphState,
     pub bundle: Rc<PokemonBundle>,
     pub profile_page: u8,
+    pub pokemon_images: Vec<Box<dyn ResizeProtocol>>,
 }
 
 impl PokemonListState {
@@ -32,6 +34,11 @@ impl PokemonListState {
             filtered_list,
             ..Default::default()
         }
+    }
+
+    pub fn with_assets(mut self, assets: Vec<Box<dyn ResizeProtocol>>) -> Self {
+        self.pokemon_images = assets;
+        self
     }
 
     pub fn len(&self) -> usize {

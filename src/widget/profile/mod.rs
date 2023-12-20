@@ -6,6 +6,7 @@ use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout},
     widgets::{Block, StatefulWidget, Widget},
 };
+use ratatui_image::ResizeImage;
 
 use crate::state::PokemonListState;
 
@@ -33,6 +34,7 @@ impl StatefulWidget for PokemonProfileWidget {
             [
                 Constraint::Length(1),
                 Constraint::Length(1),
+                Constraint::Length(5),
                 Constraint::Length(11),
                 Constraint::Length(1),
                 Constraint::Min(0),
@@ -43,10 +45,15 @@ impl StatefulWidget for PokemonProfileWidget {
 
         Overview::new(profile.name.get(), profile.r#type).render(layout[0], buf);
 
-        IVStatus::new(profile.iv).render(layout[2], buf);
+        let image_index = profile.no.saturating_sub(1) as usize;
+        if state.pokemon_images.get(image_index).is_some() {
+            ResizeImage::new(None).render(layout[2], buf, &mut state.pokemon_images[image_index]);
+        }
+
+        IVStatus::new(profile.iv).render(layout[3], buf);
 
         AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
-            layout[4],
+            layout[5],
             buf,
             &mut state.desc_scrollbar_state,
         );
@@ -58,7 +65,7 @@ impl StatefulWidget for PokemonProfileWidget {
             Block::default()
                 .title(title)
                 .title_alignment(Alignment::Center)
-                .render(layout[5], buf);
+                .render(layout[6], buf);
         }
     }
 }

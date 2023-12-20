@@ -1,3 +1,4 @@
+pub mod assets;
 pub mod constant;
 pub mod env;
 pub mod keybinding;
