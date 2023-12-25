@@ -125,7 +125,10 @@ fn load_assets() -> anyhow::Result<Vec<Box<dyn ResizeProtocol>>> {
 }
 
 fn decode_images(raws: Vec<Vec<u8>>) -> anyhow::Result<Vec<Box<dyn ResizeProtocol>>> {
-    let mut picker = Picker::new((8, 12));
+    let mut picker =  match Picker::from_termios() {
+        Ok(picker) => picker,
+        Err(_) => Picker::new((8, 12)),
+    };
     picker.guess_protocol();
 
     let len = raws.len();

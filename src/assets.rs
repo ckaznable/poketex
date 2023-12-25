@@ -1020,6 +1020,13 @@ pub fn load_low_quality_img() -> Vec<Vec<u8>> {
         "../assets/images/low/1007.png",
         "../assets/images/low/1008.png",
         "../assets/images/low/1009.png",
-        "../assets/images/low/1010.png"
+        "../assets/images/low/1010.png",
+        "../assets/images/low/1011.png",
+        "../assets/images/low/1012.png",
+        "../assets/images/low/1013.png",
+        "../assets/images/low/1014.png",
+        "../assets/images/low/1015.png",
+        "../assets/images/low/1016.png",
+        "../assets/images/low/1017.png"
     )
 }
