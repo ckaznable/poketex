@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{rc::Rc, path::PathBuf};
 
 use ratatui::widgets::{ListState, ScrollbarState};
 
@@ -13,6 +13,7 @@ pub struct PokemonListState {
     pub desc_scrollbar_state: ScrollableParagraphState,
     pub bundle: Rc<PokemonBundle>,
     pub profile_page: u8,
+    pub asset_path: PathBuf,
 }
 
 impl PokemonListState {
@@ -32,6 +33,11 @@ impl PokemonListState {
             filtered_list,
             ..Default::default()
         }
+    }
+
+    pub fn path(mut self, path: PathBuf) -> Self {
+        self.asset_path = path;
+        self
     }
 
     pub fn len(&self) -> usize {

@@ -31,7 +31,7 @@ impl StatefulWidget for PokemonProfileWidget {
 
         let lowercase_name = profile.name.en.to_lowercase();
         let (ansi_width, ansi_height, ansi) =
-            match std::fs::read(format!("./colorscripts/small/regular/{}", lowercase_name)) {
+            match std::fs::read(state.asset_path.join(lowercase_name)) {
                 Err(_) => (0u16, 0u16, None),
                 Ok(buffer) => match buffer.into_text() {
                     Ok(ansi) => (
