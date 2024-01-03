@@ -2,9 +2,10 @@ mod ability;
 mod iv;
 mod overview;
 
+use ansi_to_tui::IntoText;
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout},
-    widgets::{Block, StatefulWidget, Widget},
+    widgets::{Block, Paragraph, StatefulWidget, Widget},
 };
 
 use crate::state::PokemonListState;
@@ -28,12 +29,26 @@ impl StatefulWidget for PokemonProfileWidget {
             return;
         };
 
+        let lowercase_name = profile.name.get().to_lowercase();
+        let (ansi_width, ansi_height, ansi) =
+            match std::fs::read(format!("./colorscripts/small/regular/{}", lowercase_name)) {
+                Err(_) => (0u16, 0u16, None),
+                Ok(buffer) => match buffer.into_text() {
+                    Ok(ansi) => (
+                        ansi.width() as u16 + 1,
+                        ansi.height() as u16 + 1,
+                        Some(ansi),
+                    ),
+                    Err(_) => (0u16, 0u16, None),
+                },
+            };
+
         let layout = Layout::new(
             Direction::Vertical,
             [
                 Constraint::Length(1),
                 Constraint::Length(1),
-                Constraint::Length(11),
+                Constraint::Length(std::cmp::max(ansi_height, 11)),
                 Constraint::Length(1),
                 Constraint::Min(0),
                 Constraint::Length(1),
@@ -43,7 +58,16 @@ impl StatefulWidget for PokemonProfileWidget {
 
         Overview::new(profile.name.get(), profile.r#type).render(layout[0], buf);
 
-        IVStatus::new(profile.iv).render(layout[2], buf);
+        let ansi_and_vi = Layout::new(
+            Direction::Horizontal,
+            [Constraint::Length(ansi_width), Constraint::Min(0)],
+        )
+        .split(layout[2]);
+
+        IVStatus::new(profile.iv).render(ansi_and_vi[1], buf);
+        if let Some(ansi) = ansi {
+            Paragraph::new(ansi).render(ansi_and_vi[0], buf);
+        }
 
         AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
             layout[4],
