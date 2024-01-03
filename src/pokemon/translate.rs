@@ -4,9 +4,9 @@ use crate::env::{DEF_LOCALES, LOCALES};
 
 #[derive(Deserialize, Clone, Default)]
 pub struct TranslateText {
-    zh: String,
-    en: String,
-    jp: String,
+    pub zh: String,
+    pub en: String,
+    pub jp: String,
 }
 
 impl TranslateText {
