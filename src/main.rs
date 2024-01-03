@@ -1,4 +1,4 @@
-use std::{error::Error, io, rc::Rc, path::Path};
+use std::{error::Error, io, path::Path, rc::Rc};
 
 use clap::Parser;
 use crossterm::{
