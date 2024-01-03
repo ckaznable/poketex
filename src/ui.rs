@@ -15,11 +15,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     let size = f.size();
 
     // Surrounding block
-    let block = Block::default()
-        .borders(Borders::ALL)
-        .title("Poketex")
-        .title_alignment(Alignment::Center)
-        .border_type(BorderType::Rounded);
+    let block = Block::default();
     f.render_widget(block, size);
 
     // left chunks
