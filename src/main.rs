@@ -1,4 +1,6 @@
-use std::{error::Error, io, path::Path, rc::Rc};
+use anyhow::{anyhow, Result};
+use xdg::BaseDirectories;
+use std::{io, path::{Path, PathBuf}, rc::Rc};
 
 use clap::Parser;
 use crossterm::{
@@ -32,7 +34,7 @@ struct Tui {
 }
 
 impl Tui {
-    fn init() -> Result<Self, Box<dyn Error>> {
+    fn init() -> Result<Self> {
         // setup terminal
         enable_raw_mode()?;
         let mut stdout = io::stdout();
@@ -57,20 +59,9 @@ impl Drop for Tui {
     }
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<()> {
     let args = Args::parse();
-
-    let execute_dir = std::env::current_exe()?;
-    let execute_dir = execute_dir.parent().ok_or("can't get execute dir path")?;
-    let current_dir = std::env::current_dir()?;
-
-    let assets_path = Path::new("colorscripts/small/regular");
-    let assets_dir = execute_dir.join(assets_path);
-    let assets_dir = if assets_dir.exists() {
-        assets_dir
-    } else {
-        current_dir.join(assets_path)
-    };
+    let assets_dir = get_assets_dir_path()?;
 
     unsafe {
         DEF_LOCALES = Box::leak(args.locale.into_boxed_str());
@@ -117,4 +108,37 @@ fn load_data() -> Result<(Vec<PokemonEntity>, AbilityMap), ()> {
     let ability: AbilityMap =
         from_str(include_str!("../data/ability.json")).expect("load ability data error");
     Ok((pokemon, ability))
+}
+
+fn get_assets_dir_path() -> Result<PathBuf> {
+    let assets_path = Path::new("colorscripts/small/regular");
+
+    // binary execute path
+    if let Ok(execute_path) = std::env::current_exe() {
+        if let Some(execute_dir) = execute_path.parent() {
+            let assets_dir = execute_dir.join(assets_path);
+            if assets_dir.exists() {
+                return Ok(assets_dir)
+            }
+        };
+    };
+
+    // xdg data home
+    if let Ok(xdg_dir) = BaseDirectories::new() {
+        let data_home = xdg_dir.get_data_home().join("poketex");
+        let assets_dir = data_home.join(assets_path);
+        if assets_dir.exists() {
+            return Ok(assets_dir)
+        }
+    };
+
+    let usr_dir = Path::new("/usr/local/share/poketex");
+    let assets_dir = usr_dir.join(assets_path);
+    if assets_dir.exists() {
+        return Ok(assets_dir)
+    }
+
+    // default current dir
+    let current_dir = std::env::current_dir()?;
+    Ok(current_dir.join(assets_path))
 }

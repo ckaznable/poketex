@@ -24,6 +24,8 @@ clap = { version = "4.4.7", features = ["derive"] }
 regex = "1.10.2"
 textwrap = "0.16.0"
 ansi-to-tui = "3.1.0"
+anyhow = "1.0.79"
+xdg = "2.5.2"
 
 [profile.release]
 opt-level = "z"
