@@ -1,6 +1,10 @@
 use anyhow::Result;
+use std::{
+    io,
+    path::{Path, PathBuf},
+    rc::Rc,
+};
 use xdg::BaseDirectories;
-use std::{io, path::{Path, PathBuf}, rc::Rc};
 
 use clap::Parser;
 use crossterm::{
@@ -118,7 +122,7 @@ fn get_assets_dir_path() -> Result<PathBuf> {
         if let Some(execute_dir) = execute_path.parent() {
             let assets_dir = execute_dir.join(assets_path);
             if assets_dir.exists() {
-                return Ok(assets_dir)
+                return Ok(assets_dir);
             }
         };
     };
@@ -128,20 +132,20 @@ fn get_assets_dir_path() -> Result<PathBuf> {
         let data_home = xdg_dir.get_data_home().join("poketex");
         let assets_dir = data_home.join(assets_path);
         if assets_dir.exists() {
-            return Ok(assets_dir)
+            return Ok(assets_dir);
         }
     };
 
     let usr_dir = Path::new("/usr/share/poketex");
     let assets_dir = usr_dir.join(assets_path);
     if assets_dir.exists() {
-        return Ok(assets_dir)
+        return Ok(assets_dir);
     }
 
     let usr_dir = Path::new("/usr/local/share/poketex");
     let assets_dir = usr_dir.join(assets_path);
     if assets_dir.exists() {
-        return Ok(assets_dir)
+        return Ok(assets_dir);
     }
 
     // default current dir
