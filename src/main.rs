@@ -132,6 +132,12 @@ fn get_assets_dir_path() -> Result<PathBuf> {
         }
     };
 
+    let usr_dir = Path::new("/usr/share/poketex");
+    let assets_dir = usr_dir.join(assets_path);
+    if assets_dir.exists() {
+        return Ok(assets_dir)
+    }
+
     let usr_dir = Path::new("/usr/local/share/poketex");
     let assets_dir = usr_dir.join(assets_path);
     if assets_dir.exists() {
