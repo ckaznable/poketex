@@ -25,6 +25,7 @@
 - [Usage](#usage)
 - [Keyboard Navigation Instructions](#keyboard-navigation-instructions)
 - [Roadmap](#roadmap)
+- [Troubleshoot](#troubleshoot)
 - [Pokemon data source](#pokemon-data-source)
 - [License](#license)
 
@@ -123,6 +124,19 @@ Press `/` to enter search mode.
 - [x] gen 9 DLC - The Teal Mask
 - [ ] gen 9 DLC - The Indigo Disk
 - [x] Image support(powered by [pokemon-colorscripts](https://gitlab.com/phoneybadger/pokemon-colorscripts))
+
+## Troubleshoot
+
+### Image are not displaying
+
+If the ansi images are not displaying, please copy the `colorscripts` folder from this repository to `/usr/local/share/poketex`.
+
+```shell
+git clone https://github.com/ckaznable/poketex
+cd poketex
+mkdir -p /usr/local/share/poketex/colorscripts
+cp -rf colorscripts /usr/local/share/poketex
+```
 
 ## Pokemon data source
 
