@@ -63,15 +63,21 @@ If you're using Arch Linux, you can install poketex with using an [AUR helper](h
 paru -S poketex
 ```
 
-## Building
+### Install from Source Code
 
 poketex is written in Rust, so you'll need to grab a [Rust installation](https://www.rust-lang.org/) in order to compile it.
 
 ```shell
 git clone https://github.com/ckaznable/poketex
 cd poketex
-cargo build --release
-./target/release/poketex
+make build
+sudo make install
+```
+
+If you want to uninstall
+
+```shell
+sudo make uninsall
 ```
 
 ## Usage
