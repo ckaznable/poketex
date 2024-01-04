@@ -21,7 +21,7 @@
   - [Install from Github Release](#install-from-github-release)
   - [Install from crates.io](#install-from-cratesio)
   - [Install from the AUR](#install-from-the-aur)
-- [Building](#building)
+  - [Install from Source Code](#install-from_source-code)
 - [Usage](#usage)
 - [Keyboard Navigation Instructions](#keyboard-navigation-instructions)
 - [Roadmap](#roadmap)
