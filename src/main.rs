@@ -1,4 +1,4 @@
-use std::{error::Error, io, rc::Rc};
+use std::{error::Error, io, path::Path, rc::Rc};
 
 use clap::Parser;
 use crossterm::{
@@ -60,6 +60,18 @@ impl Drop for Tui {
 fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
 
+    let execute_dir = std::env::current_exe()?;
+    let execute_dir = execute_dir.parent().ok_or("can't get execute dir path")?;
+    let current_dir = std::env::current_dir()?;
+
+    let assets_path = Path::new("colorscripts/small/regular");
+    let assets_dir = execute_dir.join(assets_path);
+    let assets_dir = if assets_dir.exists() {
+        assets_dir
+    } else {
+        current_dir.join(assets_path)
+    };
+
     unsafe {
         DEF_LOCALES = Box::leak(args.locale.into_boxed_str());
     }
@@ -79,7 +91,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // create app and run it
     let app = AppState {
-        pokemon_list: PokemonListState::new(Rc::new(bundle)),
+        pokemon_list: PokemonListState::new(Rc::new(bundle)).path(assets_dir),
         ..Default::default()
     };
 
