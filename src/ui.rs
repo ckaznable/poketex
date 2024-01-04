@@ -1,6 +1,6 @@
 use ratatui::{
-    layout::{Alignment, Constraint, Direction, Layout, Rect},
-    widgets::{Block, BorderType, Borders},
+    layout::{Constraint, Direction, Layout, Rect},
+    widgets::Block,
     Frame,
 };
 
@@ -15,8 +15,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     let size = f.size();
 
     // Surrounding block
-    let block = Block::default();
-    f.render_widget(block, size);
+    f.render_widget(Block::default(), size);
 
     // left chunks
     let chunks = Layout::default()
