@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use xdg::BaseDirectories;
 use std::{io, path::{Path, PathBuf}, rc::Rc};
 
