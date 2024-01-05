@@ -21,10 +21,11 @@
   - [Install from Github Release](#install-from-github-release)
   - [Install from crates.io](#install-from-cratesio)
   - [Install from the AUR](#install-from-the-aur)
-- [Building](#building)
+  - [Install from Source Code](#install-from_source-code)
 - [Usage](#usage)
 - [Keyboard Navigation Instructions](#keyboard-navigation-instructions)
 - [Roadmap](#roadmap)
+- [Troubleshoot](#troubleshoot)
 - [Pokemon data source](#pokemon-data-source)
 - [License](#license)
 
@@ -63,15 +64,21 @@ If you're using Arch Linux, you can install poketex with using an [AUR helper](h
 paru -S poketex
 ```
 
-## Building
+### Install from Source Code
 
 poketex is written in Rust, so you'll need to grab a [Rust installation](https://www.rust-lang.org/) in order to compile it.
 
 ```shell
 git clone https://github.com/ckaznable/poketex
 cd poketex
-cargo build --release
-./target/release/poketex
+make build
+sudo make install
+```
+
+If you want to uninstall
+
+```shell
+sudo make uninsall
 ```
 
 ## Usage
@@ -117,6 +124,19 @@ Press `/` to enter search mode.
 - [x] gen 9 DLC - The Teal Mask
 - [ ] gen 9 DLC - The Indigo Disk
 - [x] Image support(powered by [pokemon-colorscripts](https://gitlab.com/phoneybadger/pokemon-colorscripts))
+
+## Troubleshoot
+
+### Image are not displaying
+
+If the ansi images are not displaying, please copy the `colorscripts` folder from this repository to `/usr/local/share/poketex`.
+
+```shell
+git clone https://github.com/ckaznable/poketex
+cd poketex
+mkdir -p /usr/local/share/poketex/colorscripts
+cp -rf colorscripts /usr/local/share/poketex
+```
 
 ## Pokemon data source
 
