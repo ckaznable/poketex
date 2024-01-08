@@ -90,8 +90,11 @@ jobs:
         shell: bash
         run: |
           #strip target/${{ matrix.target }}/release/poketex
-          cd target/${{ matrix.target }}/release
-          tar czvf ../../../poketex-${{ matrix.target }}.tar.gz poketex
+          mkdir -p package
+          cp target/${{ matrix.target }}/release/poketex package
+          cp -r colorscripts package
+          cd package
+          tar czvf ../poketex-${{ matrix.target }}.tar.gz poketex colorscripts
           cd -
 
       - name: Publish
@@ -128,8 +131,11 @@ jobs:
         shell: bash
         run: |
           #strip target/${{ matrix.target }}/release/poketex
-          cd target/${{ matrix.target }}/release
-          tar czvf ../../../poketex-${{ matrix.target }}.tar.gz poketex
+          mkdir -p package
+          cp target/${{ matrix.target }}/release/poketex package
+          cp -r colorscripts package
+          cd package
+          tar czvf ../poketex-${{ matrix.target }}.tar.gz poketex colorscripts
           cd -
       - name: Publish
         uses: softprops/action-gh-release@v1
@@ -162,8 +168,11 @@ jobs:
         shell: bash
         run: |
           #strip target/${{ matrix.target }}/release/poketex
-          cd target/${{ matrix.target }}/release
-          tar czvf ../../../poketex-${{ matrix.target }}.tar.gz poketex
+          mkdir -p package
+          cp target/${{ matrix.target }}/release/poketex package
+          cp -r colorscripts package
+          cd package
+          tar czvf ../poketex-${{ matrix.target }}.tar.gz poketex colorscripts
           cd -
       - name: Publish
         uses: softprops/action-gh-release@v1
