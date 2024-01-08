@@ -17,38 +17,49 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     // Surrounding block
     f.render_widget(Block::default(), size);
 
+    let area = f.size();
+    let constraint = if area.width >= 55 {
+        [Constraint::Min(0), Constraint::Length(25)]
+    } else if area.width >= 100 {
+        [Constraint::Min(0), Constraint::Length(40)]
+    } else {
+        [Constraint::Percentage(100), Constraint::Length(0)]
+    };
+
     // left chunks
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
         .margin(2)
-        .constraints([Constraint::Ratio(2, 3), Constraint::Ratio(1, 3)])
+        .constraints(constraint)
         .split(f.size());
 
     let block = PokemonProfileWidget;
     f.render_stateful_widget(block, chunks[0], &mut app.pokemon_list);
 
     // right chunks
-    let chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([
-            Constraint::Length(match app.tui.input_mode {
-                InputMode::Normal => 1,
-                InputMode::Editing => 3,
-            }),
-            Constraint::Min(0),
-        ])
-        .split(chunks[1]);
+    if chunks[1].width >= 25 {
+        let chunks = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([
+                Constraint::Length(match app.tui.input_mode {
+                    InputMode::Normal => 1,
+                    InputMode::Editing => 3,
+                }),
+                Constraint::Min(0),
+            ])
+            .split(chunks[1]);
 
-    // search input
-    f.render_stateful_widget(Filter, chunks[0], app);
+        // search input
+        f.render_stateful_widget(Filter, chunks[0], app);
 
-    // pm list
-    f.render_stateful_widget(PokemonList, chunks[1], &mut app.pokemon_list);
+        // pm list
+        f.render_stateful_widget(PokemonList, chunks[1], &mut app.pokemon_list);
 
-    // search input cursor
-    if let Some((x, y)) = app.tui.cursor {
-        f.set_cursor(x, y)
-    };
+        // search input cursor
+        if let Some((x, y)) = app.tui.cursor {
+            f.set_cursor(x, y)
+        };
+    }
 
     if app.tui.show_help {
         let area = centered_rect(50, 70, size);
