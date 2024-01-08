@@ -4,6 +4,8 @@ use std::{
     path::{Path, PathBuf},
     rc::Rc,
 };
+
+#[cfg(unix)]
 use xdg::BaseDirectories;
 
 use clap::Parser;
@@ -128,6 +130,7 @@ fn get_assets_dir_path() -> Result<PathBuf> {
     };
 
     // xdg data home
+    #[cfg(unix)]
     if let Ok(xdg_dir) = BaseDirectories::new() {
         let data_home = xdg_dir.get_data_home().join("poketex");
         let assets_dir = data_home.join(assets_path);
