@@ -29,7 +29,17 @@ impl StatefulWidget for PokemonProfileWidget {
             return;
         };
 
-        let lowercase_name = profile.name.en.to_lowercase();
+        let lowercase_name = profile
+            .default_name()
+            .replace("Galarian form", "galar")
+            .replace("Alola Form", "alola")
+            .replace("Hisuian form", "hisui")
+            .replace("Paldea form", "paldea")
+            .replace("Meowscarada", "meowth-galar")
+            .replace(" - ", "-")
+            .replace(' ', "-")
+            .to_lowercase();
+
         let (ansi_width, ansi_height, ansi) =
             match std::fs::read(state.asset_path.join(lowercase_name)) {
                 Err(_) => (0u16, 0u16, None),

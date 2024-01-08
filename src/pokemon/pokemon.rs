@@ -93,6 +93,10 @@ impl PokemonEntity {
 
         Some(form)
     }
+
+    pub fn default_name(&self) -> String {
+        self.name.en.clone()
+    }
 }
 
 #[derive(Deserialize, Clone)]
