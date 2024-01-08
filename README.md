@@ -122,8 +122,8 @@ Press `/` to enter search mode.
   - [x] --locale [en, ja, zh]
 - [x] help key
 - [x] gen 9 DLC - The Teal Mask
-- [ ] gen 9 DLC - The Indigo Disk
-- [x] Image support(powered by [pokemon-colorscripts](https://gitlab.com/phoneybadger/pokemon-colorscripts))
+- [x] gen 9 DLC - The Indigo Disk
+- [x] Image support (powered by [pokemon-colorscripts](https://gitlab.com/phoneybadger/pokemon-colorscripts))
 
 ## Troubleshoot
 
