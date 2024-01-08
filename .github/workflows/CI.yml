@@ -28,19 +28,19 @@ jobs:
       - name: cargo fmt -- --check
         run: cargo fmt --all -- --check
 
-
   test:
     name: Test
     needs: [style]
-    runs-on: ubuntu-latest
 
     strategy:
       matrix:
         build: [stable, beta, nightly]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - build: nightly
             benches: true
 
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
