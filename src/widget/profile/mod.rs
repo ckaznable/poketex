@@ -71,12 +71,13 @@ impl StatefulWidget for PokemonProfileWidget {
         )
         .split(area);
 
-        let show_layout2_ability = !show_ability && area_width > 100;
         let iv_status_constraint = if area_width < 35 {
             Constraint::Length(0)
         } else {
             Constraint::Min(0)
         };
+
+        let show_layout2_ability = !show_ability && area_width > 100;
         let layout2_ability_length = if show_layout2_ability { 40 } else { 0 };
         let layout2_ability_margin = if show_layout2_ability { 1 } else { 0 };
         let layout2 = Layout::new(
