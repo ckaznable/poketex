@@ -45,7 +45,10 @@ Download the last version binary depending on your configuration here: [Release 
 Then you just need to enter this command in your terminal:
 
 ```shell
-tar -xf <downloaded_archive> poketext && sudo mv poketext /usr/local/bin
+tar -xf <downloaded_archive> poketext
+sudo mv poketext /usr/local/bin
+sudo mkdir -p /usr/local/share/poketex/colorscripts
+sudo cp -rf colorscripts /usr/local/share/poketex
 ```
 
 ### Install from crates.io
