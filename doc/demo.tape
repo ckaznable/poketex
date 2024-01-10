@@ -2,7 +2,7 @@ Output demo.gif
 
 Set FontSize 16
 Set Width 1280
-Set Height 720
+Set Height 600
 
 Hide
 Type "poketex"
@@ -34,7 +34,7 @@ Enter
 Sleep 200ms
 
 Left
-Sleep 100ms
+Sleep 300ms
 Right
 
 Sleep 2s
