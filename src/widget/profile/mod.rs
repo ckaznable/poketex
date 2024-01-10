@@ -29,6 +29,11 @@ impl StatefulWidget for PokemonProfileWidget {
             return;
         };
 
+        let area_height = area.height;
+        let area_width = area.width;
+        let region_form_page_num = state.region_form_len();
+        let show_ability = area_height > 19;
+
         let lowercase_name = profile
             .default_name()
             .replace("Galarian form", "galar")
@@ -59,35 +64,60 @@ impl StatefulWidget for PokemonProfileWidget {
                 Constraint::Length(1),
                 Constraint::Length(1),
                 Constraint::Length(std::cmp::max(ansi_height, 11)),
-                Constraint::Length(1),
+                Constraint::Length(if show_ability { 1 } else { 0 }),
                 Constraint::Min(0),
-                Constraint::Length(1),
+                Constraint::Length(if region_form_page_num > 1 { 1 } else { 0 }),
             ],
         )
         .split(area);
 
-        Overview::new(profile.name.get(), profile.r#type).render(layout[0], buf);
+        let iv_status_constraint = if area_width < 35 {
+            Constraint::Length(0)
+        } else {
+            Constraint::Min(0)
+        };
 
-        let ansi_and_vi = Layout::new(
+        let show_layout2_ability = !show_ability && area_width > 100;
+        let layout2_ability_length = if show_layout2_ability { 40 } else { 0 };
+        let layout2_ability_margin = if show_layout2_ability { 1 } else { 0 };
+        let layout2 = Layout::new(
             Direction::Horizontal,
-            [Constraint::Length(ansi_width), Constraint::Min(0)],
+            [
+                Constraint::Length(ansi_width),
+                iv_status_constraint,
+                Constraint::Length(layout2_ability_margin),
+                Constraint::Length(layout2_ability_length),
+            ],
         )
         .split(layout[2]);
 
-        IVStatus::new(profile.iv).render(ansi_and_vi[1], buf);
+        Overview::new(profile.name.get(), profile.r#type).render(layout[0], buf);
+
+        IVStatus::new(profile.iv).render(layout2[1], buf);
         if let Some(ansi) = ansi {
-            Paragraph::new(ansi).render(ansi_and_vi[0], buf);
+            Paragraph::new(ansi).render(layout2[0], buf);
         }
 
-        AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
-            layout[4],
-            buf,
-            &mut state.desc_scrollbar_state,
-        );
+        if show_ability || show_layout2_ability {
+            let ability_area = if show_layout2_ability {
+                layout2[3]
+            } else {
+                layout[4]
+            };
 
-        let page_num = state.region_form_len();
-        if page_num > 1 {
-            let title = format!("<- {} / {} ->", state.profile_page + 1, page_num,);
+            AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
+                ability_area,
+                buf,
+                &mut state.desc_scrollbar_state,
+            );
+        }
+
+        if region_form_page_num > 1 {
+            let title = format!(
+                "<- {} / {} ->",
+                state.profile_page + 1,
+                region_form_page_num,
+            );
 
             Block::default()
                 .title(title)
