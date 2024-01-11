@@ -38,6 +38,8 @@
 
 ## Installation
 
+[![Packaging status](https://repology.org/badge/vertical-allrepos/poketex.svg)](https://repology.org/project/poketex/versions)
+
 ### Install from Github Release
 
 Download the last version binary depending on your configuration here: [Release Page](https://github.com/ckaznable/poketex/releases/latest)
