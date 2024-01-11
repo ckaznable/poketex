@@ -1,6 +1,7 @@
 use lazy_static::lazy_static;
 use sys_locale::get_locale;
 
+pub static LIST_H_MARGIN: u16 = 2;
 pub static mut DEF_LOCALES: &str = "en";
 
 lazy_static! {

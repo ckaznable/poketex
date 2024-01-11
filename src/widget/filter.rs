@@ -5,7 +5,7 @@ use ratatui::{
 };
 
 use crate::{
-    constant::LIST_H_MARGIN,
+    env::LIST_H_MARGIN,
     state::{AppState, InputMode},
 };
 

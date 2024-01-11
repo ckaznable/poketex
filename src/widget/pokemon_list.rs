@@ -5,7 +5,7 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem, Scrollbar, ScrollbarOrientation, StatefulWidget},
 };
 
-use crate::{constant::LIST_H_MARGIN, state::PokemonListState};
+use crate::{env::LIST_H_MARGIN, state::PokemonListState};
 
 pub struct PokemonList;
 

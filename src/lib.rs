@@ -1,4 +1,3 @@
-pub mod constant;
 pub mod env;
 pub mod keybinding;
 pub mod pokemon;
