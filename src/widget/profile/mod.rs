@@ -4,6 +4,7 @@ mod overview;
 
 use ansi_to_tui::IntoText;
 use ratatui::{
+    buffer::Buffer,
     layout::{Alignment, Constraint, Direction, Layout},
     widgets::{Block, Paragraph, StatefulWidget, Widget},
 };
@@ -93,23 +94,53 @@ impl StatefulWidget for PokemonProfileWidget {
 
         Overview::new(profile.name.get(), profile.r#type).render(layout[0], buf);
 
-        IVStatus::new(profile.iv).render(layout2[1], buf);
-        if let Some(ansi) = ansi {
-            Paragraph::new(ansi).render(layout2[0], buf);
-        }
+        let is_show_ability = show_ability || show_layout2_ability;
 
-        if show_ability || show_layout2_ability {
-            let ability_area = if show_layout2_ability {
-                layout2[3]
-            } else {
-                layout[4]
-            };
+        let mut render_default_iv_ability = |buf: &mut Buffer| {
+            IVStatus::new(profile.iv).render(layout2[1], buf);
 
-            AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
-                ability_area,
-                buf,
-                &mut state.desc_scrollbar_state,
-            );
+            // ability at bottom
+            if is_show_ability {
+                let ability_area = if show_layout2_ability {
+                    layout2[3]
+                } else {
+                    layout[4]
+                };
+
+                AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
+                    ability_area,
+                    buf,
+                    &mut state.desc_scrollbar_state,
+                );
+            }
+        };
+
+        match ansi {
+            Some(ansi) => {
+                let ansi_height = ansi.height();
+                Paragraph::new(ansi).render(layout2[0], buf);
+
+                if ansi_height > 15 && area_height <= 25 {
+                    let layout = Layout::new(
+                        Direction::Vertical,
+                        [Constraint::Length(10), Constraint::Min(0)],
+                    )
+                    .split(layout2[1]);
+
+                    IVStatus::new(profile.iv).render(layout[0], buf);
+                    // ability at right side bottom
+                    AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
+                        layout[1],
+                        buf,
+                        &mut state.desc_scrollbar_state,
+                    );
+                } else {
+                    render_default_iv_ability(buf);
+                }
+            }
+            None => {
+                render_default_iv_ability(buf);
+            }
         }
 
         if region_form_page_num > 1 {
