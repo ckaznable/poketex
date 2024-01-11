@@ -1,6 +1,5 @@
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
-    widgets::Block,
     Frame,
 };
 
@@ -12,11 +11,6 @@ use crate::{
 };
 
 pub fn ui(f: &mut Frame, app: &mut AppState) {
-    let size = f.size();
-
-    // Surrounding block
-    f.render_widget(Block::default(), size);
-
     let area = f.size();
     let constraint = if area.width >= 55 {
         [Constraint::Min(0), Constraint::Length(25)]
@@ -62,7 +56,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     }
 
     if app.tui.show_help {
-        let area = centered_rect(50, 70, size);
+        let area = centered_rect(50, 70, area);
         f.render_widget(Help, area);
     }
 }
