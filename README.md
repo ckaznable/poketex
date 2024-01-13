@@ -63,10 +63,10 @@ cargo install poketex
 
 ### Install from the AUR
 
-If you're using Arch Linux, you can install poketex with using an [AUR helper](https://wiki.archlinux.org/title/AUR_helpers). For example:
+If you're using Arch Linux, you can install poketex from the [extra repository](https://archlinux.org/packages/extra/x86_64/poketex/) using [pacman](https://wiki.archlinux.org/title/Pacman):
 
 ```shell
-paru -S poketex
+pacman -S poketex
 ```
 
 ### Install from Source Code
