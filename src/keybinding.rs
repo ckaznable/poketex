@@ -74,6 +74,7 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
             Left | Char('h') => app.pokemon_list.previous_profile_page(),
             Right | Char('l') => app.pokemon_list.next_profile_page(),
 
+            Char('f') => app.pokemon_list.increase_ascii_form_index(),
             Char('/') => app.tui.input_mode = InputMode::Editing,
 
             Home => app.pokemon_list.scroll_to_first(),
