@@ -55,13 +55,15 @@ impl Tui {
 impl Drop for Tui {
     fn drop(&mut self) {
         // restore terminal
-        let _ = disable_raw_mode();
-        let _ = execute!(
-            self.terminal.backend_mut(),
-            LeaveAlternateScreen,
-            DisableMouseCapture
-        );
-        let _ = self.terminal.show_cursor();
+        if crossterm::terminal::is_raw_mode_enabled().unwrap() {
+            let _ = execute!(
+                self.terminal.backend_mut(),
+                LeaveAlternateScreen,
+                DisableMouseCapture
+            );
+            let _ = disable_raw_mode();
+            let _ = self.terminal.show_cursor();
+        }
     }
 }
 
