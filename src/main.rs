@@ -17,7 +17,10 @@ use crossterm::{
 use poketex::{
     env::DEF_LOCALES,
     keybinding::handle_key,
-    pokemon::{AbilityMap, PokemonBundle, PokemonEntity, ascii_form::{AsciiJson, AsciiForms}},
+    pokemon::{
+        ascii_form::{AsciiForms, AsciiJson},
+        AbilityMap, PokemonBundle, PokemonEntity,
+    },
     state::{AppState, PokemonListState},
     ui::ui,
 };
@@ -90,7 +93,8 @@ fn main() -> Result<()> {
 
     // create app and run it
     let app = AppState {
-        pokemon_list: PokemonListState::new(Rc::new(bundle), AsciiForms::from(ascii)).path(assets_dir),
+        pokemon_list: PokemonListState::new(Rc::new(bundle), AsciiForms::from(ascii))
+            .path(assets_dir),
         ..Default::default()
     };
 

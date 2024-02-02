@@ -9,7 +9,7 @@ use ratatui::{
     widgets::{Block, Paragraph, StatefulWidget, Widget},
 };
 
-use crate::state::{PokemonListState, pokemon::AsciiType};
+use crate::state::{pokemon::AsciiType, PokemonListState};
 
 use self::ability::AbilityParaGraph;
 
@@ -46,10 +46,11 @@ impl StatefulWidget for PokemonProfileWidget {
             .replace(' ', "-")
             .to_lowercase();
 
-        let ascii_form = state.ascii_form_map
+        let ascii_form = state
+            .ascii_form_map
             .get(&lowercase_name)
             .and_then(|forms| forms.get(state.ascii_form_index % forms.len()))
-            .map_or("", |f|f);
+            .map_or("", |f| f);
 
         let ascii_type = if ascii_form == "shiny" {
             AsciiType::Shiny
@@ -65,18 +66,21 @@ impl StatefulWidget for PokemonProfileWidget {
             ascii_form.to_string()
         };
 
-        let (ansi_width, ansi_height, ansi) =
-            match std::fs::read(state.get_assets_path(ascii_type).join(lowercase_name + &ascii_form)) {
+        let (ansi_width, ansi_height, ansi) = match std::fs::read(
+            state
+                .get_assets_path(ascii_type)
+                .join(lowercase_name + &ascii_form),
+        ) {
+            Err(_) => (0u16, 0u16, None),
+            Ok(buffer) => match buffer.into_text() {
+                Ok(ansi) => (
+                    ansi.width() as u16 + 1,
+                    ansi.height() as u16 + 1,
+                    Some(ansi),
+                ),
                 Err(_) => (0u16, 0u16, None),
-                Ok(buffer) => match buffer.into_text() {
-                    Ok(ansi) => (
-                        ansi.width() as u16 + 1,
-                        ansi.height() as u16 + 1,
-                        Some(ansi),
-                    ),
-                    Err(_) => (0u16, 0u16, None),
-                },
-            };
+            },
+        };
 
         let layout = Layout::new(
             Direction::Vertical,

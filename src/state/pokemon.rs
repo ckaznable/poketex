@@ -2,7 +2,7 @@ use std::{path::PathBuf, rc::Rc};
 
 use ratatui::widgets::{ListState, ScrollbarState};
 
-use crate::pokemon::{AbilityMap, PokemonBundle, PokemonEntity, ascii_form::AsciiForms};
+use crate::pokemon::{ascii_form::AsciiForms, AbilityMap, PokemonBundle, PokemonEntity};
 
 #[derive(Copy, Clone)]
 pub enum AsciiType {

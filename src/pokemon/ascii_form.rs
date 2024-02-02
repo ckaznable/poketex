@@ -30,7 +30,7 @@ impl From<AsciiJson> for AsciiForms {
                         item.forms
                             .into_iter()
                             .chain(vec![String::from("shiny")])
-                            .collect()
+                            .collect(),
                     )
                 })
                 .fold(BTreeMap::new(), |mut map, item| {
@@ -46,4 +46,3 @@ impl AsciiForms {
         self.0.get(name)
     }
 }
-
