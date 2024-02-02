@@ -117,7 +117,6 @@ impl StatefulWidget for PokemonProfileWidget {
 
         match ansi {
             Some(ansi) => {
-                let ansi_height = ansi.height();
                 Paragraph::new(ansi).render(layout2[0], buf);
 
                 if ansi_height > 15 && area_height <= 25 {
