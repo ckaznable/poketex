@@ -17,7 +17,7 @@ use crossterm::{
 use poketex::{
     env::DEF_LOCALES,
     keybinding::handle_key,
-    pokemon::{AbilityMap, PokemonBundle, PokemonEntity},
+    pokemon::{AbilityMap, PokemonBundle, PokemonEntity, ascii_form::{AsciiJson, AsciiForms}},
     state::{AppState, PokemonListState},
     ui::ui,
 };
@@ -75,7 +75,7 @@ fn main() -> Result<()> {
         DEF_LOCALES = Box::leak(args.locale.into_boxed_str());
     }
 
-    let Ok((pokemon, ability)) = load_data() else {
+    let Ok((pokemon, ability, ascii)) = load_data() else {
         println!("load data error");
         std::process::exit(2);
     };
@@ -90,7 +90,7 @@ fn main() -> Result<()> {
 
     // create app and run it
     let app = AppState {
-        pokemon_list: PokemonListState::new(Rc::new(bundle)).path(assets_dir),
+        pokemon_list: PokemonListState::new(Rc::new(bundle), AsciiForms::from(ascii)).path(assets_dir),
         ..Default::default()
     };
 
@@ -110,16 +110,18 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Res
     }
 }
 
-fn load_data() -> Result<(Vec<PokemonEntity>, AbilityMap), ()> {
+fn load_data() -> Result<(Vec<PokemonEntity>, AbilityMap, AsciiJson), ()> {
     let pokemon: Vec<PokemonEntity> =
         from_str(include_str!("../data/data.json")).expect("load pokemon data error");
     let ability: AbilityMap =
         from_str(include_str!("../data/ability.json")).expect("load ability data error");
-    Ok((pokemon, ability))
+    let ascii: AsciiJson =
+        from_str(include_str!("../data/ascii.json")).expect("load ascii data error");
+    Ok((pokemon, ability, ascii))
 }
 
 fn get_assets_dir_path() -> Result<PathBuf> {
-    let assets_path = Path::new("colorscripts/small/regular");
+    let assets_path = Path::new("colorscripts/small");
 
     // binary execute path
     if let Ok(execute_path) = std::env::current_exe() {

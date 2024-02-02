@@ -1,8 +1,8 @@
 pub mod pokemon;
 pub mod tui;
 
-use regex::Regex;
 pub use pokemon::PokemonListState;
+use regex::Regex;
 
 use tui_input::Input;
 
