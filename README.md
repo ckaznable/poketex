@@ -58,7 +58,7 @@ sudo cp -rf colorscripts /usr/local/share/poketex
 If you're a Rust programmer, poketex can be installed with cargo.
 
 ```shell
-cargo install poketex
+cargo install poketex --locked
 ```
 
 ### Install from the AUR
