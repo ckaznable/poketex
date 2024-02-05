@@ -5,7 +5,7 @@ mod overview;
 use ansi_to_tui::IntoText;
 use ratatui::{
     buffer::Buffer,
-    layout::{Alignment, Constraint, Direction, Layout},
+    layout::{Alignment, Constraint, Layout},
     widgets::{Block, Paragraph, StatefulWidget, Widget},
 };
 

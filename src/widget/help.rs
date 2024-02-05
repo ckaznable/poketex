@@ -2,7 +2,7 @@ use ratatui::{
     buffer::Buffer,
     layout::{Alignment, Rect},
     style::{Color, Style},
-    widgets::{Block, Borders, Clear, Paragraph, Widget},
+    widgets::{Block, Clear, Paragraph, Widget},
 };
 
 pub struct Help;
