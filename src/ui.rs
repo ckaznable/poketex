@@ -21,27 +21,27 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     };
 
     // left chunks
-    let chunks = Layout::horizontal(constraint).margin(2).split(f.size());
+    let [left, right] = Layout::horizontal(constraint).margin(2).areas(f.size());
 
     let block = PokemonProfileWidget;
-    f.render_stateful_widget(block, chunks[0], &mut app.pokemon_list);
+    f.render_stateful_widget(block, left, &mut app.pokemon_list);
 
     // right chunks
-    if chunks[1].width >= 25 {
-        let chunks = Layout::vertical([
+    if right.width >= 25 {
+        let [search, pm_list] = Layout::vertical([
             Constraint::Length(match app.tui.input_mode {
                 InputMode::Normal => 1,
                 InputMode::Editing => 3,
             }),
             Constraint::Min(0),
         ])
-        .split(chunks[1]);
+        .areas(right);
 
         // search input
-        f.render_stateful_widget(Filter, chunks[0], app);
+        f.render_stateful_widget(Filter, search, app);
 
         // pm list
-        f.render_stateful_widget(PokemonList, chunks[1], &mut app.pokemon_list);
+        f.render_stateful_widget(PokemonList, pm_list, &mut app.pokemon_list);
 
         // search input cursor
         if let Some((x, y)) = app.tui.cursor {
@@ -57,10 +57,12 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
 
 fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
     let padding = (100 - percent_y) / 2;
-    let layout =
-        Layout::vertical(Constraint::from_percentages([padding, percent_y, padding])).split(r);
+    let [v_center] =
+        Layout::vertical(Constraint::from_percentages([padding, percent_y, padding])).areas(r);
 
     let padding = (100 - percent_x) / 2;
-    Layout::horizontal(Constraint::from_percentages([padding, percent_x, padding])).split(layout[1])
-        [1]
+    let [_, center, _] =
+        Layout::horizontal(Constraint::from_percentages([padding, percent_x, padding]))
+            .areas(v_center);
+    center
 }
