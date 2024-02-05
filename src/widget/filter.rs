@@ -16,7 +16,7 @@ impl Filter {
         Paragraph::new(value)
             .style(Style::default().fg(Color::Yellow))
             .scroll((0, scroll as u16))
-            .block(Block::default().borders(Borders::ALL))
+            .block(Block::bordered())
     }
 }
 

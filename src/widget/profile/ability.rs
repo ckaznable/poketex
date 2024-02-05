@@ -44,7 +44,7 @@ impl StatefulWidget for AbilityParaGraph {
         });
 
         Paragraph::new(span)
-            .block(Block::default().title("Ability").borders(Borders::ALL))
+            .block(Block::bordered().title("Ability"))
             .wrap(Wrap { trim: false })
             .scroll((state.position as u16, 0))
             .render(area, buf);

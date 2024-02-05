@@ -82,8 +82,7 @@ impl StatefulWidget for PokemonProfileWidget {
             },
         };
 
-        let layout = Layout::new(
-            Direction::Vertical,
+        let layout = Layout::vertical(
             [
                 Constraint::Length(1),
                 Constraint::Length(1),
@@ -104,8 +103,7 @@ impl StatefulWidget for PokemonProfileWidget {
         let show_layout2_ability = !show_ability && area_width > 100;
         let layout2_ability_length = if show_layout2_ability { 40 } else { 0 };
         let layout2_ability_margin = if show_layout2_ability { 1 } else { 0 };
-        let layout2 = Layout::new(
-            Direction::Horizontal,
+        let layout2 = Layout::horizontal(
             [
                 Constraint::Length(ansi_width),
                 iv_status_constraint,
@@ -143,8 +141,7 @@ impl StatefulWidget for PokemonProfileWidget {
                 Paragraph::new(ansi).render(layout2[0], buf);
 
                 if ansi_height > 15 && area_height <= 25 {
-                    let layout = Layout::new(
-                        Direction::Vertical,
+                    let layout = Layout::vertical(
                         [Constraint::Length(10), Constraint::Min(0)],
                     )
                     .split(layout2[1]);

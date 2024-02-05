@@ -21,10 +21,8 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     };
 
     // left chunks
-    let chunks = Layout::default()
-        .direction(Direction::Horizontal)
+    let chunks = Layout::horizontal(constraint)
         .margin(2)
-        .constraints(constraint)
         .split(f.size());
 
     let block = PokemonProfileWidget;
@@ -32,9 +30,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
 
     // right chunks
     if chunks[1].width >= 25 {
-        let chunks = Layout::default()
-            .direction(Direction::Vertical)
-            .constraints([
+        let chunks = Layout::vertical([
                 Constraint::Length(match app.tui.input_mode {
                     InputMode::Normal => 1,
                     InputMode::Editing => 3,
@@ -63,15 +59,13 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
 
 fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
     let padding = (100 - percent_y) / 2;
-    let layout = Layout::new(
-        Direction::Vertical,
+    let layout = Layout::vertical(
         Constraint::from_percentages([padding, percent_y, padding]),
     )
     .split(r);
 
     let padding = (100 - percent_x) / 2;
-    Layout::new(
-        Direction::Horizontal,
+    Layout::horizontal(
         Constraint::from_percentages([padding, percent_x, padding]),
     )
     .split(layout[1])[1]
