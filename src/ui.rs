@@ -23,8 +23,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     // left chunks
     let [left, right] = Layout::horizontal(constraint).margin(2).areas(f.size());
 
-    let block = PokemonProfileWidget;
-    f.render_stateful_widget(block, left, &mut app.pokemon_list);
+    f.render_stateful_widget(PokemonProfileWidget, left, &mut app.pokemon_list);
 
     // right chunks
     if right.width >= 25 {
