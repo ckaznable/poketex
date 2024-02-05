@@ -1,8 +1,8 @@
-pub mod scroll;
+pub mod pokemon;
 pub mod tui;
 
+pub use pokemon::PokemonListState;
 use regex::Regex;
-pub use scroll::PokemonListState;
 
 use tui_input::Input;
 

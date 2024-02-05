@@ -2,7 +2,13 @@ use std::{path::PathBuf, rc::Rc};
 
 use ratatui::widgets::{ListState, ScrollbarState};
 
-use crate::pokemon::{AbilityMap, PokemonBundle, PokemonEntity};
+use crate::pokemon::{ascii_form::AsciiForms, AbilityMap, PokemonBundle, PokemonEntity};
+
+#[derive(Copy, Clone)]
+pub enum AsciiType {
+    Normal,
+    Shiny,
+}
 
 #[derive(Default)]
 pub struct PokemonListState {
@@ -13,11 +19,13 @@ pub struct PokemonListState {
     pub desc_scrollbar_state: ScrollableParagraphState,
     pub bundle: Rc<PokemonBundle>,
     pub profile_page: u8,
-    pub asset_path: PathBuf,
+    pub ascii_root: PathBuf,
+    pub ascii_form_map: AsciiForms,
+    pub ascii_form_index: usize,
 }
 
 impl PokemonListState {
-    pub fn new(bundle: Rc<PokemonBundle>) -> Self {
+    pub fn new(bundle: Rc<PokemonBundle>, ascii_form_map: AsciiForms) -> Self {
         let pokemon_len = bundle.pokemon.len();
         let list_scrollbar_state = ScrollbarState::default().content_length(pokemon_len);
 
@@ -31,13 +39,21 @@ impl PokemonListState {
             list_state,
             list_scrollbar_state,
             filtered_list,
+            ascii_form_map,
             ..Default::default()
         }
     }
 
     pub fn path(mut self, path: PathBuf) -> Self {
-        self.asset_path = path;
+        self.ascii_root = path;
         self
+    }
+
+    pub fn get_assets_path(&self, t: AsciiType) -> PathBuf {
+        self.ascii_root.join(match t {
+            AsciiType::Normal => "regular",
+            AsciiType::Shiny => "shiny",
+        })
     }
 
     pub fn len(&self) -> usize {
@@ -147,6 +163,7 @@ impl PokemonListState {
         self.desc_scrollbar_state.reset();
         self.list_state.select(Some(index));
         self.list_scrollbar_state = self.list_scrollbar_state.position(index);
+        self.reset_ascii_form_index();
     }
 
     pub fn is_scroll_head(&self) -> bool {
@@ -199,6 +216,7 @@ impl PokemonListState {
     }
 
     pub fn next_profile_page(&mut self) {
+        self.reset_ascii_form_index();
         let len = self.region_form_len();
         if len > 0 && self.profile_page < len - 1 {
             self.profile_page = self.profile_page.saturating_add(1);
@@ -206,6 +224,7 @@ impl PokemonListState {
     }
 
     pub fn previous_profile_page(&mut self) {
+        self.reset_ascii_form_index();
         let len = self.region_form_len();
         if len > 0 && self.profile_page > 0 {
             self.profile_page = self.profile_page.saturating_sub(1);
@@ -218,6 +237,18 @@ impl PokemonListState {
         } else {
             &self.filtered_list
         }
+    }
+
+    pub fn increase_ascii_form_index(&mut self) {
+        self.ascii_form_index = if self.ascii_form_index == usize::MAX {
+            0
+        } else {
+            self.ascii_form_index + 1
+        }
+    }
+
+    pub fn reset_ascii_form_index(&mut self) {
+        self.ascii_form_index = 0
     }
 }
 

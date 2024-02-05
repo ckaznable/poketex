@@ -1,4 +1,5 @@
 pub mod ability;
+pub mod ascii_form;
 #[allow(clippy::module_inception)]
 pub mod pokemon;
 mod translate;

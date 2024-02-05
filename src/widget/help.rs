@@ -20,6 +20,7 @@ impl Widget for Help {
         let text = "
 Use arrow keys or hjkl to move\n
 Press page up or page down to move 4 lines at a time\n
+Press f to switch ascii forms\n
 Press q to exit\n
 Press H for help\n
 Press gg to go to the top and G to go to the bottom\n

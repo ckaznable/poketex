@@ -8,7 +8,7 @@ use ratatui::{
     },
 };
 
-use crate::{pokemon::PokemonAbilityText, state::scroll::ScrollableParagraphState};
+use crate::{pokemon::PokemonAbilityText, state::pokemon::ScrollableParagraphState};
 
 pub struct AbilityParaGraph(pub Vec<PokemonAbilityText>);
 
