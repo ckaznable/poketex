@@ -3,9 +3,7 @@ use ratatui::{
     layout::Rect,
     style::{Color, Style},
     text::Line,
-    widgets::{
-        Block, Paragraph, Scrollbar, ScrollbarOrientation, StatefulWidget, Widget, Wrap,
-    },
+    widgets::{Block, Paragraph, Scrollbar, ScrollbarOrientation, StatefulWidget, Widget, Wrap},
 };
 
 use crate::{pokemon::PokemonAbilityText, state::pokemon::ScrollableParagraphState};
