@@ -39,9 +39,7 @@ impl StatefulWidget for Filter {
             .constraints([Constraint::Min(0)])
             .areas(layout);
 
-        Block::default()
-            .borders(Borders::LEFT)
-            .render(layout, buf);
+        Block::default().borders(Borders::LEFT).render(layout, buf);
 
         match state.tui.input_mode {
             InputMode::Normal => {

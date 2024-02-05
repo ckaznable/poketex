@@ -82,17 +82,16 @@ impl StatefulWidget for PokemonProfileWidget {
             },
         };
 
-        let [overview, _, main, _, ability_bottom_area, region_form_navigation] = Layout::vertical(
-            [
+        let [overview, _, main, _, ability_bottom_area, region_form_navigation] =
+            Layout::vertical([
                 Constraint::Length(1),
                 Constraint::Length(1),
                 Constraint::Length(std::cmp::max(ansi_height, 11)),
                 Constraint::Length(if show_ability { 1 } else { 0 }),
                 Constraint::Min(0),
                 Constraint::Length(if region_form_page_num > 1 { 1 } else { 0 }),
-            ],
-        )
-        .areas(area);
+            ])
+            .areas(area);
 
         let iv_status_constraint = if area_width < 35 {
             Constraint::Length(0)
@@ -103,14 +102,12 @@ impl StatefulWidget for PokemonProfileWidget {
         let show_main_ability = !show_ability && area_width > 100;
         let main_right_side_length = if show_main_ability { 40 } else { 0 };
         let main_right_side_margin = if show_main_ability { 1 } else { 0 };
-        let [ansi_area, main_iv, _, main_ability] = Layout::horizontal(
-            [
-                Constraint::Length(ansi_width),
-                iv_status_constraint,
-                Constraint::Length(main_right_side_margin),
-                Constraint::Length(main_right_side_length),
-            ],
-        )
+        let [ansi_area, main_iv, _, main_ability] = Layout::horizontal([
+            Constraint::Length(ansi_width),
+            iv_status_constraint,
+            Constraint::Length(main_right_side_margin),
+            Constraint::Length(main_right_side_length),
+        ])
         .areas(main);
 
         Overview::new(profile.name.get(), profile.r#type).render(overview, buf);
@@ -141,10 +138,9 @@ impl StatefulWidget for PokemonProfileWidget {
                 Paragraph::new(ansi).render(ansi_area, buf);
 
                 if ansi_height > 15 && area_height <= 25 {
-                    let [iv_area, ability_bottom_area] = Layout::vertical(
-                        [Constraint::Length(10), Constraint::Min(0)],
-                    )
-                    .areas(main_iv);
+                    let [iv_area, ability_bottom_area] =
+                        Layout::vertical([Constraint::Length(10), Constraint::Min(0)])
+                            .areas(main_iv);
 
                     IVStatus::new(profile.iv).render(iv_area, buf);
                     // ability at right side bottom

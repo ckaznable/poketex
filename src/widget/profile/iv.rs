@@ -21,8 +21,7 @@ impl<'a> IVStatusBar<'a> {
 
 impl<'a> Widget for IVStatusBar<'a> {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let layout = Layout::horizontal([Constraint::Length(6), Constraint::Min(0)])
-            .split(area);
+        let layout = Layout::horizontal([Constraint::Length(6), Constraint::Min(0)]).split(area);
 
         Block::default().title(self.title).render(layout[0], buf);
 
@@ -72,8 +71,7 @@ impl Widget for IVStatus {
         }
         constraints.push(Constraint::Min(0));
 
-        let layout = Layout::vertical(constraints)
-            .split(area);
+        let layout = Layout::vertical(constraints).split(area);
 
         let max = self.get_pokemon_iv_highest();
 
