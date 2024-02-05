@@ -11,6 +11,9 @@ Enter
 Show
 Sleep 1s
 
+Type "f"
+Sleep 1s
+
 Down 10
 Sleep 500ms
 
