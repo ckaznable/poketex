@@ -20,9 +20,9 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
         [Constraint::Percentage(100), Constraint::Length(0)]
     };
 
-    // left chunks
     let [left, right] = Layout::horizontal(constraint).margin(2).areas(f.size());
 
+    // left chunks
     f.render_stateful_widget(PokemonProfileWidget, left, &mut app.pokemon_list);
 
     // right chunks
