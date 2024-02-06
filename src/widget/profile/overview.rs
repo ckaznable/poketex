@@ -1,5 +1,4 @@
 use ratatui::{
-    layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     text::Span,
     widgets::{Block, Borders, Widget},
@@ -20,8 +19,6 @@ impl Overview {
 
 impl Widget for Overview {
     fn render(self, area: ratatui::layout::Rect, buf: &mut ratatui::buffer::Buffer) {
-        let layout = Layout::new(Direction::Horizontal, [Constraint::Percentage(100)]).split(area);
-
         let mut type_span = vec![
             Span::from(self.name + " "),
             Span::styled(
@@ -43,6 +40,6 @@ impl Widget for Overview {
         Block::default()
             .title(type_span)
             .borders(Borders::NONE)
-            .render(layout[0], buf);
+            .render(area, buf);
     }
 }

@@ -5,7 +5,7 @@ mod overview;
 use ansi_to_tui::IntoText;
 use ratatui::{
     buffer::Buffer,
-    layout::{Alignment, Constraint, Direction, Layout},
+    layout::{Alignment, Constraint, Layout},
     widgets::{Block, Paragraph, StatefulWidget, Widget},
 };
 
@@ -82,18 +82,16 @@ impl StatefulWidget for PokemonProfileWidget {
             },
         };
 
-        let layout = Layout::new(
-            Direction::Vertical,
-            [
+        let [overview, _, main, _, ability_bottom_area, region_form_navigation] =
+            Layout::vertical([
                 Constraint::Length(1),
                 Constraint::Length(1),
                 Constraint::Length(std::cmp::max(ansi_height, 11)),
                 Constraint::Length(if show_ability { 1 } else { 0 }),
                 Constraint::Min(0),
                 Constraint::Length(if region_form_page_num > 1 { 1 } else { 0 }),
-            ],
-        )
-        .split(area);
+            ])
+            .areas(area);
 
         let iv_status_constraint = if area_width < 35 {
             Constraint::Length(0)
@@ -101,37 +99,34 @@ impl StatefulWidget for PokemonProfileWidget {
             Constraint::Min(0)
         };
 
-        let show_layout2_ability = !show_ability && area_width > 100;
-        let layout2_ability_length = if show_layout2_ability { 40 } else { 0 };
-        let layout2_ability_margin = if show_layout2_ability { 1 } else { 0 };
-        let layout2 = Layout::new(
-            Direction::Horizontal,
-            [
-                Constraint::Length(ansi_width),
-                iv_status_constraint,
-                Constraint::Length(layout2_ability_margin),
-                Constraint::Length(layout2_ability_length),
-            ],
-        )
-        .split(layout[2]);
+        let show_main_ability = !show_ability && area_width > 100;
+        let main_right_side_length = if show_main_ability { 40 } else { 0 };
+        let main_right_side_margin = if show_main_ability { 1 } else { 0 };
+        let [ansi_area, main_iv, _, main_ability] = Layout::horizontal([
+            Constraint::Length(ansi_width),
+            iv_status_constraint,
+            Constraint::Length(main_right_side_margin),
+            Constraint::Length(main_right_side_length),
+        ])
+        .areas(main);
 
-        Overview::new(profile.name.get(), profile.r#type).render(layout[0], buf);
+        Overview::new(profile.name.get(), profile.r#type).render(overview, buf);
 
-        let is_show_ability = show_ability || show_layout2_ability;
+        let is_show_ability = show_ability || show_main_ability;
 
         let mut render_default_iv_ability = |buf: &mut Buffer| {
-            IVStatus::new(profile.iv).render(layout2[1], buf);
+            IVStatus::new(profile.iv).render(main_iv, buf);
 
             // ability at bottom
             if is_show_ability {
-                let ability_area = if show_layout2_ability {
-                    layout2[3]
+                let ability_bottom_area = if show_main_ability {
+                    main_ability
                 } else {
-                    layout[4]
+                    ability_bottom_area
                 };
 
                 AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
-                    ability_area,
+                    ability_bottom_area,
                     buf,
                     &mut state.desc_scrollbar_state,
                 );
@@ -140,19 +135,17 @@ impl StatefulWidget for PokemonProfileWidget {
 
         match ansi {
             Some(ansi) => {
-                Paragraph::new(ansi).render(layout2[0], buf);
+                Paragraph::new(ansi).render(ansi_area, buf);
 
                 if ansi_height > 15 && area_height <= 25 {
-                    let layout = Layout::new(
-                        Direction::Vertical,
-                        [Constraint::Length(10), Constraint::Min(0)],
-                    )
-                    .split(layout2[1]);
+                    let [iv_area, ability_bottom_area] =
+                        Layout::vertical([Constraint::Length(10), Constraint::Min(0)])
+                            .areas(main_iv);
 
-                    IVStatus::new(profile.iv).render(layout[0], buf);
+                    IVStatus::new(profile.iv).render(iv_area, buf);
                     // ability at right side bottom
                     AbilityParaGraph(state.bundle.get_ability_text(&profile)).render(
-                        layout[1],
+                        ability_bottom_area,
                         buf,
                         &mut state.desc_scrollbar_state,
                     );
@@ -175,7 +168,7 @@ impl StatefulWidget for PokemonProfileWidget {
             Block::default()
                 .title(title)
                 .title_alignment(Alignment::Center)
-                .render(layout[5], buf);
+                .render(region_form_navigation, buf);
         }
     }
 }

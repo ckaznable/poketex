@@ -18,10 +18,10 @@ impl StatefulWidget for PokemonList {
         buf: &mut ratatui::buffer::Buffer,
         state: &mut Self::State,
     ) {
-        let layout = Layout::default()
+        let [layout] = Layout::default()
             .constraints([Constraint::Percentage(100)])
             .horizontal_margin(LIST_H_MARGIN)
-            .split(area);
+            .areas(area);
 
         let items: Vec<ListItem> = state
             .list_items()
@@ -36,10 +36,10 @@ impl StatefulWidget for PokemonList {
                     .bg(Color::LightGreen)
                     .add_modifier(Modifier::BOLD),
             )
-            .render(layout[0], buf, &mut state.list_state);
+            .render(layout, buf, &mut state.list_state);
 
         Scrollbar::new(ScrollbarOrientation::VerticalRight)
             .style(Style::default().bg(Color::DarkGray))
-            .render(layout[0], buf, &mut state.list_scrollbar_state);
+            .render(layout, buf, &mut state.list_scrollbar_state);
     }
 }

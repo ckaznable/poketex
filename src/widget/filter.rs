@@ -16,7 +16,7 @@ impl Filter {
         Paragraph::new(value)
             .style(Style::default().fg(Color::Yellow))
             .scroll((0, scroll as u16))
-            .block(Block::default().borders(Borders::ALL))
+            .block(Block::bordered())
     }
 }
 
@@ -29,19 +29,17 @@ impl StatefulWidget for Filter {
         buf: &mut ratatui::buffer::Buffer,
         state: &mut Self::State,
     ) {
-        let layout = Layout::default()
+        let [layout] = Layout::default()
             .constraints([Constraint::Min(0)])
             .horizontal_margin(LIST_H_MARGIN)
-            .split(area);
+            .areas(area);
 
-        let wrapper = Layout::default()
+        let [wrapper] = Layout::default()
             .horizontal_margin(1)
             .constraints([Constraint::Min(0)])
-            .split(layout[0]);
+            .areas(layout);
 
-        Block::default()
-            .borders(Borders::LEFT)
-            .render(layout[0], buf);
+        Block::default().borders(Borders::LEFT).render(layout, buf);
 
         match state.tui.input_mode {
             InputMode::Normal => {
@@ -49,19 +47,19 @@ impl StatefulWidget for Filter {
                 Block::default()
                     .title_alignment(Alignment::Center)
                     .title("Press '/' search")
-                    .render(wrapper[0], buf);
+                    .render(wrapper, buf);
             }
 
             InputMode::Editing => {
                 let width = area.width.max(3) - 3;
                 let scroll = state.key_handle.input.visual_scroll(width as usize);
                 self.paragraph(scroll, state.key_handle.input.value())
-                    .render(wrapper[0], buf);
+                    .render(wrapper, buf);
                 state.tui.cursor = Some((
-                    wrapper[0].x
+                    wrapper.x
                         + ((state.key_handle.input.visual_cursor()).max(scroll) - scroll) as u16
                         + 1,
-                    wrapper[0].y + 1,
+                    wrapper.y + 1,
                 ))
             }
         }

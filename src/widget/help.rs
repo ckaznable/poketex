@@ -2,7 +2,7 @@ use ratatui::{
     buffer::Buffer,
     layout::{Alignment, Rect},
     style::{Color, Style},
-    widgets::{Block, Borders, Clear, Paragraph, Widget},
+    widgets::{Block, Clear, Paragraph, Widget},
 };
 
 pub struct Help;
@@ -11,11 +11,10 @@ impl Widget for Help {
     fn render(self, area: Rect, buf: &mut Buffer) {
         Clear.render(area, buf);
 
-        let block = Block::default()
+        let block = Block::bordered()
             .style(Style::default().bg(Color::Gray))
             .title_alignment(Alignment::Center)
-            .title("Help")
-            .borders(Borders::ALL);
+            .title("Help");
 
         let text = "
 Use arrow keys or hjkl to move\n
