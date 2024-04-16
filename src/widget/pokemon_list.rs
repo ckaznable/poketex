@@ -36,6 +36,7 @@ impl StatefulWidget for PokemonList {
                     .bg(Color::LightGreen)
                     .add_modifier(Modifier::BOLD),
             )
+            .scroll_padding(3)
             .render(layout, buf, &mut state.list_state);
 
         Scrollbar::new(ScrollbarOrientation::VerticalRight)
