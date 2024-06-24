@@ -66,21 +66,21 @@ impl StatefulWidget for PokemonProfileWidget {
             ascii_form.to_string()
         };
 
-        let (ansi_width, ansi_height, ansi) = match std::fs::read(
+        let (ansi_width, ansi_height, ansi) = std::fs::read(
             state
                 .get_assets_path(ascii_type)
                 .join(lowercase_name + &ascii_form),
-        ) {
-            Err(_) => (0u16, 0u16, None),
-            Ok(buffer) => match buffer.into_text() {
-                Ok(ansi) => (
-                    ansi.width() as u16 + 1,
-                    ansi.height() as u16 + 1,
-                    Some(ansi),
-                ),
-                Err(_) => (0u16, 0u16, None),
-            },
-        };
+        )
+        .map(|buffer| buffer.into_text().ok())
+        .ok()
+        .flatten()
+        .map_or((0u16, 0u16, None), |ansi| {
+            (
+                ansi.width() as u16 + 1,
+                ansi.height() as u16 + 1,
+                Some(ansi),
+            )
+        });
 
         let [overview, _, main, _, ability_bottom_area, region_form_navigation] =
             Layout::vertical([
