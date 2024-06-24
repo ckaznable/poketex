@@ -30,7 +30,7 @@ impl PokemonListState {
         let list_scrollbar_state = ScrollbarState::default().content_length(pokemon_len);
 
         let mut list_state = ListState::default();
-        list_state.select(Some(0));
+        list_state.select_first();
 
         let filtered_list = Vec::with_capacity(pokemon_len);
 
@@ -69,45 +69,19 @@ impl PokemonListState {
     }
 
     pub fn scroll_to_first(&mut self) {
-        self.select(0)
+        self.list_state.select_first();
     }
 
     pub fn scroll_to_end(&mut self) {
-        self.select(self.len() - 1)
+        self.list_state.select_last();
     }
 
     pub fn next(&mut self) {
-        let index = match self.list_state.selected() {
-            Some(i) => {
-                if i >= self.len() - 1 {
-                    0
-                } else {
-                    i.saturating_add(1)
-                }
-            }
-            None => 0,
-        };
-
-        self.select(index);
+        self.list_state.select_next();
     }
 
     pub fn previous(&mut self) {
-        let index = match self.list_state.selected() {
-            Some(i) => {
-                if i == 0 {
-                    if !self.is_empty() {
-                        self.len() - 1
-                    } else {
-                        i
-                    }
-                } else {
-                    i.saturating_sub(1)
-                }
-            }
-            None => 0,
-        };
-
-        self.select(index);
+        self.list_state.select_previous();
     }
 
     pub fn scroll_down(&mut self, amount: u8) {
@@ -138,7 +112,7 @@ impl PokemonListState {
     }
 
     pub fn set_list_filter(&mut self, filter: String) {
-        self.filter_query = filter.clone();
+        self.filter_query.clone_from(&filter);
 
         if !filter.is_empty() {
             self.filtered_list.clear();

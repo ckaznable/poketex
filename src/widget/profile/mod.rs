@@ -4,9 +4,7 @@ mod overview;
 
 use ansi_to_tui::IntoText;
 use ratatui::{
-    buffer::Buffer,
-    layout::{Alignment, Constraint, Layout},
-    widgets::{Block, Paragraph, StatefulWidget, Widget},
+    buffer::Buffer, layout::{Alignment, Constraint, Layout}, text::ToLine, widgets::{Block, Paragraph, StatefulWidget, Widget}
 };
 
 use crate::state::{pokemon::AsciiType, PokemonListState};
@@ -66,21 +64,21 @@ impl StatefulWidget for PokemonProfileWidget {
             ascii_form.to_string()
         };
 
-        let (ansi_width, ansi_height, ansi) = match std::fs::read(
+        let (ansi_width, ansi_height, ansi) = std::fs::read(
             state
                 .get_assets_path(ascii_type)
                 .join(lowercase_name + &ascii_form),
-        ) {
-            Err(_) => (0u16, 0u16, None),
-            Ok(buffer) => match buffer.into_text() {
-                Ok(ansi) => (
-                    ansi.width() as u16 + 1,
-                    ansi.height() as u16 + 1,
-                    Some(ansi),
-                ),
-                Err(_) => (0u16, 0u16, None),
-            },
-        };
+        )
+        .map(|buffer| buffer.into_text().ok())
+        .ok()
+        .flatten()
+        .map_or((0u16, 0u16, None), |ansi| {
+            (
+                ansi.width() as u16 + 1,
+                ansi.height() as u16 + 1,
+                Some(ansi),
+            )
+        });
 
         let [overview, _, main, _, ability_bottom_area, region_form_navigation] =
             Layout::vertical([
@@ -135,7 +133,7 @@ impl StatefulWidget for PokemonProfileWidget {
 
         match ansi {
             Some(ansi) => {
-                Paragraph::new(ansi).render(ansi_area, buf);
+                Paragraph::new(ansi.to_string()).render(ansi_area, buf);
 
                 if ansi_height > 15 && area_height <= 25 {
                     let [iv_area, ability_bottom_area] =
