@@ -73,15 +73,41 @@ impl PokemonListState {
     }
 
     pub fn scroll_to_end(&mut self) {
-        self.list_state.select_last();
+        self.select(self.len() - 1)
     }
 
     pub fn next(&mut self) {
-        self.list_state.select_next();
+        let index = match self.list_state.selected() {
+            Some(i) => {
+                if i >= self.len() - 1 {
+                    0
+                } else {
+                    i.saturating_add(1)
+                }
+            }
+            None => 0,
+        };
+
+        self.select(index);
     }
 
     pub fn previous(&mut self) {
-        self.list_state.select_previous();
+        let index = match self.list_state.selected() {
+            Some(i) => {
+                if i == 0 {
+                    if !self.is_empty() {
+                        self.len() - 1
+                    } else {
+                        i
+                    }
+                } else {
+                    i.saturating_sub(1)
+                }
+            }
+            None => 0,
+        };
+
+        self.select(index);
     }
 
     pub fn scroll_down(&mut self, amount: u8) {
