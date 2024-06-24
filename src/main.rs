@@ -9,11 +9,6 @@ use std::{
 use xdg::BaseDirectories;
 
 use clap::Parser;
-use ratatui::crossterm::{
-    event::{self, DisableMouseCapture, Event},
-    execute,
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-};
 use poketex::{
     env::DEF_LOCALES,
     keybinding::handle_key,
@@ -23,6 +18,11 @@ use poketex::{
     },
     state::{AppState, PokemonListState},
     ui::ui,
+};
+use ratatui::crossterm::{
+    event::{self, DisableMouseCapture, Event},
+    execute,
+    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use ratatui::{
     backend::{Backend, CrosstermBackend},

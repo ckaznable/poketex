@@ -4,7 +4,9 @@ mod overview;
 
 use ansi_to_tui::IntoText;
 use ratatui::{
-    buffer::Buffer, layout::{Alignment, Constraint, Layout}, widgets::{Block, Paragraph, StatefulWidget, Widget}
+    buffer::Buffer,
+    layout::{Alignment, Constraint, Layout},
+    widgets::{Block, Paragraph, StatefulWidget, Widget},
 };
 
 use crate::state::{pokemon::AsciiType, PokemonListState};
