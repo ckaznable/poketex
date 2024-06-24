@@ -133,7 +133,7 @@ impl StatefulWidget for PokemonProfileWidget {
 
         match ansi {
             Some(ansi) => {
-                Paragraph::new(ansi.to_string()).render(ansi_area, buf);
+                Paragraph::new(ansi).render(ansi_area, buf);
 
                 if ansi_height > 15 && area_height <= 25 {
                     let [iv_area, ability_bottom_area] =
