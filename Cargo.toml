@@ -9,7 +9,7 @@ exclude = [".github/"]
 categories = ["command-line-utilities"]
 license = "MIT"
 readme = "README.md"
-version = "1.12.2"
+version = "1.13.0"
 edition = "2021"
 
 [dependencies]
