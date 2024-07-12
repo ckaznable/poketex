@@ -56,12 +56,11 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
 
 fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
     let padding = (100 - percent_y) / 2;
-    let [v_center] =
-        Layout::vertical(Constraint::from_percentages([padding, percent_y, padding])).areas(r);
+    let [_, v_center] =
+        Layout::vertical(Constraint::from_percentages([padding, percent_y])).areas(r);
 
     let padding = (100 - percent_x) / 2;
-    let [_, center, _] =
-        Layout::horizontal(Constraint::from_percentages([padding, percent_x, padding]))
-            .areas(v_center);
+    let [_, center] =
+        Layout::horizontal(Constraint::from_percentages([padding, percent_x])).areas(v_center);
     center
 }
