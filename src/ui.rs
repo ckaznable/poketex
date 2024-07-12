@@ -61,7 +61,6 @@ fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
 
     let padding = (100 - percent_x) / 2;
     let [_, center] =
-        Layout::horizontal(Constraint::from_percentages([padding, percent_x]))
-            .areas(v_center);
+        Layout::horizontal(Constraint::from_percentages([padding, percent_x])).areas(v_center);
     center
 }
