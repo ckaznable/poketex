@@ -147,6 +147,16 @@ fn get_assets_dir_path() -> Result<PathBuf> {
         }
     };
 
+    // Windows equivalent
+    #[cfg(windows)]
+    if let Ok(data_dir) = std::env::var("LOCALAPPDATA") {
+        let data_home = Path::new(&data_dir).join("poketex");
+        let assets_dir = data_home.join(assets_path);
+        if assets_dir.exists() {
+            return Ok(assets_dir);
+        }
+    }
+
     let usr_dir = Path::new("/usr/share/poketex");
     let assets_dir = usr_dir.join(assets_path);
     if assets_dir.exists() {
