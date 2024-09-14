@@ -12,9 +12,9 @@ use crate::{
 
 pub fn ui(f: &mut Frame, app: &mut AppState) {
     let area = f.size();
-    let constraint = if area.width >= 55 {
+    let constraint = if area.width >= 80 {
         [Constraint::Min(0), Constraint::Length(25)]
-    } else if area.width >= 100 {
+    } else if area.width >= 120 {
         [Constraint::Min(0), Constraint::Length(40)]
     } else {
         [Constraint::Percentage(100), Constraint::Length(0)]
