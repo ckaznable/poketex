@@ -86,7 +86,7 @@ impl StatefulWidget for PokemonProfileWidget {
             Layout::vertical([
                 Constraint::Length(1),
                 Constraint::Length(1),
-                Constraint::Length(std::cmp::max(ansi_height, 11)),
+                Constraint::Length(std::cmp::max(ansi_height, 12)),
                 Constraint::Length(if show_ability { 1 } else { 0 }),
                 Constraint::Min(0),
                 Constraint::Length(if region_form_page_num > 1 { 1 } else { 0 }),
@@ -139,7 +139,7 @@ impl StatefulWidget for PokemonProfileWidget {
 
                 if ansi_height > 15 && area_height <= 25 {
                     let [iv_area, ability_bottom_area] =
-                        Layout::vertical([Constraint::Length(10), Constraint::Min(0)])
+                        Layout::vertical([Constraint::Length(11), Constraint::Min(0)])
                             .areas(main_iv);
 
                     IVStatus::new(profile.iv).render(iv_area, buf);
