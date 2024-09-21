@@ -14,9 +14,9 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     let area = f.size();
     let constraint = if !app.tui.show_list {
         [Constraint::Percentage(100), Constraint::Length(0)]
-    } else if area.width >= 55 {
+    } else if area.width >= 80 {
         [Constraint::Min(0), Constraint::Length(25)]
-    } else if area.width >= 100 {
+    } else if area.width >= 120 {
         [Constraint::Min(0), Constraint::Length(40)]
     } else {
         [Constraint::Percentage(100), Constraint::Length(0)]
