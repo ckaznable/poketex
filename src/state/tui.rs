@@ -14,6 +14,8 @@ impl TuiState {
     pub fn new() -> Self {
         Self {
             show_list: true,
+            show_abilities: true,
+            show_iv: true,
             ..Default::default()
         }
     }
@@ -28,5 +30,9 @@ impl TuiState {
 
     pub fn toggle_show_abilities(&mut self) {
         self.show_abilities = !self.show_abilities;
+    }
+
+    pub fn toggle_show_iv(&mut self) {
+        self.show_iv = !self.show_iv;
     }
 }
