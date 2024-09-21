@@ -16,7 +16,7 @@ use poketex::{
         ascii_form::{AsciiForms, AsciiJson},
         AbilityMap, PokemonBundle, PokemonEntity,
     },
-    state::{AppState, PokemonListState},
+    state::{tui::TuiState, AppState, PokemonListState},
     ui::ui,
 };
 use ratatui::crossterm::{
@@ -95,6 +95,7 @@ fn main() -> Result<()> {
     let app = AppState {
         pokemon_list: PokemonListState::new(Rc::new(bundle), AsciiForms::from(ascii))
             .path(assets_dir),
+        tui: TuiState::new(),
         ..Default::default()
     };
 

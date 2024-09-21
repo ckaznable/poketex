@@ -8,7 +8,7 @@ use tui_input::Input;
 
 use self::tui::TuiState;
 
-#[derive(Default)]
+#[derive(Default, Copy, Clone)]
 pub enum InputMode {
     #[default]
     Normal,
@@ -39,10 +39,6 @@ impl AppState {
         if i > 0 || i - 1 > self.pokemon_list.len() {
             self.pokemon_list.select(i.saturating_sub(1));
         }
-    }
-
-    pub fn toggle_help(&mut self) {
-        self.tui.show_help = !self.tui.show_help;
     }
 
     pub fn command(&mut self, cmd: char) {

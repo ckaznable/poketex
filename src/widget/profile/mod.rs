@@ -9,13 +9,13 @@ use ratatui::{
     widgets::{Block, Paragraph, StatefulWidget, Widget},
 };
 
-use crate::state::{pokemon::AsciiType, PokemonListState};
+use crate::state::{pokemon::AsciiType, tui::TuiState, PokemonListState};
 
 use self::ability::AbilityParaGraph;
 
 use {iv::IVStatus, overview::Overview};
 
-pub struct PokemonProfileWidget;
+pub struct PokemonProfileWidget(pub TuiState);
 
 impl StatefulWidget for PokemonProfileWidget {
     type State = PokemonListState;
