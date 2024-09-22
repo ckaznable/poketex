@@ -12,7 +12,9 @@ use crate::{
 
 pub fn ui(f: &mut Frame, app: &mut AppState) {
     let area = f.size();
-    let constraint = if area.width >= 80 {
+    let constraint = if !app.tui.show_list {
+        [Constraint::Percentage(100), Constraint::Length(0)]
+    } else if area.width >= 80 {
         [Constraint::Min(0), Constraint::Length(25)]
     } else if area.width >= 120 {
         [Constraint::Min(0), Constraint::Length(40)]
@@ -23,7 +25,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
     let [left, right] = Layout::horizontal(constraint).margin(2).areas(f.size());
 
     // left chunks
-    f.render_stateful_widget(PokemonProfileWidget, left, &mut app.pokemon_list);
+    f.render_stateful_widget(PokemonProfileWidget(app.tui), left, &mut app.pokemon_list);
 
     // right chunks
     if right.width >= 25 {

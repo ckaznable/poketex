@@ -63,7 +63,10 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
         // handle other key
         (c, _) => match c {
             Char('q') => return KeyHandleResult::Exit,
-            Char('H') => app.toggle_help(),
+            Char('H') => app.tui.toggle_help(),
+            Char('E') => app.tui.toggle_show_list(),
+            Char('A') => app.tui.toggle_show_abilities(),
+            Char('V') => app.tui.toggle_show_iv(),
 
             Down | Char('j') => app.pokemon_list.next(),
             PageDown => app.pokemon_list.scroll_down(PAGE_NUM),
