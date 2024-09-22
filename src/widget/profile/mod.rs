@@ -35,7 +35,8 @@ struct LayoutParam {
 pub struct PokemonProfileWidget(pub TuiState);
 
 impl PokemonProfileWidget {
-    const SPACE_WITHOUT_ANSI: u16 = 10;
+    const SPACE_WITHOUT_ANSI_H: u16 = 10;
+    const SPACE_WITHOUT_ANSI_V: u16 = 3;
 
     fn get_render_areas(&self, area: Rect, param: LayoutParam) -> ProfileLayout {
         let [name, _, body, navi] = Layout::vertical([
@@ -49,13 +50,13 @@ impl PokemonProfileWidget {
         let [ansi, iv, ability] = if (!self.0.show_abilities && !self.0.show_iv)
             || body.width <= param.ansi_width
                 && body.height <= param.ansi_height
-                && body.width - param.ansi_width < Self::SPACE_WITHOUT_ANSI
-                && body.height - param.ansi_height < Self::SPACE_WITHOUT_ANSI
+                && body.width.saturating_sub(param.ansi_width) < Self::SPACE_WITHOUT_ANSI_H
+                && body.height.saturating_sub(param.ansi_height) < Self::SPACE_WITHOUT_ANSI_V
         {
             self.get_only_ansi_areas(body)
-        } else if body.height - param.ansi_height < Self::SPACE_WITHOUT_ANSI {
+        } else if body.height.saturating_sub(param.ansi_height) < Self::SPACE_WITHOUT_ANSI_V {
             self.get_h_rect_areas(body, param)
-        } else if body.width - param.ansi_width < Self::SPACE_WITHOUT_ANSI {
+        } else if body.width.saturating_sub(param.ansi_width) < Self::SPACE_WITHOUT_ANSI_H {
             self.get_v_rect_areas(body, param)
         } else {
             self.get_rect_areas(body, param)
@@ -64,46 +65,45 @@ impl PokemonProfileWidget {
         [name, ansi, iv, ability, navi]
     }
 
-    fn get_constraints_with_iv_ability(
-        &self,
-        body: Rect,
-        param: LayoutParam,
-    ) -> (Constraint, Constraint) {
+    fn get_constraints_with_iv_ability(&self, remaining_space: u16) -> (Constraint, Constraint) {
         use Constraint::*;
         match (self.0.show_abilities, self.0.show_iv) {
             (true, false) => (Percentage(100), Length(0)),
             (false, true) => (Length(0), Percentage(100)),
             (false, false) => (Length(0), Length(0)),
             (true, true) => {
-                let remaining_space = body.width.saturating_sub(param.ansi_width);
-                if remaining_space <= Self::SPACE_WITHOUT_ANSI {
-                    (Length(Self::SPACE_WITHOUT_ANSI), Length(0))
-                } else if remaining_space >= Self::SPACE_WITHOUT_ANSI * 6 {
+                let space: u16 = Self::SPACE_WITHOUT_ANSI_H;
+                if remaining_space <= space {
+                    (Length(space), Length(0))
+                } else if remaining_space >= space * 6 {
                     (Percentage(40), Percentage(60))
-                } else if remaining_space >= Self::SPACE_WITHOUT_ANSI * 2 {
+                } else if remaining_space >= space * 2 {
                     (Percentage(50), Percentage(50))
-                } else if remaining_space >= Self::SPACE_WITHOUT_ANSI {
-                    (Min(0), Length(Self::SPACE_WITHOUT_ANSI / 2))
+                } else if remaining_space >= space {
+                    (Min(0), Length(space / 2))
                 } else {
-                    (Length(Self::SPACE_WITHOUT_ANSI), Length(0))
+                    (Length(space), Length(0))
                 }
             }
         }
     }
 
     fn get_h_rect_areas(&self, body: Rect, param: LayoutParam) -> ProfileBodyLayout {
-        let (iv, ability) = self.get_constraints_with_iv_ability(body, param);
+        let remaining_space = body.width.saturating_sub(param.ansi_width);
+        let (iv, ability) = self.get_constraints_with_iv_ability(remaining_space);
         Layout::horizontal([Constraint::Length(param.ansi_width), iv, ability]).areas(body)
     }
 
     fn get_v_rect_areas(&self, body: Rect, param: LayoutParam) -> ProfileBodyLayout {
-        let (iv, ability) = self.get_constraints_with_iv_ability(body, param);
+        let remaining_space = body.height.saturating_sub(param.ansi_height);
+        let (iv, ability) = self.get_constraints_with_iv_ability(remaining_space);
         Layout::vertical([Constraint::Length(param.ansi_height), iv, ability]).areas(body)
     }
 
     fn get_rect_areas(&self, body: Rect, param: LayoutParam) -> ProfileBodyLayout {
         use Constraint::*;
-        if body.height.saturating_sub(param.ansi_height) < Self::SPACE_WITHOUT_ANSI {
+        if body.height.saturating_sub(param.ansi_height) < 5 && body.height.saturating_sub(12) >= 5
+        {
             let iv = if self.0.show_iv {
                 Length(12)
             } else {
