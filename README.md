@@ -105,6 +105,12 @@ Press `Page Up` or `Page Down` to move 4 steps at a time.
 
 Press `f` to switch ascii forms.
 
+Press `E` to toggle list showing.
+
+Press `A` to toggle ability showing.
+
+Press `V` to toggle IV showing.
+
 Press `q` to exit.
 
 Press `H` to display help information.
