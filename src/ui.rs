@@ -11,7 +11,7 @@ use crate::{
 };
 
 pub fn ui(f: &mut Frame, app: &mut AppState) {
-    let area = f.size();
+    let area = f.area();
     let constraint = if !app.tui.show_list {
         [Constraint::Percentage(100), Constraint::Length(0)]
     } else if area.width >= 80 {
@@ -22,7 +22,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
         [Constraint::Percentage(100), Constraint::Length(0)]
     };
 
-    let [left, right] = Layout::horizontal(constraint).margin(2).areas(f.size());
+    let [left, right] = Layout::horizontal(constraint).margin(2).areas(f.area());
 
     // left chunks
     f.render_stateful_widget(PokemonProfileWidget(app.tui), left, &mut app.pokemon_list);
@@ -46,7 +46,7 @@ pub fn ui(f: &mut Frame, app: &mut AppState) {
 
         // search input cursor
         if let Some((x, y)) = app.tui.cursor {
-            f.set_cursor(x, y)
+            f.set_cursor_position((x, y))
         };
     }
 
