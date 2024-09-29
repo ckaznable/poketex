@@ -147,9 +147,10 @@ impl PokemonProfileWidget {
             .replace("Alola Form", "alola")
             .replace("Hisuian form", "hisui")
             .replace("Paldea form", "paldea")
-            .replace("Meowscarada", "meowth-galar")
             .replace(" - ", "-")
             .replace(' ', "-")
+            .replace('♀', "-f")
+            .replace('♂', "-m")
             .to_lowercase()
     }
 }
