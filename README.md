@@ -137,7 +137,9 @@ Press `/` to enter search mode.
 - [x] help key
 - [x] gen 9 DLC - The Teal Mask
 - [x] gen 9 DLC - The Indigo Disk
-- [x] Image support (powered by [pokemon-colorscripts](https://gitlab.com/phoneybadger/pokemon-colorscripts))
+- [x] Image support 
+  - Gen 8 and below(powered by [pokemon-colorscripts](https://gitlab.com/phoneybadger/pokemon-colorscripts))
+  - Gen 9(#58)
 
 ## Troubleshoot
 
