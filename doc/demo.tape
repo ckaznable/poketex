@@ -2,7 +2,7 @@ Output demo.gif
 
 Set FontSize 16
 Set Width 1280
-Set Height 600
+Set Height 768
 
 Hide
 Type "poketex"
