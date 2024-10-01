@@ -54,7 +54,9 @@ impl PokemonProfileWidget {
                 && body.height.saturating_sub(param.ansi_height) < Self::SPACE_WITHOUT_ANSI_V
         {
             self.get_only_ansi_areas(body)
-        } else if body.height.saturating_sub(param.ansi_height) < Self::SPACE_WITHOUT_ANSI_V && body.height.saturating_sub(12) < Self::SPACE_WITHOUT_ANSI_V {
+        } else if body.height.saturating_sub(param.ansi_height) < Self::SPACE_WITHOUT_ANSI_V
+            && body.height.saturating_sub(12) < Self::SPACE_WITHOUT_ANSI_V
+        {
             self.get_h_rect_areas(body, param)
         } else if body.width.saturating_sub(param.ansi_width) < Self::SPACE_WITHOUT_ANSI_H {
             self.get_v_rect_areas(body, param)
