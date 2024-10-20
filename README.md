@@ -139,7 +139,7 @@ Press `/` to enter search mode.
 - [x] gen 9 DLC - The Indigo Disk
 - [x] Image support 
   - Gen 8 and below(powered by [pokemon-colorscripts](https://gitlab.com/phoneybadger/pokemon-colorscripts))
-  - Gen 9([#58](https://github.com/ckaznable/poketex/pull/58))
+  - Gen 9([#58](https://github.com/ckaznable/poketex/pull/58), Creator [Caruban](https://www.pokecommunity.com/threads/generation-9-resource-pack-v21-1.527398/))
 
 ## Troubleshoot
 
