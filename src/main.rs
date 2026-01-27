@@ -103,9 +103,11 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> io::Result<()> {
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> anyhow::Result<()> {
     loop {
-        terminal.draw(|f| ui(f, &mut app))?;
+        if terminal.draw(|f| ui(f, &mut app)).is_err() {
+            return Ok(());
+        };
 
         if let Event::Key(event) = event::read()? {
             if handle_key(&mut app, event).is_exit() {
