@@ -866,7 +866,7 @@ dependencies = [
 
 [[package]]
 name = "poketex"
-version = "1.16.3"
+version = "1.16.4"
 dependencies = [
  "ansi-to-tui",
  "anyhow",
