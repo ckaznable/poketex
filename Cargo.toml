@@ -25,6 +25,7 @@ textwrap = "0.16.0"
 ansi-to-tui = "8.0.0"
 anyhow = "1.0.79"
 xdg = "2.5.2"
+fuzzy-matcher = "0.3.7"
 
 [profile.release]
 opt-level = "z"
