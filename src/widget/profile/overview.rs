@@ -28,13 +28,11 @@ impl Widget for Overview {
             Span::from(" "),
         ];
 
-        if let Some(kind) = self.pm_type.1 {
-            if kind != PokemonTypeKind::Other {
-                type_span.push(Span::styled(
-                    kind.to_string(),
-                    Style::default().bg(kind.color()).fg(Color::White),
-                ));
-            }
+        if let Some(kind) = self.pm_type.1 && kind != PokemonTypeKind::Other {
+            type_span.push(Span::styled(
+                kind.to_string(),
+                Style::default().bg(kind.color()).fg(Color::White),
+            ));
         }
 
         Block::default()

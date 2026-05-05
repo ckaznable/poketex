@@ -109,10 +109,8 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> anyhow:
             return Ok(());
         };
 
-        if let Event::Key(event) = event::read()? {
-            if handle_key(&mut app, event).is_exit() {
-                return Ok(());
-            }
+        if let Event::Key(event) = event::read()? && handle_key(&mut app, event).is_exit() {
+            return Ok(());
         }
     }
 }
@@ -131,13 +129,11 @@ fn get_assets_dir_path() -> Result<PathBuf> {
     let assets_path = Path::new("colorscripts/small");
 
     // binary execute path
-    if let Ok(execute_path) = std::env::current_exe() {
-        if let Some(execute_dir) = execute_path.parent() {
-            let assets_dir = execute_dir.join(assets_path);
-            if assets_dir.exists() {
-                return Ok(assets_dir);
-            }
-        };
+    if let Ok(execute_path) = std::env::current_exe() && let Some(execute_dir) = execute_path.parent() {
+        let assets_dir = execute_dir.join(assets_path);
+        if assets_dir.exists() {
+            return Ok(assets_dir);
+        }
     };
 
     // xdg data home
