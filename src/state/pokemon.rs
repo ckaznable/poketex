@@ -1,5 +1,6 @@
 use std::{path::PathBuf, rc::Rc};
 
+use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
 use ratatui::widgets::{ListState, ScrollbarState};
 
 use crate::pokemon::{ascii_form::AsciiForms, AbilityMap, PokemonBundle, PokemonEntity};
@@ -57,11 +58,15 @@ impl PokemonListState {
     }
 
     pub fn len(&self) -> usize {
-        self.bundle.pokemon.len()
+        if self.filter_query.is_empty() {
+            self.bundle.pokemon.len()
+        } else {
+            self.filtered_list.len()
+        }
     }
 
     pub fn is_empty(&self) -> bool {
-        self.bundle.pokemon.is_empty()
+        self.len() == 0
     }
 
     pub fn ability_map(&self) -> Rc<AbilityMap> {
@@ -141,18 +146,23 @@ impl PokemonListState {
         self.filter_query.clone_from(&filter);
 
         if !filter.is_empty() {
+            let matcher = SkimMatcherV2::default();
             self.filtered_list.clear();
-            self.filtered_list.extend(
-                self.bundle
-                    .pokemon
-                    .iter()
-                    .filter(|item| {
-                        item.name_with_no()
-                            .to_lowercase()
-                            .contains(&filter.to_lowercase())
-                    })
-                    .cloned(),
-            );
+
+            // Filter by fuzzy match and sort by score
+            let mut list: Vec<_> = self
+                .bundle
+                .pokemon
+                .iter()
+                .filter_map(|p| {
+                    matcher
+                        .fuzzy_match(&p.name_with_no(), &filter)
+                        .map(|score| (score, p.clone()))
+                })
+                .collect();
+
+            list.sort_by_key(|&(score, _)| -score);
+            self.filtered_list = list.into_iter().map(|(_, p)| p).collect();
         };
 
         self.select(0);

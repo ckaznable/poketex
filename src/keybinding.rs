@@ -21,9 +21,12 @@ impl KeyHandleResult {
 fn on_editing(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
     use KeyCode::*;
 
-    match event.code {
-        Esc => app.reset(),
-        Enter => app.tui.input_mode = InputMode::Normal,
+    match (event.code, event.modifiers) {
+        (Esc, _) => app.reset(),
+        (Enter, _) => app.tui.input_mode = InputMode::Normal,
+        (Up, _) => app.pokemon_list.previous(),
+        (Down, _) => app.pokemon_list.next(),
+        (Char('c'), KeyModifiers::CONTROL) => return KeyHandleResult::Exit,
         _ => {
             app.key_handle.input.handle_event(&Event::Key(event));
             app.pokemon_list.filter_query.clear();
@@ -61,9 +64,11 @@ fn on_normal(app: &mut AppState, event: KeyEvent) -> KeyHandleResult {
         },
 
         // handle other key
-        (c, _) => match c {
+        (code, modifiers) => match code {
+            Char('c') if modifiers == KeyModifiers::CONTROL => return KeyHandleResult::Exit,
             Char('q') => return KeyHandleResult::Exit,
             Char('H') => app.tui.toggle_help(),
+
             Char('E') => app.tui.toggle_show_list(),
             Char('A') => app.tui.toggle_show_abilities(),
             Char('V') => app.tui.toggle_show_iv(),
