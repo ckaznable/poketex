@@ -1,6 +1,6 @@
 use ratatui::{
-    layout::{Constraint, Layout, Rect},
     Frame,
+    layout::{Constraint, Layout, Rect},
 };
 
 use crate::{

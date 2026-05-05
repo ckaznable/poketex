@@ -13,7 +13,7 @@ use ratatui::{
 
 use crate::{
     pokemon::PokemonEntity,
-    state::{pokemon::AsciiType, tui::TuiState, PokemonListState},
+    state::{PokemonListState, pokemon::AsciiType, tui::TuiState},
 };
 
 use self::ability::AbilityParaGraph;

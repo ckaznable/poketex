@@ -2,8 +2,8 @@ use std::fmt::{self, Display};
 
 use ratatui::style::Color;
 use serde::{
-    de::{self, Visitor},
     Deserialize, Deserializer,
+    de::{self, Visitor},
 };
 use serde_json::Value;
 

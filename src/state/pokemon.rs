@@ -1,9 +1,9 @@
 use std::{path::PathBuf, rc::Rc};
 
-use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
+use fuzzy_matcher::{FuzzyMatcher, skim::SkimMatcherV2};
 use ratatui::widgets::{ListState, ScrollbarState};
 
-use crate::pokemon::{ascii_form::AsciiForms, AbilityMap, PokemonBundle, PokemonEntity};
+use crate::pokemon::{AbilityMap, PokemonBundle, PokemonEntity, ascii_form::AsciiForms};
 
 #[derive(Copy, Clone)]
 pub enum AsciiType {
@@ -100,11 +100,7 @@ impl PokemonListState {
         let index = match self.list_state.selected() {
             Some(i) => {
                 if i == 0 {
-                    if !self.is_empty() {
-                        self.len() - 1
-                    } else {
-                        i
-                    }
+                    if !self.is_empty() { self.len() - 1 } else { i }
                 } else {
                     i.saturating_sub(1)
                 }

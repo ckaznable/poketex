@@ -13,20 +13,20 @@ use poketex::{
     env::DEF_LOCALES,
     keybinding::handle_key,
     pokemon::{
-        ascii_form::{AsciiForms, AsciiJson},
         AbilityMap, PokemonBundle, PokemonEntity,
+        ascii_form::{AsciiForms, AsciiJson},
     },
-    state::{tui::TuiState, AppState, PokemonListState},
+    state::{AppState, PokemonListState, tui::TuiState},
     ui::ui,
 };
 use ratatui::crossterm::{
     event::{self, DisableMouseCapture, Event},
     execute,
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    terminal::{EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode},
 };
 use ratatui::{
-    backend::{Backend, CrosstermBackend},
     Terminal,
+    backend::{Backend, CrosstermBackend},
 };
 use serde_json::from_str;
 
@@ -109,7 +109,9 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: AppState) -> anyhow:
             return Ok(());
         };
 
-        if let Event::Key(event) = event::read()? && handle_key(&mut app, event).is_exit() {
+        if let Event::Key(event) = event::read()?
+            && handle_key(&mut app, event).is_exit()
+        {
             return Ok(());
         }
     }
@@ -129,7 +131,9 @@ fn get_assets_dir_path() -> Result<PathBuf> {
     let assets_path = Path::new("colorscripts/small");
 
     // binary execute path
-    if let Ok(execute_path) = std::env::current_exe() && let Some(execute_dir) = execute_path.parent() {
+    if let Ok(execute_path) = std::env::current_exe()
+        && let Some(execute_dir) = execute_path.parent()
+    {
         let assets_dir = execute_dir.join(assets_path);
         if assets_dir.exists() {
             return Ok(assets_dir);
