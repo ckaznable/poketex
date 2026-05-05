@@ -116,9 +116,8 @@ Press `/` to enter search mode.
   - [x] Galar
   - [x] Hisuian
   - [x] Paldea
-- [ ] add cli flags
+- [x] add cli flags
   - [x] --locale [en, ja, zh]
-  - [ ] for controlling layout
 - [x] help key
 - [x] gen 9 DLC - The Teal Mask
 - [x] gen 9 DLC - The Indigo Disk
