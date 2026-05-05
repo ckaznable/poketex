@@ -12,7 +12,7 @@ use crate::{
 pub struct Filter;
 
 impl Filter {
-    fn paragraph(self, scroll: usize, value: &str) -> Paragraph {
+    fn paragraph(self, scroll: usize, value: &str) -> Paragraph<'_> {
         Paragraph::new(value)
             .style(Style::default().fg(Color::Yellow))
             .scroll((0, scroll as u16))

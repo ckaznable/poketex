@@ -74,9 +74,9 @@ fn main() -> Result<()> {
     let args = Args::parse();
     let assets_dir = get_assets_dir_path()?;
 
-    unsafe {
-        DEF_LOCALES = Box::leak(args.locale.into_boxed_str());
-    }
+    DEF_LOCALES
+        .set(Box::leak(args.locale.into_boxed_str()))
+        .ok();
 
     let Ok((pokemon, ability, ascii)) = load_data() else {
         println!("load data error");

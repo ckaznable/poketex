@@ -11,25 +11,24 @@ pub struct TranslateText {
 
 impl TranslateText {
     pub fn get(&self) -> String {
-        unsafe {
-            let loc = if !DEF_LOCALES.eq(LOCALES.as_str()) {
-                DEF_LOCALES
-            } else {
-                LOCALES.as_str()
-            };
+        let def_locales = DEF_LOCALES.get().copied().unwrap_or("en");
+        let loc = if def_locales != LOCALES.as_str() {
+            def_locales
+        } else {
+            LOCALES.as_str()
+        };
 
-            let text = match loc {
-                "en" => &self.en,
-                "zh" => &self.zh,
-                "ja" => &self.jp,
-                _ => &self.en,
-            };
+        let text = match loc {
+            "en" => &self.en,
+            "zh" => &self.zh,
+            "ja" => &self.jp,
+            _ => &self.en,
+        };
 
-            if !text.is_empty() {
-                text.to_string()
-            } else {
-                self.en.clone()
-            }
+        if !text.is_empty() {
+            text.to_string()
+        } else {
+            self.en.clone()
         }
     }
 }
