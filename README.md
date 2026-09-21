@@ -142,6 +142,10 @@ cp -rf colorscripts /usr/local/share/poketex
 
 data generated from [ckaznable/poke-data-crawler](https://github.com/ckaznable/poke-data-cralwer)
 
+## Related projects
+
+[pokemon-info](https://github.com/pkong-ds/pokemon-info)
+
 ## License
 
 [MIT](./LICENSE)
